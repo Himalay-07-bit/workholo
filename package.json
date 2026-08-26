@@ -52,7 +52,8 @@
     "docker:down": "docker compose down",
     "docker:logs": "docker compose logs -f",
     "check": "ultracite check",
-    "fix": "ultracite fix"
+    "fix": "ultracite fix",
+    "dev:type-generator": "bun scripts/type-generator.ts --watch"
   },
   "dependencies": {
     "@workholo/env": "workspace:*",
