@@ -22,13 +22,13 @@
     "better-auth": "catalog:",
     "dotenv": "catalog:",
     "elysia": "catalog:",
-    "evlog": "^2.22.4",
+    "evlog": "^2.27.0",
     "zod": "catalog:"
   },
   "devDependencies": {
     "@types/bun": "catalog:",
     "@workholo/config": "workspace:*",
     "tsdown": "^0.22.14",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   }
 }

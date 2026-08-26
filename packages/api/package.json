@@ -26,6 +26,6 @@
   "devDependencies": {
     "@workholo/config": "workspace:*",
     "elysia": "catalog:",
-    "typescript": "^6.0.3"
+    "typescript": "^7.0.2"
   }
 }
