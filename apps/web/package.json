@@ -4,14 +4,14 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite dev",
     "build": "vite build",
+    "check-types": "vite build && tsc --noEmit",
+    "desktop:build": "tauri build",
+    "desktop:dev": "tauri dev",
+    "dev": "vite dev",
     "serve": "vite preview",
     "start": "vite",
-    "check-types": "vite build && tsc --noEmit",
-    "tauri": "tauri",
-    "desktop:dev": "tauri dev",
-    "desktop:build": "tauri build"
+    "tauri": "tauri"
   },
   "dependencies": {
     "@orpc/client": "catalog:",
@@ -34,15 +34,19 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@babel/core": "^7.29.7",
+    "@rolldown/plugin-babel": "^0.2.3",
     "@tanstack/react-query-devtools": "^5.102.5",
     "@tanstack/react-router-devtools": "^1.167.1",
     "@tanstack/router-plugin": "^1.168.35",
     "@tauri-apps/cli": "^2.11.4",
+    "@types/babel__core": "^7.20.5",
     "@types/node": "catalog:",
     "@types/react": "^19.2.18",
     "@types/react-dom": "catalog:",
     "@vitejs/plugin-react": "^6.1.0",
     "@workholo/config": "workspace:*",
+    "babel-plugin-react-compiler": "^1.0.0",
     "postcss": "^8.5.26",
     "tailwindcss": "catalog:",
     "typescript": "^7.0.2",
