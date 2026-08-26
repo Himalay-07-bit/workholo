@@ -6,29 +6,34 @@ import { betterAuth } from "better-auth";
 import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 export function createAuth() {
-  const db = createDb();
+	const db = createDb();
 
-  return betterAuth({
-    database: drizzleAdapter(db, {
-      provider: "pg",
+	return betterAuth({
+		advanced: {
+			defaultCookieAttributes: {
+				httpOnly: true,
+				sameSite: "none",
+				secure: true,
+			},
+		},
+		baseURL: env.BETTER_AUTH_URL,
+		database: drizzleAdapter(db, {
+			provider: "pg",
 
-      schema: schema,
-    }),
-    trustedOrigins: [env.CORS_ORIGIN, "workholo://", "exp://", "http://localhost:8081"],
-    emailAndPassword: {
-      enabled: true,
-    },
-    secret: env.BETTER_AUTH_SECRET,
-    baseURL: env.BETTER_AUTH_URL,
-    advanced: {
-      defaultCookieAttributes: {
-        sameSite: "none",
-        secure: true,
-        httpOnly: true,
-      },
-    },
-    plugins: [expo()],
-  });
+			schema,
+		}),
+		emailAndPassword: {
+			enabled: true,
+		},
+		plugins: [expo()],
+		secret: env.BETTER_AUTH_SECRET,
+		trustedOrigins: [
+			env.CORS_ORIGIN,
+			"workholo://",
+			"exp://",
+			"http://localhost:8081",
+		],
+	});
 }
 
 export const auth = createAuth();
