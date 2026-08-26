@@ -1,0 +1,25 @@
+{
+  "name": "@workholo/auth",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@better-auth/expo": "catalog:",
+    "@workholo/db": "workspace:*",
+    "@workholo/env": "workspace:*",
+    "better-auth": "catalog:",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@workholo/config": "workspace:*",
+    "typescript": "^6.0.3"
+  }
+}

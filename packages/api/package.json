@@ -1,0 +1,31 @@
+{
+  "name": "@workholo/api",
+  "type": "module",
+  "exports": {
+    ".": {
+      "default": "./src/index.ts"
+    },
+    "./*": {
+      "default": "./src/*.ts"
+    }
+  },
+  "scripts": {},
+  "dependencies": {
+    "@orpc/client": "catalog:",
+    "@orpc/openapi": "catalog:",
+    "@orpc/server": "catalog:",
+    "@orpc/zod": "catalog:",
+    "@types/pg": "catalog:",
+    "@workholo/auth": "workspace:*",
+    "@workholo/db": "workspace:*",
+    "@workholo/env": "workspace:*",
+    "dotenv": "catalog:",
+    "drizzle-orm": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@workholo/config": "workspace:*",
+    "elysia": "catalog:",
+    "typescript": "^6.0.3"
+  }
+}
