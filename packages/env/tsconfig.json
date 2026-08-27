@@ -2,6 +2,6 @@
   "extends": "@workholo/config/tsconfig.base.json",
   "compilerOptions": {
     "strictNullChecks": true,
-    "types": ["vite/client"]
+    "types": ["vite/client", "bun"]
   }
 }

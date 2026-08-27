@@ -1,136 +1,203 @@
 # workholo
 
-This project was created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack), a modern TypeScript stack that combines React, TanStack Router, Elysia, ORPC, and more.
+Workholo is a Bun and Nx monorepo created with [Better-T-Stack](https://github.com/AmanVarshney01/create-better-t-stack). It contains a React web app, an Elysia API, an Expo app, an Astro documentation site, and shared packages for the API, authentication, database, environment validation, and UI.
 
-## Features
+## Prerequisites
 
-- **TypeScript** - For type safety and improved developer experience
-- **TanStack Router** - File-based routing with full type safety
-- **React Native** - Build mobile apps using React
-- **Expo** - Tools for React Native development
-- **TailwindCSS** - Utility-first CSS for rapid UI development
-- **Shared UI package** - shadcn/ui primitives live in `packages/ui`
-- **Elysia** - Type-safe, high-performance framework
-- **oRPC** - End-to-end type-safe APIs with OpenAPI integration
-- **Bun** - Runtime environment
-- **Drizzle** - TypeScript-first ORM
-- **PostgreSQL** - Database engine
-- **Authentication** - Better-Auth
-- **Biome** - Linting and formatting
-- **Nx** - Smart monorepo task orchestration and caching
-- **Starlight** - Documentation site with Astro
-- **Tauri** - Build native desktop applications
+Install the following before starting:
 
-## Getting Started
+- [Bun](https://bun.sh/) 1.4.0 (the version pinned in `package.json`)
+- [Docker](https://docs.docker.com/get-docker/) with Docker Compose, for the local PostgreSQL database
+- Git
 
-First, install the dependencies:
+Expo and Tauri have additional platform requirements. They are only needed when running the native mobile or desktop targets.
+
+## Local setup
+
+Run all commands from the repository root unless a section says otherwise.
+
+### 1. Install dependencies
 
 ```bash
 bun install
 ```
 
-## Database Setup
-
-This project uses PostgreSQL with Drizzle ORM.
-
-1. Make sure you have a PostgreSQL database set up.
-2. Update your `apps/server/.env` file with your PostgreSQL connection details.
-
-3. Apply the schema to your database:
+### 2. Create the local environment files
 
 ```bash
+cp apps/server/.env.example apps/server/.env
+cp apps/web/.env.example apps/web/.env
+```
+
+The example files are configured for the local ports used by this repository:
+
+| File | Variable | Local value |
+| --- | --- | --- |
+| `apps/server/.env` | `DATABASE_URL` | `postgresql://postgres:password@localhost:5432/workholo` |
+| `apps/server/.env` | `BETTER_AUTH_URL` | `http://localhost:3000` |
+| `apps/server/.env` | `CORS_ORIGIN` | `http://localhost:3001` |
+| `apps/web/.env` | `VITE_SERVER_URL` | `http://localhost:3000` |
+
+`BETTER_AUTH_SECRET` must be at least 32 characters. The example value is suitable only for local development. To generate your own value, run `openssl rand -base64 32` and paste the result into `apps/server/.env`.
+
+### 3. Start PostgreSQL and apply the schema
+
+```bash
+bun run db:start
 bun run db:push
 ```
 
-Then, run the development server:
+`db:start` starts only the `postgres:18` service from `docker-compose.yml`. Its default local credentials match `apps/server/.env.example`.
+
+### 4. Start the API and web app
+
+Use two terminals:
+
+```bash
+# Terminal 1
+bun run dev:server
+```
+
+```bash
+# Terminal 2
+bun run dev:web
+```
+
+The local services are then available at:
+
+- Web app: [http://localhost:3001](http://localhost:3001)
+- API health endpoint: [http://localhost:3000](http://localhost:3000)
+- API reference: [http://localhost:3000/api-reference](http://localhost:3000/api-reference)
+
+To stop PostgreSQL without deleting its data, run:
+
+```bash
+bun run db:stop
+```
+
+## Other development targets
+
+### Run every development target
 
 ```bash
 bun run dev
 ```
 
-Open [http://localhost:3001](http://localhost:3001) in your browser to see the web application.
-Use the Expo Go app to run the mobile application.
-The API is running at [http://localhost:3000](http://localhost:3000).
+This starts every Nx project that defines a `dev` target: the web app, API server, Expo app, and Astro docs. For normal browser development, starting `dev:server` and `dev:web` separately is less noisy.
 
-## UI Customization
+### Expo mobile app
 
-React web apps in this stack share shadcn/ui primitives through `packages/ui`.
+Create `apps/native/.env` with an API URL reachable from the device or emulator:
 
-- Change design tokens and global styles in `packages/ui/src/styles/globals.css`
-- Update shared primitives in `packages/ui/src/components/*`
-- Adjust shadcn aliases or style config in `packages/ui/components.json` and `apps/web/components.json`
-
-### Add more shared components
-
-Run this from the project root to add more primitives to the shared UI package:
-
-```bash
-npx shadcn@latest add accordion dialog popover sheet table -c packages/ui
+```dotenv
+EXPO_PUBLIC_SERVER_URL=http://YOUR_COMPUTER_LAN_IP:3000
 ```
 
-Import shared components like this:
+Then start Expo:
+
+```bash
+bun run dev:native
+```
+
+Do not use `localhost` when testing on a physical phone; on the phone, `localhost` refers to the phone itself. Keep the API server running separately.
+
+### Documentation site
+
+```bash
+bun run --cwd apps/docs dev
+```
+
+Astro serves the docs at [http://localhost:4321](http://localhost:4321) by default.
+
+### Tauri desktop app
+
+After installing the [Tauri prerequisites](https://v2.tauri.app/start/prerequisites/) for your operating system, run:
+
+```bash
+bun run --cwd apps/web desktop:dev
+```
+
+The Tauri configuration starts the Vite web app automatically.
+
+## Database commands
+
+| Command | Purpose |
+| --- | --- |
+| `bun run db:start` | Start PostgreSQL in the background |
+| `bun run db:watch` | Start PostgreSQL and follow its output |
+| `bun run db:stop` | Stop PostgreSQL while preserving its volume |
+| `bun run db:push` | Push the current Drizzle schema to the database |
+| `bun run db:generate` | Generate SQL migrations from schema changes |
+| `bun run db:migrate` | Apply generated migrations |
+| `bun run db:studio` | Open Drizzle Studio |
+
+The Drizzle configuration always loads the database URL from `apps/server/.env`.
+
+## Quality checks
+
+This repository uses Ultracite with Biome and Nx for type checking and builds:
+
+```bash
+bun run check
+bun run check-types
+bun run build
+```
+
+To apply safe formatting and lint fixes, run:
+
+```bash
+bun run fix
+```
+
+## Docker Compose stack
+
+To build and run the web app, API server, and PostgreSQL together, first create `apps/server/.env` as described above, then run:
+
+```bash
+bun run docker:up
+bun run db:push
+```
+
+Useful commands:
+
+```bash
+bun run docker:logs
+bun run docker:down
+```
+
+The Compose stack exposes the same URLs as local development: the web app on port 3001 and the API on port 3000. Database data is retained in the `workholo_postgres_data` Docker volume when the stack is stopped.
+
+## Project structure
+
+```text
+workholo/
+├── apps/
+│   ├── docs/       # Astro Starlight documentation
+│   ├── native/     # Expo and React Native application
+│   ├── server/     # Elysia API server
+│   └── web/        # React, Vite, and TanStack Router application
+├── packages/
+│   ├── api/        # Shared oRPC procedures and context
+│   ├── auth/       # Better Auth configuration
+│   ├── config/     # Shared TypeScript configuration
+│   ├── db/         # Drizzle schema and database client
+│   ├── env/        # Runtime environment validation
+│   └── ui/         # Shared shadcn UI components and styles
+└── docker-compose.yml
+```
+
+## UI development
+
+Shared shadcn components live in `packages/ui/src/components`, and shared design tokens and global styles live in `packages/ui/src/styles/globals.css`.
+
+Add a shared component from the repository root:
+
+```bash
+bun x shadcn@latest add accordion dialog popover sheet table -c packages/ui
+```
+
+Import shared components through the package exports:
 
 ```tsx
 import { Button } from "@workholo/ui/components/button";
 ```
-
-### Add app-specific blocks
-
-If you want to add app-specific blocks instead of shared primitives, run the shadcn CLI from `apps/web`.
-
-## Deployment
-
-### Docker Compose
-
-- Target: web + server
-- Config: `docker-compose.yml` (app Dockerfiles live in `apps/*/Dockerfile`)
-- Build images: bun run docker:build
-- Start: bun run docker:up
-- Logs: bun run docker:logs
-- Stop: bun run docker:down
-
-Environment variables are read from each app's `.env` file (baked into web builds for public variables) and overridden in `docker-compose.yml` for container networking.
-
-For more details, see the guide on [Deploying with Docker Compose](https://www.better-t-stack.dev/docs/guides/docker).
-
-## Git Hooks and Formatting
-
-- Run checks: `bun run check`
-
-## Project Structure
-
-```
-workholo/
-├── apps/
-│   ├── web/         # Frontend application (React + TanStack Router)
-│   ├── native/      # Mobile application (React Native, Expo)
-│   ├── docs/        # Documentation site (Astro Starlight)
-│   └── server/      # Backend API (Elysia, ORPC)
-├── packages/
-│   ├── ui/          # Shared shadcn/ui components and styles
-│   ├── api/         # API layer / business logic
-│   ├── auth/        # Authentication configuration & logic
-│   └── db/          # Database schema & queries
-```
-
-## Available Scripts
-
-- `bun run dev`: Start all applications in development mode
-- `bun run build`: Build all applications
-- `bun run dev:web`: Start only the web application
-- `bun run dev:server`: Start only the server
-- `bun run check-types`: Check TypeScript types across all apps
-- `bun run dev:native`: Start the React Native/Expo development server
-- `bun run db:push`: Push schema changes to database
-- `bun run db:generate`: Generate database client/types
-- `bun run db:migrate`: Run database migrations
-- `bun run db:studio`: Open database studio UI
-- `bun run check`: Run Biome formatting and linting
-- `cd apps/web && bun run desktop:dev`: Start Tauri desktop app in development
-- `cd apps/web && bun run desktop:build`: Build Tauri desktop app
-- `cd apps/docs && bun run dev`: Start documentation site
-- `cd apps/docs && bun run build`: Build documentation site
-- `bun run docker:build`: Build the Docker Compose images
-- `bun run docker:up`: Build and start the Docker Compose stack
-- `bun run docker:logs`: Tail logs from the Docker Compose stack
-- `bun run docker:down`: Stop the Docker Compose stack
