@@ -1,4 +1,5 @@
 // biome-ignore-all lint/performance/noJsxPropsBind: Navigation handlers need the selected menu item.
+
 import { useNavigate } from "@tanstack/react-router";
 import {
 	Sidebar,
@@ -20,6 +21,7 @@ import {
 	Phone,
 	Settings,
 	Users,
+	Wrench,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -55,6 +57,92 @@ const userItems = [
 	},
 ];
 
+const serviceItems = [
+	{
+		title: "My Numbers",
+		url: "/admin/manage-did-numbers",
+	},
+	{
+		title: "Time Groups",
+		url: "/admin/time-groups",
+	},
+	{
+		title: "Time Conditions",
+		url: "/admin/time-conditions",
+	},
+	{
+		title: "IVR",
+		url: "/admin/ivr",
+	},
+	{
+		title: "Auto-Attendant",
+		url: "/admin/auto-attendant",
+	},
+	{
+		title: "Agents",
+		url: "/admin/extensions",
+	},
+	{
+		title: "Departments",
+		url: "/admin/departments",
+	},
+	{
+		title: "System Recordings",
+		url: "/admin/system-recordings",
+	},
+	{
+		title: "Voicemail",
+		url: "/admin/voicemail",
+	},
+];
+
+const outboundItems = [
+	{
+		title: "Dialer Campaigns",
+		url: "/admin/dialer-campaigns",
+	},
+	{
+		title: "Dialer Inbound Queue",
+		url: "/admin/show-inbound-queue",
+	},
+	{
+		title: "Lead Lists",
+		url: "/admin/manage-leads",
+	},
+	{
+		title: "Disposition Lists",
+		url: "/admin/manage-disposition-list",
+	},
+	{
+		title: "Pause Code Lists",
+		url: "/admin/pause-code-lists",
+	},
+	{
+		title: "Account DND Lists",
+		url: "/admin/dnd/manage-list",
+	},
+	{
+		title: "Quick Transfer Lists",
+		url: "/admin/quick-transfer-lists",
+	},
+	{
+		title: "CSAT Survey",
+		url: "/admin/csat-survey",
+	},
+	{
+		title: "Dialer Skill Lists",
+		url: "/admin/dialer-skill-lists",
+	},
+	{
+		title: "Agent Script",
+		url: "/admin/agent-script",
+	},
+	{
+		title: "Holiday Calendar",
+		url: "/admin/holiday-calendar",
+	},
+];
+
 const otherNavigation = [
 	{
 		icon: Phone,
@@ -70,7 +158,10 @@ const otherNavigation = [
 
 export function AdminSidebar() {
 	const navigate = useNavigate();
+
 	const [usersOpen, setUsersOpen] = useState(true);
+	const [servicesOpen, setServicesOpen] = useState(true);
+	const [outboundOpen, setOutboundOpen] = useState(true);
 
 	return (
 		<Sidebar collapsible="icon">
@@ -150,6 +241,72 @@ export function AdminSidebar() {
 								) : null}
 							</SidebarMenuItem>
 
+							{/* Services */}
+							<SidebarMenuItem>
+								<SidebarMenuButton
+									onClick={() => setServicesOpen((open) => !open)}
+									tooltip="Services"
+								>
+									<Wrench />
+									<span>Services</span>
+
+									<ChevronRight
+										className={`ml-auto transition-transform ${
+											servicesOpen ? "rotate-90" : ""
+										}`}
+									/>
+								</SidebarMenuButton>
+
+								{servicesOpen ? (
+									<div className="ml-4 border-l pl-3">
+										{serviceItems.map((item) => (
+											<SidebarMenuItem key={item.title}>
+												<SidebarMenuButton
+													onClick={() => navigate({ to: item.url })}
+													size="sm"
+													tooltip={item.title}
+												>
+													<span>{item.title}</span>
+												</SidebarMenuButton>
+											</SidebarMenuItem>
+										))}
+
+										{/* Outbound Services */}
+										<SidebarMenuItem>
+											<SidebarMenuButton
+												onClick={() => setOutboundOpen((open) => !open)}
+												size="sm"
+												tooltip="Outbound Services"
+											>
+												<span>Outbound Services</span>
+
+												<ChevronRight
+													className={`ml-auto transition-transform ${
+														outboundOpen ? "rotate-90" : ""
+													}`}
+												/>
+											</SidebarMenuButton>
+
+											{outboundOpen ? (
+												<div className="mt-1 ml-4 rounded-md bg-muted/50 px-2 py-1">
+													{outboundItems.map((item) => (
+														<SidebarMenuItem key={item.title}>
+															<SidebarMenuButton
+																onClick={() => navigate({ to: item.url })}
+																size="sm"
+																tooltip={item.title}
+															>
+																<span>{item.title}</span>
+															</SidebarMenuButton>
+														</SidebarMenuItem>
+													))}
+												</div>
+											) : null}
+										</SidebarMenuItem>
+									</div>
+								) : null}
+							</SidebarMenuItem>
+
 							{/* Calls + Call Logs */}
 							{otherNavigation.map((item) => {
 								const Icon = item.icon;
@@ -170,6 +327,7 @@ export function AdminSidebar() {
 					</SidebarGroupContent>
 				</SidebarGroup>
 
+				{/* System */}
 				<SidebarGroup>
 					<SidebarGroupLabel>System</SidebarGroupLabel>
 
