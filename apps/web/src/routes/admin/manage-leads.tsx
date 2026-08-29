@@ -1,6 +1,16 @@
+// biome-ignore-all lint/performance/noJsxPropsBind: Table controls use local component state.
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
+import {
+	ChevronLeft,
+	ChevronRight,
+	FileText,
+	List,
+	Plus,
+	Search,
+	Upload,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { AdminTopbar } from "@/components/admin/admin-topbar";
@@ -54,150 +64,302 @@ function ManageLeadsPage() {
 
 	const visibleLists = filteredLists.slice(startIndex, startIndex + pageSize);
 
+	const totalLists = leadLists.length;
+
 	return (
-		<div className="flex min-h-svh flex-col">
+		<div className="min-h-svh bg-[#eef3f9] dark:bg-[#07111f]">
 			<AdminTopbar />
 
-			<main className="flex-1 bg-muted/30 p-4 md:p-6">
-				<section className="overflow-hidden rounded-md border bg-background">
-					{/* Header */}
-					<div className="flex flex-col gap-3 border-b px-4 py-3 md:flex-row md:items-center md:justify-between">
-						<h1 className="font-medium text-lg">Lead Lists</h1>
+			<main className="p-4 md:p-6">
+				<div className="mx-auto max-w-[1500px]">
+					{/* PAGE HEADER */}
+					<div className="mb-4 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm lg:flex-row lg:items-center lg:justify-between dark:border-slate-800 dark:bg-[#0b1728]">
+						<div>
+							<div className="flex items-center gap-2">
+								<h1 className="font-bold text-[#102b55] text-xl tracking-tight dark:text-slate-100">
+									Lead Lists
+								</h1>
+
+								<span className="rounded-full bg-blue-50 px-2.5 py-1 font-semibold text-[#0757ff] text-[10px] dark:bg-blue-950/60 dark:text-blue-400">
+									{totalLists} LISTS
+								</span>
+							</div>
+
+							<p className="mt-1 text-slate-500 text-xs dark:text-slate-400">
+								Manage your lead lists, uploads and lead data.
+							</p>
+						</div>
 
 						<div className="flex flex-wrap gap-2">
-							<Button variant="outline">Logs Of Upload Leads</Button>
-							<Button variant="outline">Master Upload</Button>
-							<Button variant="outline">Master Delete</Button>
-							<Button>Add Lead List</Button>
-						</div>
-					</div>
-
-					{/* Controls */}
-					<div className="flex flex-col gap-3 px-4 py-4 md:flex-row md:items-center md:justify-between">
-						<div className="flex items-center gap-2 text-sm">
-							<span>Show</span>
-
-							<select
-								className="h-8 rounded-md border bg-background px-2"
-								onChange={(event) => {
-									setPageSize(Number(event.target.value));
-									setCurrentPage(1);
-								}}
-								value={pageSize}
+							<Button
+								className="h-9 border-slate-200 text-slate-600 text-xs hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								variant="outline"
 							>
-								<option value={10}>10</option>
-								<option value={25}>25</option>
-								<option value={50}>50</option>
-							</select>
+								<FileText className="mr-1.5 size-3.5" />
+								Logs Of Upload Leads
+							</Button>
 
-							<span>entries</span>
-						</div>
+							<Button
+								className="h-9 border-slate-200 text-slate-600 text-xs hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								variant="outline"
+							>
+								<Upload className="mr-1.5 size-3.5" />
+								Master Upload
+							</Button>
 
-						<div className="flex items-center gap-2">
-							<span className="text-sm">Search:</span>
+							<Button
+								className="h-9 border-slate-200 text-slate-600 text-xs hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+								variant="outline"
+							>
+								Master Delete
+							</Button>
 
-							<Input
-								className="w-[220px]"
-								onChange={(event) => {
-									setSearch(event.target.value);
-									setCurrentPage(1);
-								}}
-								value={search}
-							/>
+							<Button className="h-9 bg-[#0757ff] text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500">
+								<Plus className="mr-1.5 size-4" />
+								Add Lead List
+							</Button>
 						</div>
 					</div>
 
-					{/* Table */}
-					<div className="overflow-x-auto">
-						<table className="w-full min-w-[900px] border-collapse text-sm">
-							<thead>
-								<tr className="border-y bg-muted/40">
-									<th className="px-3 py-3 text-left font-medium">S.No.</th>
-									<th className="px-3 py-3 text-left font-medium">Name</th>
-									<th className="px-3 py-3 text-left font-medium">
-										Description
-									</th>
-									<th className="px-3 py-3 text-left font-medium">Action</th>
-								</tr>
-							</thead>
+					{/* SUMMARY */}
+					<div className="mb-4 grid gap-3 sm:grid-cols-3">
+						<div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
+							<div className="flex items-center gap-3">
+								<div className="flex size-9 items-center justify-center rounded-lg bg-blue-50 text-[#0757ff] dark:bg-blue-950/60 dark:text-blue-400">
+									<List className="size-4" />
+								</div>
 
-							<tbody>
-								{visibleLists.map((item) => (
-									<tr className="border-b hover:bg-muted/20" key={item.id}>
-										<td className="px-3 py-3">{item.id}</td>
+								<div>
+									<p className="font-semibold text-[10px] text-slate-400 uppercase tracking-wider dark:text-slate-500">
+										Total Lead Lists
+									</p>
 
-										<td className="px-3 py-3">
-											<button
-												className="text-blue-600 hover:underline"
-												type="button"
-											>
-												{item.name}
-											</button>
-										</td>
+									<p className="font-bold text-[#102b55] text-lg dark:text-slate-100">
+										{totalLists}
+									</p>
+								</div>
+							</div>
+						</div>
 
-										<td className="px-3 py-3">{item.description}</td>
+						<div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
+							<div className="flex items-center gap-3">
+								<div className="flex size-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
+									<FileText className="size-4" />
+								</div>
 
-										<td className="px-3 py-3">
-											<select
-												className="h-9 min-w-[125px] rounded-md border bg-background px-2 text-sm"
-												defaultValue=""
-											>
-												<option disabled value="">
-													Select an Action
-												</option>
-												<option value="view">View</option>
-												<option value="edit">Edit</option>
-												<option value="upload">Upload</option>
-												<option value="delete">Delete</option>
-											</select>
-										</td>
+								<div>
+									<p className="font-semibold text-[10px] text-slate-400 uppercase tracking-wider dark:text-slate-500">
+										Visible Lists
+									</p>
+
+									<p className="font-bold text-[#102b55] text-lg dark:text-slate-100">
+										{filteredLists.length}
+									</p>
+								</div>
+							</div>
+						</div>
+
+						<div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
+							<div className="flex items-center gap-3">
+								<div className="flex size-9 items-center justify-center rounded-lg bg-sky-50 text-sky-600 dark:bg-sky-950/50 dark:text-sky-400">
+									<Upload className="size-4" />
+								</div>
+
+								<div>
+									<p className="font-semibold text-[10px] text-slate-400 uppercase tracking-wider dark:text-slate-500">
+										Lead Management
+									</p>
+
+									<p className="font-bold text-[#102b55] text-lg dark:text-slate-100">
+										Active
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
+
+					{/* MAIN CARD */}
+					<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
+						{/* CONTROLS */}
+						<div className="flex flex-col gap-3 border-slate-100 border-b px-5 py-3.5 md:flex-row md:items-center md:justify-between dark:border-slate-800">
+							<div className="flex items-center gap-2 text-slate-500 text-xs dark:text-slate-400">
+								<span>Show</span>
+
+								<select
+									className="h-8 rounded-lg border border-slate-200 bg-white px-2.5 text-slate-700 text-xs outline-none focus:border-[#0757ff] focus:ring-2 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-blue-500"
+									onChange={(event) => {
+										setPageSize(Number(event.target.value));
+										setCurrentPage(1);
+									}}
+									value={pageSize}
+								>
+									<option value={10}>10</option>
+									<option value={25}>25</option>
+									<option value={50}>50</option>
+								</select>
+
+								<span>entries</span>
+							</div>
+
+							<div className="relative">
+								<Search className="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+
+								<Input
+									className="h-8 w-full rounded-lg border-slate-200 bg-white pl-8 text-xs md:w-[240px] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
+									onChange={(event) => {
+										setSearch(event.target.value);
+										setCurrentPage(1);
+									}}
+									placeholder="Search lead lists..."
+									value={search}
+								/>
+							</div>
+						</div>
+
+						{/* TABLE */}
+						<div className="overflow-x-auto">
+							<table className="w-full min-w-[800px] border-collapse text-xs">
+								<thead>
+									<tr className="border-slate-100 border-b bg-slate-50/70 dark:border-slate-800 dark:bg-slate-900/70">
+										<th className="w-[90px] px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											S.No.
+										</th>
+
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Lead List
+										</th>
+
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Description
+										</th>
+
+										<th className="w-[180px] px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Action
+										</th>
 									</tr>
-								))}
+								</thead>
 
-								{visibleLists.length === 0 && (
-									<tr>
-										<td
-											className="px-4 py-10 text-center text-muted-foreground"
-											colSpan={4}
+								<tbody>
+									{visibleLists.map((item) => (
+										<tr
+											className="border-slate-100 border-b transition-colors last:border-0 hover:bg-blue-50/30 dark:border-slate-800 dark:hover:bg-blue-950/30"
+											key={item.id}
 										>
-											No lead lists found.
-										</td>
-									</tr>
-								)}
-							</tbody>
-						</table>
-					</div>
+											<td className="px-4 py-3 font-medium text-slate-400 dark:text-slate-500">
+												{item.id}
+											</td>
 
-					{/* Footer */}
-					<div className="flex flex-col gap-3 border-t px-4 py-4 text-sm md:flex-row md:items-center md:justify-between">
-						<span className="text-muted-foreground">
-							Showing {filteredLists.length === 0 ? 0 : startIndex + 1} to{" "}
-							{Math.min(startIndex + pageSize, filteredLists.length)} of{" "}
-							{filteredLists.length} entries
-						</span>
+											<td className="px-4 py-3">
+												<div className="flex items-center gap-2.5">
+													<div className="flex size-8 items-center justify-center rounded-lg bg-blue-50 text-[#0757ff] dark:bg-blue-950/60 dark:text-blue-400">
+														<List className="size-3.5" />
+													</div>
 
-						<div className="flex items-center gap-1">
-							<Button
-								disabled={safePage === 1}
-								onClick={() => setCurrentPage(1)}
-								size="sm"
-								variant="outline"
-							>
-								First
-							</Button>
+													<button
+														className="font-semibold text-[#0757ff] hover:underline dark:text-blue-400"
+														type="button"
+													>
+														{item.name}
+													</button>
+												</div>
+											</td>
 
-							<Button
-								disabled={safePage === 1}
-								onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-								size="sm"
-								variant="outline"
-							>
-								Previous
-							</Button>
+											<td className="px-4 py-3 text-slate-500 dark:text-slate-400">
+												{item.description}
+											</td>
 
-							{Array.from({ length: totalPages }, (_, index) => index + 1).map(
-								(page) => (
+											<td className="px-4 py-3">
+												<select
+													className="h-8 min-w-[125px] rounded-lg border border-slate-200 bg-white px-2 text-[11px] text-slate-600 outline-none transition hover:border-blue-200 focus:border-[#0757ff] focus:ring-2 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-blue-500 dark:hover:border-blue-800"
+													defaultValue=""
+												>
+													<option disabled value="">
+														Select Action
+													</option>
+
+													<option value="view">View</option>
+													<option value="edit">Edit</option>
+													<option value="upload">Upload</option>
+													<option value="delete">Delete</option>
+												</select>
+											</td>
+										</tr>
+									))}
+
+									{visibleLists.length === 0 && (
+										<tr>
+											<td
+												className="px-4 py-12 text-center text-slate-400 dark:text-slate-500"
+												colSpan={4}
+											>
+												<Search className="mx-auto mb-2 size-7 text-slate-300 dark:text-slate-600" />
+
+												<p className="font-medium text-slate-500 dark:text-slate-400">
+													No lead lists found
+												</p>
+
+												<p className="mt-1 text-slate-400 text-xs dark:text-slate-500">
+													Try changing your search.
+												</p>
+											</td>
+										</tr>
+									)}
+								</tbody>
+							</table>
+						</div>
+
+						{/* FOOTER */}
+						<div className="flex flex-col gap-3 border-slate-100 border-t px-5 py-3.5 text-xs sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+							<span className="text-slate-400 dark:text-slate-500">
+								Showing{" "}
+								<span className="font-semibold text-slate-600 dark:text-slate-300">
+									{filteredLists.length === 0 ? 0 : startIndex + 1}
+								</span>{" "}
+								to{" "}
+								<span className="font-semibold text-slate-600 dark:text-slate-300">
+									{Math.min(startIndex + pageSize, filteredLists.length)}
+								</span>{" "}
+								of{" "}
+								<span className="font-semibold text-slate-600 dark:text-slate-300">
+									{filteredLists.length}
+								</span>{" "}
+								entries
+							</span>
+
+							<div className="flex items-center gap-1.5">
+								<Button
+									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									disabled={safePage === 1}
+									onClick={() => setCurrentPage(1)}
+									size="sm"
+									variant="outline"
+								>
+									First
+								</Button>
+
+								<Button
+									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									disabled={safePage === 1}
+									onClick={() =>
+										setCurrentPage((page) => Math.max(1, page - 1))
+									}
+									size="sm"
+									variant="outline"
+								>
+									<ChevronLeft className="mr-1 size-3.5" />
+									Previous
+								</Button>
+
+								{Array.from(
+									{ length: totalPages },
+									(_, index) => index + 1
+								).map((page) => (
 									<Button
+										className={
+											page === safePage
+												? "h-8 min-w-8 bg-[#0757ff] px-2 text-[11px] shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+												: "h-8 min-w-8 border-slate-200 px-2 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+										}
 										key={page}
 										onClick={() => setCurrentPage(page)}
 										size="sm"
@@ -205,31 +367,34 @@ function ManageLeadsPage() {
 									>
 										{page}
 									</Button>
-								)
-							)}
+								))}
 
-							<Button
-								disabled={safePage === totalPages}
-								onClick={() =>
-									setCurrentPage((page) => Math.min(totalPages, page + 1))
-								}
-								size="sm"
-								variant="outline"
-							>
-								Next
-							</Button>
+								<Button
+									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									disabled={safePage === totalPages}
+									onClick={() =>
+										setCurrentPage((page) => Math.min(totalPages, page + 1))
+									}
+									size="sm"
+									variant="outline"
+								>
+									Next
+									<ChevronRight className="ml-1 size-3.5" />
+								</Button>
 
-							<Button
-								disabled={safePage === totalPages}
-								onClick={() => setCurrentPage(totalPages)}
-								size="sm"
-								variant="outline"
-							>
-								Last
-							</Button>
+								<Button
+									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									disabled={safePage === totalPages}
+									onClick={() => setCurrentPage(totalPages)}
+									size="sm"
+									variant="outline"
+								>
+									Last
+								</Button>
+							</div>
 						</div>
 					</div>
-				</section>
+				</div>
 			</main>
 		</div>
 	);

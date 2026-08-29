@@ -1,6 +1,5 @@
 // biome-ignore-all lint/performance/noJsxPropsBind: Navigation handlers need the selected menu item.
-
-import { useNavigate } from "@tanstack/react-router";
+import { useLocation, useNavigate } from "@tanstack/react-router";
 import {
 	Sidebar,
 	SidebarContent,
@@ -158,25 +157,51 @@ const otherNavigation = [
 
 export function AdminSidebar() {
 	const navigate = useNavigate();
+	const location = useLocation();
 
 	const [usersOpen, setUsersOpen] = useState(true);
 	const [servicesOpen, setServicesOpen] = useState(true);
 	const [outboundOpen, setOutboundOpen] = useState(true);
 
+	/*
+	 * TanStack Router se current route directly mil raha hai.
+	 * Isliye route change hone par sidebar automatically re-render hoga.
+	 */
+	const currentPath = location.pathname;
+
+	const isActive = (url: string) => {
+		// Dashboard ko sirf exact /admin route par active rakho.
+		if (url === "/admin") {
+			return currentPath === "/admin" || currentPath === "/admin/";
+		}
+
+		// Baaki pages ke liye exact route ya uske child route ko active rakho.
+		return currentPath === url || currentPath.startsWith(`${url}/`);
+	};
+
 	return (
-		<Sidebar collapsible="icon">
-			<SidebarHeader>
+		<Sidebar
+			className="border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950"
+			collapsible="none"
+		>
+			{/* BRAND */}
+			<SidebarHeader className="border-slate-100 border-b bg-white px-4 py-4 dark:border-slate-800 dark:bg-slate-950">
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<SidebarMenuButton size="lg">
-							<div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground">
-								<span className="font-bold">W</span>
+						<SidebarMenuButton
+							className="h-auto cursor-default p-0 hover:bg-transparent dark:hover:bg-transparent"
+							size="lg"
+						>
+							<div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#0757ff] text-white shadow-blue-500/20 shadow-sm dark:bg-blue-600">
+								<span className="font-bold text-lg">W</span>
 							</div>
 
-							<div className="grid flex-1 text-left text-sm leading-tight">
-								<span className="truncate font-semibold">WORKHOLO</span>
+							<div className="grid flex-1 text-left leading-tight">
+								<span className="truncate font-bold text-[#102b55] text-sm tracking-tight dark:text-white">
+									WORKHOLO
+								</span>
 
-								<span className="truncate text-muted-foreground text-xs">
+								<span className="truncate font-medium text-[10px] text-slate-400 uppercase tracking-wider dark:text-slate-500">
 									Admin Panel
 								</span>
 							</div>
@@ -185,140 +210,223 @@ export function AdminSidebar() {
 				</SidebarMenu>
 			</SidebarHeader>
 
-			<SidebarContent>
-				<SidebarGroup>
-					<SidebarGroupLabel>Management</SidebarGroupLabel>
+			<SidebarContent className="bg-white px-3 py-3 dark:bg-slate-950">
+				{/* MANAGEMENT */}
+				<SidebarGroup className="p-0">
+					<SidebarGroupLabel className="mb-1 px-3 font-bold text-[10px] text-slate-400 uppercase tracking-wider dark:text-slate-500">
+						Management
+					</SidebarGroupLabel>
 
 					<SidebarGroupContent>
-						<SidebarMenu>
-							{/* Dashboard + Live Calls */}
+						<SidebarMenu className="gap-1">
+							{/* DASHBOARD + LIVE CALLS */}
 							{navigation.map((item) => {
 								const Icon = item.icon;
+								const active = isActive(item.url);
 
 								return (
 									<SidebarMenuItem key={item.title}>
 										<SidebarMenuButton
-											onClick={() => navigate({ to: item.url })}
+											className={`h-9 rounded-lg px-3 transition-all ${
+												active
+													? "bg-blue-50 font-semibold text-[#0757ff] hover:bg-blue-50 hover:text-[#0757ff] dark:bg-blue-950/60 dark:text-blue-400 dark:hover:bg-blue-950/60 dark:hover:text-blue-400"
+													: "text-slate-600 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-blue-400"
+											}`}
+											onClick={() =>
+												navigate({
+													to: item.url,
+												})
+											}
 											tooltip={item.title}
 										>
-											<Icon />
-											<span>{item.title}</span>
+											<Icon
+												className={`size-4 ${
+													active
+														? "text-[#0757ff] dark:text-blue-400"
+														: "text-slate-400 dark:text-slate-500"
+												}`}
+											/>
+
+											<span className="text-xs">{item.title}</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 								);
 							})}
 
-							{/* Users */}
+							{/* USERS */}
 							<SidebarMenuItem>
 								<SidebarMenuButton
+									className="h-9 rounded-lg px-3 text-slate-600 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-blue-400"
 									onClick={() => setUsersOpen((open) => !open)}
 									tooltip="Users"
 								>
-									<Users />
-									<span>Users</span>
+									<Users className="size-4 text-slate-400 dark:text-slate-500" />
+
+									<span className="text-xs">Users</span>
 
 									<ChevronRight
-										className={`ml-auto transition-transform ${
+										className={`ml-auto size-4 text-slate-400 transition-transform dark:text-slate-500 ${
 											usersOpen ? "rotate-90" : ""
 										}`}
 									/>
 								</SidebarMenuButton>
 
-								{usersOpen ? (
-									<div className="ml-4 border-l pl-3">
-										{userItems.map((item) => (
-											<SidebarMenuItem key={item.title}>
-												<SidebarMenuButton
-													onClick={() => navigate({ to: item.url })}
-													size="sm"
-													tooltip={item.title}
-												>
-													<span>{item.title}</span>
-												</SidebarMenuButton>
-											</SidebarMenuItem>
-										))}
+								{!!usersOpen && (
+									<div className="mt-1 ml-4 border-slate-200 border-l pl-2 dark:border-slate-800">
+										{userItems.map((item) => {
+											const active = isActive(item.url);
+
+											return (
+												<SidebarMenuItem key={item.title}>
+													<SidebarMenuButton
+														className={`h-8 rounded-md px-3 ${
+															active
+																? "bg-blue-50 font-semibold text-[#0757ff] dark:bg-blue-950/60 dark:text-blue-400"
+																: "text-slate-500 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
+														}`}
+														onClick={() =>
+															navigate({
+																to: item.url,
+															})
+														}
+														size="sm"
+														tooltip={item.title}
+													>
+														<span className="text-[11px]">{item.title}</span>
+													</SidebarMenuButton>
+												</SidebarMenuItem>
+											);
+										})}
 									</div>
-								) : null}
+								)}
 							</SidebarMenuItem>
 
-							{/* Services */}
+							{/* SERVICES */}
 							<SidebarMenuItem>
 								<SidebarMenuButton
+									className="h-9 rounded-lg px-3 text-slate-600 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-blue-400"
 									onClick={() => setServicesOpen((open) => !open)}
 									tooltip="Services"
 								>
-									<Wrench />
-									<span>Services</span>
+									<Wrench className="size-4 text-slate-400 dark:text-slate-500" />
+
+									<span className="text-xs">Services</span>
 
 									<ChevronRight
-										className={`ml-auto transition-transform ${
+										className={`ml-auto size-4 text-slate-400 transition-transform dark:text-slate-500 ${
 											servicesOpen ? "rotate-90" : ""
 										}`}
 									/>
 								</SidebarMenuButton>
 
-								{servicesOpen ? (
-									<div className="ml-4 border-l pl-3">
-										{serviceItems.map((item) => (
-											<SidebarMenuItem key={item.title}>
-												<SidebarMenuButton
-													onClick={() => navigate({ to: item.url })}
-													size="sm"
-													tooltip={item.title}
-												>
-													<span>{item.title}</span>
-												</SidebarMenuButton>
-											</SidebarMenuItem>
-										))}
+								{!!servicesOpen && (
+									<div className="mt-1 ml-4 border-slate-200 border-l pl-2 dark:border-slate-800">
+										{serviceItems.map((item) => {
+											const active = isActive(item.url);
 
-										{/* Outbound Services */}
-										<SidebarMenuItem>
+											return (
+												<SidebarMenuItem key={item.title}>
+													<SidebarMenuButton
+														className={`h-8 rounded-md px-3 ${
+															active
+																? "bg-blue-50 font-semibold text-[#0757ff] dark:bg-blue-950/60 dark:text-blue-400"
+																: "text-slate-500 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
+														}`}
+														onClick={() =>
+															navigate({
+																to: item.url,
+															})
+														}
+														size="sm"
+														tooltip={item.title}
+													>
+														<span className="text-[11px]">{item.title}</span>
+													</SidebarMenuButton>
+												</SidebarMenuItem>
+											);
+										})}
+
+										{/* OUTBOUND SERVICES */}
+										<SidebarMenuItem className="mt-1">
 											<SidebarMenuButton
+												className="h-8 rounded-md px-3 text-slate-500 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
 												onClick={() => setOutboundOpen((open) => !open)}
 												size="sm"
 												tooltip="Outbound Services"
 											>
-												<span>Outbound Services</span>
+												<span className="text-[11px]">Outbound Services</span>
 
 												<ChevronRight
-													className={`ml-auto transition-transform ${
+													className={`ml-auto size-3.5 text-slate-400 transition-transform dark:text-slate-500 ${
 														outboundOpen ? "rotate-90" : ""
 													}`}
 												/>
 											</SidebarMenuButton>
 
-											{outboundOpen ? (
-												<div className="mt-1 ml-4 rounded-md bg-muted/50 px-2 py-1">
-													{outboundItems.map((item) => (
-														<SidebarMenuItem key={item.title}>
-															<SidebarMenuButton
-																onClick={() => navigate({ to: item.url })}
-																size="sm"
-																tooltip={item.title}
-															>
-																<span>{item.title}</span>
-															</SidebarMenuButton>
-														</SidebarMenuItem>
-													))}
+											{!!outboundOpen && (
+												<div className="mt-1 ml-3 border-slate-200 border-l pl-2 dark:border-slate-800">
+													{outboundItems.map((item) => {
+														const active = isActive(item.url);
+
+														return (
+															<SidebarMenuItem key={item.title}>
+																<SidebarMenuButton
+																	className={`h-7 rounded-md px-2 ${
+																		active
+																			? "bg-blue-50 font-semibold text-[#0757ff] dark:bg-blue-950/60 dark:text-blue-400"
+																			: "text-slate-500 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
+																	}`}
+																	onClick={() =>
+																		navigate({
+																			to: item.url,
+																		})
+																	}
+																	size="sm"
+																	tooltip={item.title}
+																>
+																	<span className="text-[10px]">
+																		{item.title}
+																	</span>
+																</SidebarMenuButton>
+															</SidebarMenuItem>
+														);
+													})}
 												</div>
-											) : null}
+											)}
 										</SidebarMenuItem>
 									</div>
-								) : null}
+								)}
 							</SidebarMenuItem>
 
-							{/* Calls + Call Logs */}
+							{/* CALLS + CALL LOGS */}
 							{otherNavigation.map((item) => {
 								const Icon = item.icon;
+								const active = isActive(item.url);
 
 								return (
 									<SidebarMenuItem key={item.title}>
 										<SidebarMenuButton
-											onClick={() => navigate({ to: item.url })}
+											className={`h-9 rounded-lg px-3 ${
+												active
+													? "bg-blue-50 font-semibold text-[#0757ff] dark:bg-blue-950/60 dark:text-blue-400"
+													: "text-slate-600 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-blue-400"
+											}`}
+											onClick={() =>
+												navigate({
+													to: item.url,
+												})
+											}
 											tooltip={item.title}
 										>
-											<Icon />
-											<span>{item.title}</span>
+											<Icon
+												className={`size-4 ${
+													active
+														? "text-[#0757ff] dark:text-blue-400"
+														: "text-slate-400 dark:text-slate-500"
+												}`}
+											/>
+
+											<span className="text-xs">{item.title}</span>
 										</SidebarMenuButton>
 									</SidebarMenuItem>
 								);
@@ -327,19 +435,31 @@ export function AdminSidebar() {
 					</SidebarGroupContent>
 				</SidebarGroup>
 
-				{/* System */}
-				<SidebarGroup>
-					<SidebarGroupLabel>System</SidebarGroupLabel>
+				{/* SYSTEM */}
+				<SidebarGroup className="mt-5 border-slate-100 border-t pt-4 dark:border-slate-800">
+					<SidebarGroupLabel className="mb-1 px-3 font-bold text-[10px] text-slate-400 uppercase tracking-wider dark:text-slate-500">
+						System
+					</SidebarGroupLabel>
 
 					<SidebarGroupContent>
 						<SidebarMenu>
 							<SidebarMenuItem>
 								<SidebarMenuButton
-									onClick={() => navigate({ to: "/admin/settings" })}
+									className={`h-9 rounded-lg px-3 ${
+										isActive("/admin/settings")
+											? "bg-blue-50 font-semibold text-[#0757ff] dark:bg-blue-950/60 dark:text-blue-400"
+											: "text-slate-600 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-blue-400"
+									}`}
+									onClick={() =>
+										navigate({
+											to: "/admin/settings",
+										})
+									}
 									tooltip="Settings"
 								>
-									<Settings />
-									<span>Settings</span>
+									<Settings className="size-4 text-slate-400 dark:text-slate-500" />
+
+									<span className="text-xs">Settings</span>
 								</SidebarMenuButton>
 							</SidebarMenuItem>
 						</SidebarMenu>
@@ -347,12 +467,17 @@ export function AdminSidebar() {
 				</SidebarGroup>
 			</SidebarContent>
 
-			<SidebarFooter>
+			{/* FOOTER */}
+			<SidebarFooter className="border-slate-100 border-t bg-white px-3 py-3 dark:border-slate-800 dark:bg-slate-950">
 				<SidebarMenu>
 					<SidebarMenuItem>
-						<SidebarMenuButton tooltip="Logout">
-							<LogOut />
-							<span>Logout</span>
+						<SidebarMenuButton
+							className="h-9 rounded-lg px-3 text-slate-500 hover:bg-red-50 hover:text-red-600 dark:text-slate-400 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+							tooltip="Logout"
+						>
+							<LogOut className="size-4" />
+
+							<span className="text-xs">Logout</span>
 						</SidebarMenuButton>
 					</SidebarMenuItem>
 				</SidebarMenu>

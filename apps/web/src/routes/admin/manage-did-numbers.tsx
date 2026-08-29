@@ -1,8 +1,9 @@
+// biome-ignore-all lint/performance/noJsxPropsBind: Table controls use local component state.
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
+import { CheckCircle2, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
-
 import { AdminTopbar } from "@/components/admin/admin-topbar";
 
 export const Route = createFileRoute("/admin/manage-did-numbers")({
@@ -130,6 +131,7 @@ function ManageDidNumbersPage() {
 
 	const [statusFilter, setStatusFilter] = useState("All");
 	const [typeFilter, setTypeFilter] = useState("All Types");
+
 	const [search, setSearch] = useState("");
 	const [appliedSearch, setAppliedSearch] = useState("");
 
@@ -165,214 +167,312 @@ function ManageDidNumbersPage() {
 		startIndex + pageSize
 	);
 
-	const handlePageSizeChange = (value: string) => {
-		const newSize = Number(value);
-
-		setPageSize(newSize);
+	function handlePageSizeChange(value: string) {
+		setPageSize(Number(value));
 		setCurrentPage(1);
-	};
+	}
 
-	const handleStatusChange = (value: string) => {
+	function handleStatusChange(value: string) {
 		setStatusFilter(value);
 		setCurrentPage(1);
-	};
+	}
 
-	const handleTypeChange = (value: string) => {
+	function handleTypeChange(value: string) {
 		setTypeFilter(value);
 		setCurrentPage(1);
-	};
+	}
 
-	const handleSearch = () => {
+	function handleSearch() {
 		setAppliedSearch(search);
 		setCurrentPage(1);
-	};
+	}
 
-	const goToPreviousPage = () => {
+	function goToPreviousPage() {
 		setCurrentPage((page) => Math.max(1, page - 1));
-	};
+	}
 
-	const goToNextPage = () => {
+	function goToNextPage() {
 		setCurrentPage((page) => Math.min(totalPages, page + 1));
-	};
+	}
 
 	return (
-		<div className="flex min-h-svh flex-col">
+		<div className="min-h-svh bg-[#eef3f9] dark:bg-[#07111f]">
 			<AdminTopbar />
 
-			<main className="flex-1 bg-muted/30 p-4 md:p-6">
-				<section className="overflow-hidden rounded-md border bg-background shadow-sm">
-					{/* Page Header */}
-					<div className="flex flex-col gap-4 border-b px-6 py-4 md:flex-row md:items-center md:justify-between">
-						<h1 className="font-semibold text-xl">My Numbers</h1>
+			<main className="p-4 md:p-6">
+				<div className="mx-auto max-w-7xl">
+					{/* PAGE HEADER */}
+					<div className="mb-5 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm md:flex-row md:items-center md:justify-between dark:border-slate-800 dark:bg-[#0b1728]">
+						<div>
+							<div className="flex items-center gap-2">
+								<h1 className="font-bold text-[#102b55] text-xl tracking-tight dark:text-slate-100">
+									My Numbers
+								</h1>
+
+								<span className="rounded-full bg-blue-50 px-2.5 py-1 font-semibold text-[#0757ff] text-[10px] dark:bg-blue-950/60 dark:text-blue-400">
+									{filteredNumbers.length} NUMBERS
+								</span>
+							</div>
+
+							<p className="mt-1 text-slate-500 text-xs dark:text-slate-400">
+								Manage your DID numbers and calling assignments.
+							</p>
+						</div>
 
 						<div className="flex flex-wrap gap-2">
-							<Button variant="outline">Export Numbers</Button>
-
-							<Button variant="outline">Block a Number</Button>
-
-							<Button variant="outline">All Blocked Numbers</Button>
-						</div>
-					</div>
-
-					{/* Filters */}
-					<div className="flex flex-col gap-4 border-b px-6 py-4 lg:flex-row lg:items-center lg:justify-between">
-						<div className="flex items-center gap-2 text-sm">
-							<span className="text-muted-foreground">Show</span>
-
-							<select
-								className="h-9 rounded-md border bg-background px-3 text-sm outline-none"
-								onChange={(event) => handlePageSizeChange(event.target.value)}
-								value={pageSize}
-							>
-								<option value={10}>10</option>
-								<option value={25}>25</option>
-								<option value={50}>50</option>
-							</select>
-
-							<span className="text-muted-foreground">entries</span>
-						</div>
-
-						<div className="flex flex-col gap-2 sm:flex-row sm:items-center">
-							<select
-								className="h-9 min-w-[140px] rounded-md border bg-background px-3 text-sm outline-none"
-								onChange={(event) => handleStatusChange(event.target.value)}
-								value={statusFilter}
-							>
-								<option value="All">All</option>
-								<option value="Enabled">Enabled</option>
-								<option value="Disabled">Disabled</option>
-							</select>
-
-							<select
-								className="h-9 min-w-[140px] rounded-md border bg-background px-3 text-sm outline-none"
-								onChange={(event) => handleTypeChange(event.target.value)}
-								value={typeFilter}
-							>
-								<option value="All Types">All Types</option>
-								<option value="DID">DID</option>
-								<option value="Toll Free">Toll Free</option>
-								<option value="Virtual">Virtual</option>
-							</select>
-
-							<div className="flex gap-2">
-								<Input
-									className="w-full sm:w-[220px]"
-									onChange={(event) => setSearch(event.target.value)}
-									onKeyDown={(event) => {
-										if (event.key === "Enter") {
-											handleSearch();
-										}
-									}}
-									placeholder="Search"
-									value={search}
-								/>
-
-								<Button onClick={handleSearch}>Search</Button>
-							</div>
-						</div>
-					</div>
-
-					{/* Table */}
-					<div className="overflow-x-auto">
-						<table className="w-full min-w-[1050px] text-sm">
-							<thead>
-								<tr className="border-b bg-muted/40">
-									<th className="px-4 py-3 text-left font-medium">Name</th>
-
-									<th className="px-4 py-3 text-left font-medium">
-										Description
-									</th>
-
-									<th className="px-4 py-3 text-left font-medium">Number</th>
-
-									<th className="px-4 py-3 text-left font-medium">Status</th>
-
-									<th className="px-4 py-3 text-left font-medium">
-										Assigned to
-									</th>
-
-									<th className="px-4 py-3 text-left font-medium">Action</th>
-								</tr>
-							</thead>
-
-							<tbody>
-								{visibleNumbers.length > 0 ? (
-									visibleNumbers.map((item) => (
-										<tr
-											className="border-b last:border-0 hover:bg-muted/20"
-											key={item.id}
-										>
-											<td className="px-4 py-3">{item.name || "—"}</td>
-
-											<td className="px-4 py-3">{item.description || "—"}</td>
-
-											<td className="px-4 py-3 font-medium">{item.number}</td>
-
-											<td className="px-4 py-3">
-												<span
-													className={
-														item.status === "Enabled"
-															? "font-medium text-green-600"
-															: "font-medium text-red-600"
-													}
-												>
-													{item.status}
-												</span>
-											</td>
-
-											<td className="px-4 py-3">{item.assignedTo || ""}</td>
-
-											<td className="px-4 py-3">
-												<select
-													className="h-9 rounded-md border bg-background px-3 text-sm outline-none"
-													defaultValue=""
-												>
-													<option disabled value="">
-														Select an Action
-													</option>
-													<option value="view">View</option>
-													<option value="edit">Edit</option>
-													<option value="assign">Assign</option>
-													<option value="block">Block</option>
-												</select>
-											</td>
-										</tr>
-									))
-								) : (
-									<tr>
-										<td
-											className="px-4 py-10 text-center text-muted-foreground"
-											colSpan={6}
-										>
-											No numbers found.
-										</td>
-									</tr>
-								)}
-							</tbody>
-						</table>
-					</div>
-
-					{/* Footer / Pagination */}
-					<div className="flex flex-col gap-4 border-t px-6 py-4 text-sm md:flex-row md:items-center md:justify-between">
-						<p className="text-muted-foreground">
-							Showing {filteredNumbers.length === 0 ? 0 : startIndex + 1} to{" "}
-							{Math.min(startIndex + pageSize, filteredNumbers.length)} of{" "}
-							{filteredNumbers.length} entries
-						</p>
-
-						<div className="flex items-center gap-1">
 							<Button
-								disabled={safeCurrentPage === 1}
-								onClick={goToPreviousPage}
-								size="sm"
+								className="border-slate-200 text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 								variant="outline"
 							>
-								Previous
+								Export Numbers
 							</Button>
 
-							{Array.from({ length: totalPages }, (_, index) => index + 1).map(
-								(page) => (
+							<Button
+								className="border-slate-200 text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								variant="outline"
+							>
+								Block a Number
+							</Button>
+
+							<Button
+								className="border-slate-200 text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								variant="outline"
+							>
+								All Blocked Numbers
+							</Button>
+						</div>
+					</div>
+
+					{/* MAIN CARD */}
+					<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
+						{/* FILTER BAR */}
+						<div className="flex flex-col gap-4 border-slate-100 border-b px-5 py-4 lg:flex-row lg:items-center lg:justify-between dark:border-slate-800">
+							<div className="flex items-center gap-2 text-xs">
+								<span className="font-medium text-slate-500 dark:text-slate-400">
+									Show
+								</span>
+
+								<select
+									className="h-9 rounded-lg border border-slate-200 bg-white px-3 text-slate-700 text-xs outline-none transition focus:border-[#0757ff] focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-blue-500"
+									onChange={(event) => handlePageSizeChange(event.target.value)}
+									value={pageSize}
+								>
+									<option value={10}>10</option>
+									<option value={25}>25</option>
+									<option value={50}>50</option>
+								</select>
+
+								<span className="text-slate-500 dark:text-slate-400">
+									entries
+								</span>
+							</div>
+
+							<div className="flex flex-col gap-2 sm:flex-row">
+								<select
+									className="h-9 min-w-[130px] rounded-lg border border-slate-200 bg-white px-3 text-slate-700 text-xs outline-none transition focus:border-[#0757ff] focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-blue-500"
+									onChange={(event) => handleStatusChange(event.target.value)}
+									value={statusFilter}
+								>
+									<option value="All">All Status</option>
+									<option value="Enabled">Enabled</option>
+									<option value="Disabled">Disabled</option>
+								</select>
+
+								<select
+									className="h-9 min-w-[130px] rounded-lg border border-slate-200 bg-white px-3 text-slate-700 text-xs outline-none transition focus:border-[#0757ff] focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-blue-500"
+									onChange={(event) => handleTypeChange(event.target.value)}
+									value={typeFilter}
+								>
+									<option value="All Types">All Types</option>
+									<option value="DID">DID</option>
+									<option value="Toll Free">Toll Free</option>
+									<option value="Virtual">Virtual</option>
+								</select>
+
+								<div className="flex gap-2">
+									<div className="relative">
+										<Search className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+
+										<Input
+											className="h-9 w-full rounded-lg border-slate-200 bg-white pl-9 text-xs sm:w-[220px] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
+											onChange={(event) => setSearch(event.target.value)}
+											onKeyDown={(event) => {
+												if (event.key === "Enter") {
+													handleSearch();
+												}
+											}}
+											placeholder="Search numbers..."
+											value={search}
+										/>
+									</div>
+
 									<Button
+										className="h-9 rounded-lg bg-[#0757ff] px-4 text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+										onClick={handleSearch}
+									>
+										<Search className="mr-1.5 size-3.5" />
+										Search
+									</Button>
+								</div>
+							</div>
+						</div>
+
+						{/* TABLE */}
+						<div className="overflow-x-auto">
+							<table className="w-full min-w-[950px] text-xs">
+								<thead>
+									<tr className="border-slate-100 border-b bg-slate-50/70 dark:border-slate-800 dark:bg-slate-900/70">
+										<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Name
+										</th>
+
+										<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Description
+										</th>
+
+										<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Number
+										</th>
+
+										<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Status
+										</th>
+
+										<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Assigned To
+										</th>
+
+										<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Action
+										</th>
+									</tr>
+								</thead>
+
+								<tbody>
+									{visibleNumbers.length > 0 ? (
+										visibleNumbers.map((item) => (
+											<tr
+												className="border-slate-100 border-b transition-colors last:border-0 hover:bg-blue-50/30 dark:border-slate-800 dark:hover:bg-blue-950/30"
+												key={item.id}
+											>
+												<td className="px-5 py-3.5">
+													<span className="font-medium text-[#263b5b] dark:text-slate-200">
+														{item.name || "—"}
+													</span>
+												</td>
+
+												<td className="px-5 py-3.5 text-slate-500 dark:text-slate-400">
+													{item.description || "—"}
+												</td>
+
+												<td className="px-5 py-3.5">
+													<span className="font-semibold text-[#102b55] dark:text-slate-200">
+														{item.number}
+													</span>
+												</td>
+
+												<td className="px-5 py-3.5">
+													<span
+														className={[
+															"inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-semibold text-[10px]",
+															item.status === "Enabled"
+																? "bg-emerald-50 text-emerald-600 dark:bg-emerald-950/50 dark:text-emerald-400"
+																: "bg-red-50 text-red-600 dark:bg-red-950/50 dark:text-red-400",
+														].join(" ")}
+													>
+														<CheckCircle2 className="size-3" />
+														{item.status}
+													</span>
+												</td>
+
+												<td className="px-5 py-3.5 text-slate-500 dark:text-slate-400">
+													{item.assignedTo || "Not assigned"}
+												</td>
+
+												<td className="px-5 py-3.5">
+													<select
+														className="h-8 rounded-lg border border-slate-200 bg-white px-2.5 text-[11px] text-slate-600 outline-none transition hover:border-blue-200 focus:border-[#0757ff] focus:ring-2 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-blue-500 dark:hover:border-blue-800"
+														defaultValue=""
+													>
+														<option disabled value="">
+															Select Action
+														</option>
+
+														<option value="view">View</option>
+
+														<option value="edit">Edit</option>
+
+														<option value="assign">Assign</option>
+
+														<option value="block">Block</option>
+													</select>
+												</td>
+											</tr>
+										))
+									) : (
+										<tr>
+											<td
+												className="px-5 py-12 text-center text-slate-400 dark:text-slate-500"
+												colSpan={6}
+											>
+												<div className="flex flex-col items-center">
+													<Search className="mb-2 size-7 text-slate-300 dark:text-slate-600" />
+
+													<p className="font-medium text-slate-500 dark:text-slate-400">
+														No numbers found
+													</p>
+
+													<p className="mt-1 text-[11px]">
+														Try changing your search or filters.
+													</p>
+												</div>
+											</td>
+										</tr>
+									)}
+								</tbody>
+							</table>
+						</div>
+
+						{/* FOOTER */}
+						<div className="flex flex-col gap-3 border-slate-100 border-t px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+							<p className="text-slate-400 text-xs dark:text-slate-500">
+								Showing{" "}
+								<span className="font-semibold text-slate-600 dark:text-slate-300">
+									{filteredNumbers.length === 0 ? 0 : startIndex + 1}
+								</span>{" "}
+								to{" "}
+								<span className="font-semibold text-slate-600 dark:text-slate-300">
+									{Math.min(startIndex + pageSize, filteredNumbers.length)}
+								</span>{" "}
+								of{" "}
+								<span className="font-semibold text-slate-600 dark:text-slate-300">
+									{filteredNumbers.length}
+								</span>{" "}
+								entries
+							</p>
+
+							<div className="flex items-center gap-1.5">
+								<Button
+									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									disabled={safeCurrentPage === 1}
+									onClick={goToPreviousPage}
+									size="sm"
+									variant="outline"
+								>
+									<ChevronLeft className="mr-1 size-3.5" />
+									Previous
+								</Button>
+
+								{Array.from(
+									{ length: totalPages },
+									(_, index) => index + 1
+								).map((page) => (
+									<Button
+										className={
+											page === safeCurrentPage
+												? "h-8 min-w-8 bg-[#0757ff] px-2 text-[11px] shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+												: "h-8 min-w-8 border-slate-200 px-2 text-[11px] text-slate-500 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+										}
 										key={page}
 										onClick={() => setCurrentPage(page)}
 										size="sm"
@@ -380,20 +480,28 @@ function ManageDidNumbersPage() {
 									>
 										{page}
 									</Button>
-								)
-							)}
+								))}
 
-							<Button
-								disabled={safeCurrentPage === totalPages}
-								onClick={goToNextPage}
-								size="sm"
-								variant="outline"
-							>
-								Next
-							</Button>
+								<Button
+									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									disabled={safeCurrentPage === totalPages}
+									onClick={goToNextPage}
+									size="sm"
+									variant="outline"
+								>
+									Next
+									<ChevronRight className="ml-1 size-3.5" />
+								</Button>
+							</div>
 						</div>
 					</div>
-				</section>
+
+					{/* SECURITY FOOTER */}
+					<div className="mt-3 flex items-center justify-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
+						<CheckCircle2 className="size-3.5 text-emerald-500" />
+						DID numbers are securely managed
+					</div>
+				</div>
 			</main>
 		</div>
 	);

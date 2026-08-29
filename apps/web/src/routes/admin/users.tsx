@@ -8,8 +8,17 @@ import {
 	CardTitle,
 } from "@workholo/ui/components/card";
 import { Input } from "@workholo/ui/components/input";
-import { MoreHorizontal, Plus, Search, UserRound } from "lucide-react";
+import {
+	CheckCircle2,
+	MoreHorizontal,
+	Plus,
+	Search,
+	UserRound,
+	UsersRound,
+} from "lucide-react";
 import { useState } from "react";
+
+import { AdminTopbar } from "@/components/admin/admin-topbar";
 
 export const Route = createFileRoute("/admin/users")({
 	component: RouteComponent,
@@ -57,159 +66,327 @@ const users: User[] = [
 
 function RouteComponent() {
 	const navigate = useNavigate();
-
 	const [search, setSearch] = useState("");
 
 	const filteredUsers = users.filter((user) => {
-		const value = search.toLowerCase();
+		const value = search.trim().toLowerCase();
 
 		return (
 			user.name.toLowerCase().includes(value) ||
 			user.email.toLowerCase().includes(value) ||
 			user.phone.toLowerCase().includes(value) ||
-			user.team.toLowerCase().includes(value)
+			user.team.toLowerCase().includes(value) ||
+			user.role.toLowerCase().includes(value)
 		);
 	});
 
-	return (
-		<div className="flex min-h-svh flex-col">
-			{/* Page Header */}
-			<div className="border-b bg-background px-6 py-4">
-				<div className="flex items-center justify-between gap-4">
-					<div>
-						<h1 className="font-semibold text-xl">Users</h1>
+	const activeUsers = users.filter((user) => user.status === "Active").length;
 
-						<p className="text-muted-foreground text-sm">
-							Manage platform users and their access.
-						</p>
+	const agents = users.filter((user) => user.role === "Agent").length;
+
+	return (
+		<div className="min-h-screen w-full bg-[#eef3f9] text-[#102b55] transition-colors dark:bg-[#0b1220] dark:text-slate-100">
+			<AdminTopbar />
+
+			<main className="p-4 md:p-6">
+				<div className="mx-auto max-w-[1500px]">
+					{/* PAGE HEADER */}
+					<div className="mb-4 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm transition-colors lg:flex-row lg:items-center lg:justify-between dark:border-slate-800 dark:bg-[#111827]">
+						<div>
+							<div className="flex items-center gap-2">
+								<h1 className="font-bold text-[#102b55] text-xl tracking-tight dark:text-white">
+									Users
+								</h1>
+
+								<span className="rounded-full bg-blue-50 px-2.5 py-1 font-semibold text-[#0757ff] text-[10px] dark:bg-blue-500/10 dark:text-blue-400">
+									{users.length} USERS
+								</span>
+							</div>
+
+							<p className="mt-1 text-slate-500 text-xs dark:text-slate-400">
+								Manage platform users and their access.
+							</p>
+						</div>
+
+						<Button
+							className="h-9 w-fit bg-[#0757ff] text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0]"
+							onClick={() =>
+								navigate({
+									to: "/admin/add-new-user",
+								})
+							}
+							type="button"
+						>
+							<Plus className="mr-1.5 size-4" />
+							Add User
+						</Button>
 					</div>
 
-					<Button
-						onClick={() => navigate({ to: "/admin/add-new-user" })}
-						type="button"
-					>
-						<Plus className="mr-2 size-4" />
-						Add User
-					</Button>
-				</div>
-			</div>
+					{/* SUMMARY CARDS */}
+					<div className="mb-4 grid gap-3 sm:grid-cols-3">
+						{/* TOTAL USERS */}
+						<div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition-colors dark:border-slate-800 dark:bg-[#111827]">
+							<div className="flex items-center gap-3">
+								<div className="flex size-9 items-center justify-center rounded-lg bg-blue-50 text-[#0757ff] dark:bg-blue-500/10 dark:text-blue-400">
+									<UsersRound className="size-4" />
+								</div>
 
-			{/* Content */}
-			<main className="flex-1 bg-muted/30 p-6">
-				<Card>
-					<CardHeader>
-						<div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
-							<div>
-								<CardTitle>All Users</CardTitle>
+								<div>
+									<p className="font-semibold text-[10px] text-slate-400 uppercase tracking-wider dark:text-slate-500">
+										Total Users
+									</p>
 
-								<p className="mt-1 text-muted-foreground text-sm">
-									{filteredUsers.length} user
-									{filteredUsers.length === 1 ? "" : "s"} found
-								</p>
-							</div>
-
-							{/* Search */}
-							<div className="relative w-full md:w-72">
-								<Search className="absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
-
-								<Input
-									className="pl-9"
-									onChange={(event) => setSearch(event.target.value)}
-									placeholder="Search users..."
-									value={search}
-								/>
+									<p className="font-bold text-[#102b55] text-lg dark:text-white">
+										{users.length}
+									</p>
+								</div>
 							</div>
 						</div>
-					</CardHeader>
 
-					<CardContent>
-						<div className="overflow-x-auto rounded-lg border">
-							<table className="w-full min-w-[850px] text-sm">
-								<thead>
-									<tr className="border-b bg-muted/50">
-										<th className="px-4 py-3 text-left font-medium">User</th>
+						{/* ACTIVE USERS */}
+						<div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition-colors dark:border-slate-800 dark:bg-[#111827]">
+							<div className="flex items-center gap-3">
+								<div className="flex size-9 items-center justify-center rounded-lg bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400">
+									<CheckCircle2 className="size-4" />
+								</div>
 
-										<th className="px-4 py-3 text-left font-medium">Phone</th>
+								<div>
+									<p className="font-semibold text-[10px] text-slate-400 uppercase tracking-wider dark:text-slate-500">
+										Active Users
+									</p>
 
-										<th className="px-4 py-3 text-left font-medium">Email</th>
+									<p className="font-bold text-[#102b55] text-lg dark:text-white">
+										{activeUsers}
+									</p>
+								</div>
+							</div>
+						</div>
 
-										<th className="px-4 py-3 text-left font-medium">Role</th>
+						{/* AGENTS */}
+						<div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm transition-colors dark:border-slate-800 dark:bg-[#111827]">
+							<div className="flex items-center gap-3">
+								<div className="flex size-9 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 dark:bg-indigo-500/10 dark:text-indigo-400">
+									<UserRound className="size-4" />
+								</div>
 
-										<th className="px-4 py-3 text-left font-medium">Team</th>
+								<div>
+									<p className="font-semibold text-[10px] text-slate-400 uppercase tracking-wider dark:text-slate-500">
+										Agents
+									</p>
 
-										<th className="px-4 py-3 text-left font-medium">Status</th>
+									<p className="font-bold text-[#102b55] text-lg dark:text-white">
+										{agents}
+									</p>
+								</div>
+							</div>
+						</div>
+					</div>
 
-										<th className="w-12 px-4 py-3" />
-									</tr>
-								</thead>
+					{/* USERS CARD */}
+					<Card className="overflow-hidden rounded-2xl border-slate-200 bg-white shadow-sm transition-colors dark:border-slate-800 dark:bg-[#111827]">
+						<CardHeader className="border-slate-100 border-b px-5 py-4 dark:border-slate-800">
+							<div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+								<div>
+									<CardTitle className="font-bold text-[#102b55] text-base dark:text-white">
+										All Users
+									</CardTitle>
 
-								<tbody>
-									{filteredUsers.length === 0 ? (
-										<tr>
-											<td className="px-4 py-12 text-center" colSpan={7}>
-												<div className="flex flex-col items-center gap-2">
-													<UserRound className="size-8 text-muted-foreground" />
+									<p className="mt-1 text-slate-400 text-xs dark:text-slate-500">
+										{filteredUsers.length} user
+										{filteredUsers.length === 1 ? "" : "s"} found
+									</p>
+								</div>
 
-													<p className="font-medium">No users found</p>
+								{/* SEARCH */}
+								<div className="relative w-full md:w-[260px]">
+									<Search className="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
 
-													<p className="text-muted-foreground text-sm">
-														Try changing your search.
-													</p>
-												</div>
-											</td>
+									<Input
+										className="h-9 rounded-lg border-slate-200 bg-white pl-9 text-slate-700 text-xs placeholder:text-slate-400 focus:border-[#0757ff] dark:border-slate-700 dark:bg-[#0f172a] dark:text-slate-200 dark:placeholder:text-slate-500"
+										onChange={(event) => setSearch(event.target.value)}
+										placeholder="Search users..."
+										value={search}
+									/>
+								</div>
+							</div>
+						</CardHeader>
+
+						<CardContent className="p-0">
+							<div className="overflow-x-auto">
+								<table className="w-full min-w-[900px] border-collapse text-xs">
+									<thead>
+										<tr className="border-slate-100 border-b bg-slate-50/70 dark:border-slate-800 dark:bg-slate-900/70">
+											<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+												User
+											</th>
+
+											<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+												Phone
+											</th>
+
+											<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+												Email
+											</th>
+
+											<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+												Role
+											</th>
+
+											<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+												Team
+											</th>
+
+											<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+												Status
+											</th>
+
+											<th className="w-12 px-5 py-3" />
 										</tr>
-									) : (
-										filteredUsers.map((user) => (
-											<tr
-												className="border-b last:border-b-0 hover:bg-muted/30"
-												key={user.id}
-											>
-												<td className="px-4 py-4">
-													<div className="font-medium">{user.name}</div>
-												</td>
+									</thead>
 
-												<td className="px-4 py-4 text-muted-foreground">
-													{user.phone}
-												</td>
+									<tbody>
+										{filteredUsers.length === 0 ? (
+											<tr>
+												<td className="px-5 py-12 text-center" colSpan={7}>
+													<div className="flex flex-col items-center gap-2">
+														<div className="flex size-10 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+															<UserRound className="size-5 text-slate-400 dark:text-slate-500" />
+														</div>
 
-												<td className="px-4 py-4 text-muted-foreground">
-													{user.email}
-												</td>
+														<p className="font-semibold text-slate-600 dark:text-slate-300">
+															No users found
+														</p>
 
-												<td className="px-4 py-4">{user.role}</td>
-
-												<td className="px-4 py-4">{user.team}</td>
-
-												<td className="px-4 py-4">
-													<span
-														className={
-															user.status === "Active"
-																? "rounded-full bg-green-100 px-2.5 py-1 font-medium text-green-700 text-xs"
-																: "rounded-full bg-muted px-2.5 py-1 font-medium text-muted-foreground text-xs"
-														}
-													>
-														{user.status}
-													</span>
-												</td>
-
-												<td className="px-4 py-4">
-													<Button
-														size="icon"
-														title="User actions"
-														type="button"
-														variant="ghost"
-													>
-														<MoreHorizontal className="size-4" />
-													</Button>
+														<p className="text-slate-400 text-xs dark:text-slate-500">
+															Try changing your search.
+														</p>
+													</div>
 												</td>
 											</tr>
-										))
-									)}
-								</tbody>
-							</table>
-						</div>
-					</CardContent>
-				</Card>
+										) : (
+											filteredUsers.map((user) => (
+												<tr
+													className="border-slate-100 border-b transition-colors hover:bg-blue-50/30 dark:border-slate-800 dark:hover:bg-blue-500/5"
+													key={user.id}
+												>
+													<td className="px-5 py-3.5">
+														<div className="flex items-center gap-3">
+															<div className="flex size-8 items-center justify-center rounded-lg bg-blue-50 font-bold text-[#0757ff] text-xs dark:bg-blue-500/10 dark:text-blue-400">
+																{user.name.charAt(0)}
+															</div>
+
+															<div>
+																<div className="font-semibold text-[#102b55] dark:text-slate-100">
+																	{user.name}
+																</div>
+
+																<div className="mt-0.5 text-[10px] text-slate-400 dark:text-slate-500">
+																	ID #{user.id}
+																</div>
+															</div>
+														</div>
+													</td>
+
+													<td className="px-5 py-3.5 text-slate-500 dark:text-slate-400">
+														{user.phone}
+													</td>
+
+													<td className="px-5 py-3.5 text-slate-500 dark:text-slate-400">
+														{user.email}
+													</td>
+
+													<td className="px-5 py-3.5">
+														<span className="rounded-full bg-blue-50 px-2.5 py-1 font-semibold text-[#0757ff] text-[10px] dark:bg-blue-500/10 dark:text-blue-400">
+															{user.role}
+														</span>
+													</td>
+
+													<td className="px-5 py-3.5 font-medium text-slate-600 dark:text-slate-300">
+														{user.team}
+													</td>
+
+													<td className="px-5 py-3.5">
+														<span
+															className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 font-semibold text-[10px] ${
+																user.status === "Active"
+																	? "bg-emerald-50 text-emerald-600 dark:bg-emerald-500/10 dark:text-emerald-400"
+																	: "bg-slate-100 text-slate-500 dark:bg-slate-800 dark:text-slate-400"
+															}`}
+														>
+															<span
+																className={`size-1.5 rounded-full ${
+																	user.status === "Active"
+																		? "bg-emerald-500"
+																		: "bg-slate-400"
+																}`}
+															/>
+
+															{user.status}
+														</span>
+													</td>
+
+													<td className="px-5 py-3.5">
+														<Button
+															className="size-8 text-slate-400 hover:bg-blue-50 hover:text-[#0757ff] dark:text-slate-500 dark:hover:bg-blue-500/10 dark:hover:text-blue-400"
+															size="icon"
+															title="User actions"
+															type="button"
+															variant="ghost"
+														>
+															<MoreHorizontal className="size-4" />
+														</Button>
+													</td>
+												</tr>
+											))
+										)}
+									</tbody>
+								</table>
+							</div>
+
+							{/* FOOTER */}
+							<div className="flex items-center justify-between border-slate-100 border-t px-5 py-3.5 text-xs dark:border-slate-800">
+								<span className="text-slate-400 dark:text-slate-500">
+									Showing{" "}
+									<span className="font-semibold text-slate-600 dark:text-slate-300">
+										{filteredUsers.length}
+									</span>{" "}
+									of{" "}
+									<span className="font-semibold text-slate-600 dark:text-slate-300">
+										{users.length}
+									</span>{" "}
+									users
+								</span>
+
+								<div className="flex gap-1.5">
+									<Button
+										className="h-8 border-slate-200 text-[11px] text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
+										disabled
+										size="sm"
+										variant="outline"
+									>
+										Previous
+									</Button>
+
+									<Button
+										className="h-8 min-w-8 bg-[#0757ff] px-2 text-[11px] hover:bg-[#004be0]"
+										size="sm"
+									>
+										1
+									</Button>
+
+									<Button
+										className="h-8 border-slate-200 text-[11px] text-slate-500 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
+										disabled
+										size="sm"
+										variant="outline"
+									>
+										Next
+									</Button>
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+				</div>
 			</main>
 		</div>
 	);
