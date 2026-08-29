@@ -1,1 +1,16 @@
 @import "@workholo/ui/globals.css";
+
+html,
+body,
+#root {
+	min-height: 100%;
+}
+
+body {
+	margin: 0;
+	background: #eef3f9;
+}
+
+html.dark body {
+	background: #0b1220;
+}

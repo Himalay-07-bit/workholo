@@ -15,8 +15,13 @@ import {
 	ArrowRight,
 	Check,
 	LogIn,
+	Mail,
+	Phone,
 	Settings,
+	ShieldCheck,
 	User,
+	UserPlus,
+	Users,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -28,16 +33,19 @@ const steps = [
 	{
 		id: 1,
 		title: "General Details",
+		description: "Basic information",
 		icon: User,
 	},
 	{
 		id: 2,
 		title: "User Settings",
+		description: "Calling & team setup",
 		icon: Settings,
 	},
 	{
 		id: 3,
 		title: "Web Login",
+		description: "Access & security",
 		icon: LogIn,
 	},
 ];
@@ -88,14 +96,14 @@ const initialForm: FormData = {
 
 function getStepClassName(active: boolean, completed: boolean) {
 	if (active) {
-		return "bg-primary text-primary-foreground";
+		return "border-[#0757ff] bg-[#0757ff] text-white shadow-md shadow-blue-500/20 dark:border-blue-500 dark:bg-blue-600 dark:shadow-blue-900/30";
 	}
 
 	if (completed) {
-		return "bg-primary/10 text-primary";
+		return "border-blue-100 bg-blue-50 text-[#0757ff] dark:border-blue-900 dark:bg-blue-950/60 dark:text-blue-400";
 	}
 
-	return "bg-muted/50 text-muted-foreground hover:bg-muted";
+	return "border-slate-200 bg-slate-50 text-slate-400 hover:border-blue-100 hover:bg-blue-50/50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-500 dark:hover:border-blue-900 dark:hover:bg-blue-950/40 dark:hover:text-blue-400";
 }
 
 function AddUserPage() {
@@ -131,19 +139,36 @@ function AddUserPage() {
 	}
 
 	return (
-		<div className="flex min-h-svh flex-col">
-			{/* Header */}
-			<div className="border-b bg-background px-6 py-4">
-				<div className="flex items-center justify-between gap-4">
-					<div>
-						<h1 className="font-semibold text-xl">Add User</h1>
+		<div className="min-h-svh bg-[#eef3f9] dark:bg-[#07111f]">
+			{/* =====================================================
+			    PAGE HEADER
+			===================================================== */}
+			<header className="border-slate-200 border-b bg-white dark:border-slate-800 dark:bg-[#0b1728]">
+				<div className="flex items-center justify-between gap-4 px-5 py-4 lg:px-7">
+					<div className="flex items-center gap-3">
+						<div className="flex size-10 items-center justify-center rounded-xl bg-[#0757ff] text-white shadow-blue-500/20 shadow-md dark:bg-blue-600 dark:shadow-blue-900/30">
+							<UserPlus className="size-4" />
+						</div>
 
-						<p className="text-muted-foreground text-sm">
-							Create and configure a new platform user.
-						</p>
+						<div>
+							<div className="flex items-center gap-2">
+								<h1 className="font-bold text-[#102b55] text-lg tracking-tight dark:text-slate-100">
+									Add New User
+								</h1>
+
+								<span className="rounded-full bg-blue-50 px-2 py-0.5 font-semibold text-[#0757ff] text-[9px] dark:bg-blue-950/60 dark:text-blue-400">
+									ADMIN
+								</span>
+							</div>
+
+							<p className="text-slate-500 text-xs dark:text-slate-400">
+								Create and configure a new platform user.
+							</p>
+						</div>
 					</div>
 
 					<Button
+						className="h-9 rounded-lg border-slate-200 text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 						onClick={() =>
 							navigate({
 								to: "/admin/users",
@@ -152,116 +177,219 @@ function AddUserPage() {
 						type="button"
 						variant="outline"
 					>
-						<ArrowLeft className="mr-2 size-4" />
+						<ArrowLeft className="mr-1.5 size-3.5" />
 						Back to Users
 					</Button>
 				</div>
-			</div>
+			</header>
 
-			<main className="flex-1 bg-muted/30 p-6">
-				<Card className="mx-auto max-w-5xl">
-					<CardHeader>
-						<CardTitle>Add User</CardTitle>
-					</CardHeader>
+			{/* =====================================================
+			    MAIN
+			===================================================== */}
+			<main className="p-4 lg:p-6">
+				<div className="mx-auto max-w-6xl">
+					{/* =================================================
+					    MAIN CARD
+					================================================= */}
+					<Card className="overflow-hidden rounded-2xl border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
+						{/* =================================================
+						    CARD HEADER
+						================================================= */}
+						<CardHeader className="border-slate-100 border-b bg-slate-50/60 px-5 py-4 dark:border-slate-800 dark:bg-slate-900/50">
+							<div className="flex items-center gap-3">
+								<div className="flex size-9 items-center justify-center rounded-lg bg-blue-50 text-[#0757ff] dark:bg-blue-950/60 dark:text-blue-400">
+									{step === 1 && <User className="size-4" />}
 
-					<CardContent>
-						{/* Steps */}
-						<div className="mb-8 grid grid-cols-3 overflow-hidden rounded-lg border">
-							{steps.map((item) => {
-								const Icon = item.icon;
+									{step === 2 && <Settings className="size-4" />}
 
-								const active = step === item.id;
-								const completed = step > item.id;
-
-								return (
-									<button
-										className={[
-											"flex items-center justify-center gap-2 px-4 py-4 font-medium text-sm transition",
-											getStepClassName(active, completed),
-										].join(" ")}
-										key={item.id}
-										onClick={() => setStep(item.id)}
-										type="button"
-									>
-										{completed ? (
-											<Check className="size-4" />
-										) : (
-											<Icon className="size-4" />
-										)}
-
-										{item.title}
-									</button>
-								);
-							})}
-						</div>
-
-						{/* STEP 1 */}
-						{step === 1 && (
-							<GeneralDetails form={form} updateField={updateField} />
-						)}
-
-						{/* STEP 2 */}
-						{step === 2 && (
-							<UserSettings form={form} updateField={updateField} />
-						)}
-
-						{/* STEP 3 */}
-						{step === 3 && <WebLogin form={form} updateField={updateField} />}
-
-						{/* Success */}
-						{created ? (
-							<div className="mt-6 rounded-lg border border-green-200 bg-green-50 p-4">
-								<div className="flex items-center gap-2 font-medium text-green-700">
-									<Check className="size-4" />
-									User created successfully.
+									{step === 3 && <ShieldCheck className="size-4" />}
 								</div>
 
-								<p className="mt-1 text-green-700/80 text-sm">
-									Backend integration will be connected later.
-								</p>
+								<div>
+									<CardTitle className="font-semibold text-[#102b55] text-sm dark:text-slate-100">
+										{steps[step - 1]?.title}
+									</CardTitle>
+
+									<p className="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">
+										{steps[step - 1]?.description}
+									</p>
+								</div>
 							</div>
-						) : null}
+						</CardHeader>
 
-						{/* Navigation */}
-						<div className="mt-8 flex justify-between border-t pt-6">
-							<Button onClick={clearForm} type="button" variant="ghost">
-								Clear
-							</Button>
+						<CardContent className="p-5 lg:p-6">
+							{/* =================================================
+							    STEPS
+							================================================= */}
+							<div className="mb-6 flex items-center">
+								{steps.map((item, index) => {
+									const Icon = item.icon;
+									const active = step === item.id;
+									const completed = step > item.id;
 
-							<div className="flex gap-2">
-								{step > 1 && (
-									<Button
-										onClick={previousStep}
-										type="button"
-										variant="outline"
-									>
-										<ArrowLeft className="mr-2 size-4" />
-										Previous
-									</Button>
-								)}
+									return (
+										<div className="flex flex-1 items-center" key={item.id}>
+											<button
+												className="group flex items-center gap-2.5 text-left"
+												onClick={() => setStep(item.id)}
+												type="button"
+											>
+												<div
+													className={[
+														"flex size-9 shrink-0 items-center justify-center rounded-lg border font-semibold transition-all",
+														getStepClassName(active, completed),
+													].join(" ")}
+												>
+													{completed ? (
+														<Check className="size-4" />
+													) : (
+														<Icon className="size-4" />
+													)}
+												</div>
 
-								{step < 3 ? (
-									<Button onClick={nextStep} type="button">
-										Next
-										<ArrowRight className="ml-2 size-4" />
-									</Button>
-								) : (
-									<Button onClick={createUser} type="button">
-										<Check className="mr-2 size-4" />
-										Create User
-									</Button>
-								)}
+												<div className="hidden sm:block">
+													<p
+														className={[
+															"font-semibold text-[10px]",
+															active
+																? "text-[#102b55] dark:text-slate-100"
+																: "text-slate-500 dark:text-slate-400",
+														].join(" ")}
+													>
+														{item.title}
+													</p>
+
+													<p className="mt-0.5 text-[9px] text-slate-400 dark:text-slate-500">
+														{item.description}
+													</p>
+												</div>
+											</button>
+
+											{index < steps.length - 1 && (
+												<div className="mx-3 h-px flex-1 bg-slate-200 dark:bg-slate-700" />
+											)}
+										</div>
+									);
+								})}
 							</div>
-						</div>
-					</CardContent>
-				</Card>
+
+							{/* Progress */}
+							<div className="mb-6 h-1 overflow-hidden rounded-full bg-slate-100 dark:bg-slate-800">
+								<div
+									className="h-full rounded-full bg-[#0757ff] transition-all duration-300 dark:bg-blue-500"
+									style={{
+										width: `${((step - 1) / 2) * 100}%`,
+									}}
+								/>
+							</div>
+
+							{/* =================================================
+							    STEP 1
+							================================================= */}
+							{step === 1 && (
+								<GeneralDetails form={form} updateField={updateField} />
+							)}
+
+							{/* =================================================
+							    STEP 2
+							================================================= */}
+							{step === 2 && (
+								<UserSettings form={form} updateField={updateField} />
+							)}
+
+							{/* =================================================
+							    STEP 3
+							================================================= */}
+							{step === 3 && <WebLogin form={form} updateField={updateField} />}
+
+							{/* =================================================
+							    SUCCESS
+							================================================= */}
+							{created ? (
+								<div className="mt-5 rounded-xl border border-emerald-200 bg-emerald-50 p-3 dark:border-emerald-900/60 dark:bg-emerald-950/30">
+									<div className="flex items-center gap-2.5">
+										<div className="flex size-8 items-center justify-center rounded-full bg-emerald-100 text-emerald-600 dark:bg-emerald-950 dark:text-emerald-400">
+											<Check className="size-4" />
+										</div>
+
+										<div>
+											<p className="font-semibold text-emerald-700 text-xs dark:text-emerald-400">
+												User created successfully.
+											</p>
+
+											<p className="mt-0.5 text-[10px] text-emerald-700/70 dark:text-emerald-400/70">
+												Backend integration will be connected later.
+											</p>
+										</div>
+									</div>
+								</div>
+							) : null}
+
+							{/* =================================================
+							    NAVIGATION
+							================================================= */}
+							<div className="mt-6 flex items-center justify-between border-slate-100 border-t pt-5 dark:border-slate-800">
+								<Button
+									className="h-9 px-3 text-slate-500 text-xs hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-slate-800"
+									onClick={clearForm}
+									type="button"
+									variant="ghost"
+								>
+									Clear
+								</Button>
+
+								<div className="flex gap-2">
+									{step > 1 && (
+										<Button
+											className="h-9 rounded-lg border-slate-200 text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+											onClick={previousStep}
+											type="button"
+											variant="outline"
+										>
+											<ArrowLeft className="mr-1.5 size-3.5" />
+											Previous
+										</Button>
+									)}
+
+									{step < 3 ? (
+										<Button
+											className="h-9 rounded-lg bg-[#0757ff] px-5 text-xs shadow-blue-500/20 shadow-md hover:bg-[#004be0] dark:bg-blue-600 dark:shadow-blue-900/30 dark:hover:bg-blue-500"
+											onClick={nextStep}
+											type="button"
+										>
+											Next
+											<ArrowRight className="ml-1.5 size-3.5" />
+										</Button>
+									) : (
+										<Button
+											className="h-9 rounded-lg bg-[#0757ff] px-5 text-xs shadow-blue-500/20 shadow-md hover:bg-[#004be0] dark:bg-blue-600 dark:shadow-blue-900/30 dark:hover:bg-blue-500"
+											onClick={createUser}
+											type="button"
+										>
+											<Check className="mr-1.5 size-3.5" />
+											Create User
+										</Button>
+									)}
+								</div>
+							</div>
+						</CardContent>
+					</Card>
+
+					{/* =================================================
+					    SECURITY FOOTER
+					================================================= */}
+					<div className="mt-3 flex items-center justify-center gap-1.5 text-[9px] text-slate-400 dark:text-slate-500">
+						<ShieldCheck className="size-3 text-emerald-500" />
+						User information is securely managed
+					</div>
+				</div>
 			</main>
 		</div>
 	);
 }
 
 /* =====================================================
-   STEP 1
+   STEP 1 — GENERAL DETAILS
 ===================================================== */
 
 function GeneralDetails({
@@ -272,67 +400,80 @@ function GeneralDetails({
 	updateField: <K extends keyof FormData>(field: K, value: FormData[K]) => void;
 }) {
 	return (
-		<div className="grid gap-6 md:grid-cols-2">
-			<div className="space-y-2">
-				<Label htmlFor="name">
-					Name <span className="text-destructive">*</span>
-				</Label>
-
+		<div className="grid gap-5 md:grid-cols-2">
+			<FormField
+				icon={<User className="size-3.5" />}
+				id="name"
+				label="Name"
+				required
+			>
 				<Input
+					className="crm-input h-10 rounded-lg pl-10 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/10 dark:placeholder:text-slate-500"
 					id="name"
 					onChange={(event) => updateField("name", event.target.value)}
 					placeholder="Enter user's name"
 					value={form.name}
 				/>
-			</div>
+			</FormField>
 
-			<div className="space-y-2">
-				<Label htmlFor="phone">
-					Phone Number <span className="text-destructive">*</span>
-				</Label>
-
+			<FormField
+				icon={<Phone className="size-3.5" />}
+				id="phone"
+				label="Phone Number"
+				required
+			>
 				<div className="flex gap-2">
-					<Input className="w-20" readOnly value="+91" />
+					<Input
+						className="h-10 w-16 rounded-lg border-slate-200 bg-slate-50 px-2 text-center text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
+						readOnly
+						value="+91"
+					/>
 
 					<Input
+						className="crm-input h-10 rounded-lg text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/10 dark:placeholder:text-slate-500"
 						id="phone"
 						onChange={(event) => updateField("phone", event.target.value)}
 						placeholder="Enter phone number"
 						value={form.phone}
 					/>
 				</div>
-			</div>
+			</FormField>
 
-			<div className="space-y-2">
-				<Label htmlFor="designation">Designation</Label>
-
+			<FormField
+				icon={<Users className="size-3.5" />}
+				id="designation"
+				label="Designation"
+			>
 				<Input
+					className="crm-input h-10 rounded-lg pl-10 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/10 dark:placeholder:text-slate-500"
 					id="designation"
 					onChange={(event) => updateField("designation", event.target.value)}
 					placeholder="Enter designation"
 					value={form.designation}
 				/>
-			</div>
+			</FormField>
 
-			<div className="space-y-2">
-				<Label htmlFor="email">
-					Email Address <span className="text-destructive">*</span>
-				</Label>
-
+			<FormField
+				icon={<Mail className="size-3.5" />}
+				id="email"
+				label="Email Address"
+				required
+			>
 				<Input
+					className="crm-input h-10 rounded-lg pl-10 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/10 dark:placeholder:text-slate-500"
 					id="email"
 					onChange={(event) => updateField("email", event.target.value)}
 					placeholder="Enter email address"
 					type="email"
 					value={form.email}
 				/>
-			</div>
+			</FormField>
 		</div>
 	);
 }
 
 /* =====================================================
-   STEP 2
+   STEP 2 — USER SETTINGS
 ===================================================== */
 
 function UserSettings({
@@ -343,84 +484,102 @@ function UserSettings({
 	updateField: <K extends keyof FormData>(field: K, value: FormData[K]) => void;
 }) {
 	return (
-		<div className="grid gap-8 md:grid-cols-2">
-			<div className="space-y-2">
-				<Label htmlFor="team">Assign user to team</Label>
-
-				<select
-					className="h-9 w-full rounded-md border bg-background px-3 text-sm"
+		<div className="space-y-5">
+			<div className="grid gap-5 md:grid-cols-2">
+				<SelectField
 					id="team"
-					onChange={(event) => updateField("team", event.target.value)}
+					label="Assign User to Team"
+					onChange={(value) => updateField("team", value)}
+					options={[
+						["", "Select team"],
+						["sales", "Sales"],
+						["support", "Support"],
+						["operations", "Operations"],
+						["hr", "HR"],
+					]}
 					value={form.team}
-				>
-					<option value="">Select team</option>
-					<option value="sales">Sales</option>
-					<option value="support">Support</option>
-					<option value="operations">Operations</option>
-					<option value="hr">HR</option>
-				</select>
-			</div>
+				/>
 
-			<div className="space-y-2">
-				<Label htmlFor="call-forward">Call Forward Number</Label>
-
-				<Input
+				<FormField
+					icon={<Phone className="size-3.5" />}
 					id="call-forward"
-					onChange={(event) =>
-						updateField("callForwardNumber", event.target.value)
-					}
-					placeholder="+91XXXXXXXXXX"
-					value={form.callForwardNumber}
-				/>
-			</div>
-
-			<div className="space-y-2">
-				<Label htmlFor="caller-ids">Allowed Caller IDs</Label>
-
-				<Input
-					id="caller-ids"
-					onChange={(event) => updateField("callerIds", event.target.value)}
-					placeholder="Select caller IDs"
-					value={form.callerIds}
-				/>
-			</div>
-
-			<div className="space-y-2">
-				<Label htmlFor="department">Assign user to department</Label>
-
-				<select
-					className="h-9 w-full rounded-md border bg-background px-3 text-sm"
-					id="department"
-					onChange={(event) => updateField("department", event.target.value)}
-					value={form.department}
+					label="Call Forward Number"
 				>
-					<option value="">Select department</option>
-					<option value="sales">Sales</option>
-					<option value="support">Support</option>
-					<option value="operations">Operations</option>
-					<option value="hr">HR</option>
-				</select>
+					<Input
+						className="crm-input h-10 rounded-lg pl-10 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/10 dark:placeholder:text-slate-500"
+						id="call-forward"
+						onChange={(event) =>
+							updateField("callForwardNumber", event.target.value)
+						}
+						placeholder="+91XXXXXXXXXX"
+						value={form.callForwardNumber}
+					/>
+				</FormField>
+
+				<FormField
+					icon={<Phone className="size-3.5" />}
+					id="caller-ids"
+					label="Allowed Caller IDs"
+				>
+					<Input
+						className="crm-input h-10 rounded-lg pl-10 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/10 dark:placeholder:text-slate-500"
+						id="caller-ids"
+						onChange={(event) => updateField("callerIds", event.target.value)}
+						placeholder="Select caller IDs"
+						value={form.callerIds}
+					/>
+				</FormField>
+
+				<SelectField
+					id="department"
+					label="Assign User to Department"
+					onChange={(value) => updateField("department", value)}
+					options={[
+						["", "Select department"],
+						["sales", "Sales"],
+						["support", "Support"],
+						["operations", "Operations"],
+						["hr", "HR"],
+					]}
+					value={form.department}
+				/>
 			</div>
 
-			<ToggleCard
-				checked={form.callingAgent}
-				description="Allow this user to make calls."
-				onChange={(value) => updateField("callingAgent", value)}
-				title="Calling Agent"
-			/>
+			<div className="border-slate-100 border-t pt-5 dark:border-slate-800">
+				<div className="mb-3">
+					<h3 className="font-semibold text-[#102b55] text-xs dark:text-slate-100">
+						Calling Configuration
+					</h3>
 
-			<ToggleCard
-				checked={form.createExtension}
-				description="Automatically create an extension."
-				onChange={(value) => updateField("createExtension", value)}
-				title="Create Agent Extension"
-			/>
+					<p className="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">
+						Configure calling capabilities for this user.
+					</p>
+				</div>
+
+				<div className="grid gap-3 md:grid-cols-2">
+					<ToggleCard
+						checked={form.callingAgent}
+						description="Allow this user to make and receive calls."
+						icon={<Phone className="size-3.5" />}
+						onChange={(value) => updateField("callingAgent", value)}
+						title="Calling Agent"
+					/>
+
+					<ToggleCard
+						checked={form.createExtension}
+						description="Automatically create a calling extension."
+						icon={<Phone className="size-3.5" />}
+						onChange={(value) => updateField("createExtension", value)}
+						title="Create Agent Extension"
+					/>
+				</div>
+			</div>
 		</div>
 	);
 }
 
 /* =====================================================
-   STEP 3
+   STEP 3 — WEB LOGIN
 ===================================================== */
 
 function WebLogin({
@@ -431,69 +590,176 @@ function WebLogin({
 	updateField: <K extends keyof FormData>(field: K, value: FormData[K]) => void;
 }) {
 	return (
-		<div className="grid gap-8 md:grid-cols-2">
-			<div className="space-y-2">
-				<Label htmlFor="role">User Role</Label>
-
-				<select
-					className="h-9 w-full rounded-md border bg-background px-3 text-sm"
+		<div className="space-y-5">
+			<div className="grid gap-5 md:grid-cols-2">
+				<SelectField
 					id="role"
-					onChange={(event) => updateField("role", event.target.value)}
+					label="User Role"
+					onChange={(value) => updateField("role", value)}
+					options={[
+						["Agent", "Agent"],
+						["Supervisor", "Supervisor"],
+						["Admin", "Admin"],
+					]}
 					value={form.role}
-				>
-					<option value="Agent">Agent</option>
-					<option value="Supervisor">Supervisor</option>
-					<option value="Admin">Admin</option>
-				</select>
-			</div>
-
-			<div className="space-y-2">
-				<Label htmlFor="login-id">
-					Login ID <span className="text-destructive">*</span>
-				</Label>
-
-				<Input
-					id="login-id"
-					onChange={(event) => updateField("loginId", event.target.value)}
-					placeholder="Enter login ID"
-					value={form.loginId}
 				/>
+
+				<FormField
+					icon={<LogIn className="size-3.5" />}
+					id="login-id"
+					label="Login ID"
+					required
+				>
+					<Input
+						className="crm-input h-10 rounded-lg pl-10 text-xs dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:focus:border-blue-500 dark:focus:ring-blue-500/10 dark:placeholder:text-slate-500"
+						id="login-id"
+						onChange={(event) => updateField("loginId", event.target.value)}
+						placeholder="Enter login ID"
+						value={form.loginId}
+					/>
+				</FormField>
 			</div>
 
-			<ToggleCard
-				checked={form.autoGeneratePassword}
-				description="Generate a secure password automatically."
-				onChange={(value) => updateField("autoGeneratePassword", value)}
-				title="Auto Generate Password"
-			/>
+			<div className="border-slate-100 border-t pt-5 dark:border-slate-800">
+				<div className="mb-3">
+					<h3 className="font-semibold text-[#102b55] text-xs dark:text-slate-100">
+						Access & Security
+					</h3>
 
-			<ToggleCard
-				checked={form.twoFactor}
-				description="Require two-factor authentication."
-				onChange={(value) => updateField("twoFactor", value)}
-				title="Two Factor Authentication"
-			/>
+					<p className="mt-0.5 text-[10px] text-slate-500 dark:text-slate-400">
+						Configure how this user accesses the platform.
+					</p>
+				</div>
 
-			<ToggleCard
-				checked={form.loginBasedCalling}
-				description="Allow calls based on web login."
-				onChange={(value) => updateField("loginBasedCalling", value)}
-				title="Login Based Calling"
-			/>
+				<div className="grid gap-3 md:grid-cols-2">
+					<ToggleCard
+						checked={form.autoGeneratePassword}
+						description="Generate a secure password automatically."
+						icon={<ShieldCheck className="size-3.5" />}
+						onChange={(value) => updateField("autoGeneratePassword", value)}
+						title="Auto Generate Password"
+					/>
 
-			<ToggleCard
-				checked={form.blockWebLogin}
-				description="Prevent this user from logging into the web application."
-				onChange={(value) => updateField("blockWebLogin", value)}
-				title="Block Web Login"
-			/>
+					<ToggleCard
+						checked={form.twoFactor}
+						description="Require two-factor authentication."
+						icon={<ShieldCheck className="size-3.5" />}
+						onChange={(value) => updateField("twoFactor", value)}
+						title="Two Factor Authentication"
+					/>
 
-			<ToggleCard
-				checked={form.agentDispositions}
-				description="Enable call disposition management."
-				onChange={(value) => updateField("agentDispositions", value)}
-				title="Agent Dispositions"
-			/>
+					<ToggleCard
+						checked={form.loginBasedCalling}
+						description="Allow calls based on web login."
+						icon={<Phone className="size-3.5" />}
+						onChange={(value) => updateField("loginBasedCalling", value)}
+						title="Login Based Calling"
+					/>
+
+					<ToggleCard
+						checked={form.blockWebLogin}
+						description="Prevent this user from logging into the web app."
+						icon={<ShieldCheck className="size-3.5" />}
+						onChange={(value) => updateField("blockWebLogin", value)}
+						title="Block Web Login"
+					/>
+
+					<ToggleCard
+						checked={form.agentDispositions}
+						description="Enable call disposition management."
+						icon={<Settings className="size-3.5" />}
+						onChange={(value) => updateField("agentDispositions", value)}
+						title="Agent Dispositions"
+					/>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+/* =====================================================
+   REUSABLE FORM FIELD
+===================================================== */
+
+function FormField({
+	id,
+	label,
+	required,
+	icon,
+	children,
+}: {
+	id: string;
+	label: string;
+	required?: boolean;
+	icon?: React.ReactNode;
+	children: React.ReactNode;
+}) {
+	return (
+		<div className="space-y-1.5">
+			<Label
+				className="font-semibold text-[#263b5b] text-[10px] dark:text-slate-300"
+				htmlFor={id}
+			>
+				{label}
+
+				{required ? <span className="ml-1 text-red-500">*</span> : null}
+			</Label>
+
+			<div className="relative">
+				{icon ? (
+					<div className="pointer-events-none absolute top-1/2 left-3 z-10 -translate-y-1/2 text-slate-400 dark:text-slate-500">
+						{icon}
+					</div>
+				) : null}
+
+				{children}
+			</div>
+		</div>
+	);
+}
+
+/* =====================================================
+   SELECT
+===================================================== */
+
+function SelectField({
+	id,
+	label,
+	value,
+	onChange,
+	options,
+}: {
+	id: string;
+	label: string;
+	value: string;
+	onChange: (value: string) => void;
+	options: [string, string][];
+}) {
+	return (
+		<div className="space-y-1.5">
+			<Label
+				className="font-semibold text-[#263b5b] text-[10px] dark:text-slate-300"
+				htmlFor={id}
+			>
+				{label}
+			</Label>
+
+			<select
+				className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-slate-700 text-xs outline-none transition-all focus:border-[#0757ff] focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:focus:border-blue-500 dark:focus:ring-blue-500/10"
+				id={id}
+				onChange={(event) => onChange(event.target.value)}
+				value={value}
+			>
+				{options.map(([optionValue, optionLabel]) => (
+					<option
+						className="bg-white text-slate-700 dark:bg-slate-900 dark:text-slate-200"
+						key={optionValue}
+						value={optionValue}
+					>
+						{optionLabel}
+					</option>
+				))}
+			</select>
 		</div>
 	);
 }
@@ -507,21 +773,51 @@ function ToggleCard({
 	description,
 	checked,
 	onChange,
+	icon,
 }: {
 	title: string;
 	description: string;
 	checked: boolean;
 	onChange: (value: boolean) => void;
+	icon?: React.ReactNode;
 }) {
 	return (
-		<div className="flex items-center justify-between rounded-lg border p-4">
-			<div className="pr-4">
-				<p className="font-medium">{title}</p>
+		<div
+			className={[
+				"flex items-center justify-between rounded-xl border p-3 transition-all",
+				checked
+					? "border-blue-200 bg-blue-50/50 dark:border-blue-900 dark:bg-blue-950/30"
+					: "border-slate-200 bg-white hover:border-blue-100 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:hover:border-blue-900 dark:hover:bg-slate-800",
+			].join(" ")}
+		>
+			<div className="flex min-w-0 items-center gap-2.5 pr-3">
+				<div
+					className={[
+						"flex size-8 shrink-0 items-center justify-center rounded-lg",
+						checked
+							? "bg-[#0757ff] text-white dark:bg-blue-600"
+							: "bg-slate-100 text-slate-400 dark:bg-slate-800 dark:text-slate-500",
+					].join(" ")}
+				>
+					{icon}
+				</div>
 
-				<p className="text-muted-foreground text-sm">{description}</p>
+				<div className="min-w-0">
+					<p className="font-semibold text-[#263b5b] text-[10px] dark:text-slate-200">
+						{title}
+					</p>
+
+					<p className="mt-0.5 text-[9px] text-slate-500 leading-3.5 dark:text-slate-400">
+						{description}
+					</p>
+				</div>
 			</div>
 
-			<Switch checked={checked} onCheckedChange={onChange} />
+			<Switch
+				checked={checked}
+				className="data-[state=checked]:bg-[#0757ff] dark:data-[state=checked]:bg-blue-600"
+				onCheckedChange={onChange}
+			/>
 		</div>
 	);
 }

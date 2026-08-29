@@ -1,6 +1,15 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
+import {
+	CheckCircle2,
+	ChevronLeft,
+	ChevronRight,
+	RefreshCw,
+	Search,
+	Upload,
+	Users,
+} from "lucide-react";
 import { useMemo, useState } from "react";
 
 import { AdminTopbar } from "@/components/admin/admin-topbar";
@@ -155,16 +164,16 @@ const agents: Agent[] = [
 
 function AgentStatusDot({ status }: { status: Agent["agentStatus"] }) {
 	const className = {
-		Active: "bg-green-500",
+		Active: "bg-emerald-500",
 		Blocked: "bg-red-500",
-		Disabled: "bg-yellow-500",
+		Disabled: "bg-amber-500",
 		Busy: "bg-orange-500",
-		Offline: "bg-gray-400",
+		Offline: "bg-slate-400",
 	}[status];
 
 	return (
 		<span
-			className={`inline-block size-3 rounded-full ${className}`}
+			className={`inline-block size-2.5 rounded-full ring-4 ring-white dark:ring-[#0b1728] ${className}`}
 			title={status}
 		/>
 	);
@@ -173,8 +182,8 @@ function AgentStatusDot({ status }: { status: Agent["agentStatus"] }) {
 function ExtensionStatusDot({ status }: { status: Agent["extensionStatus"] }) {
 	return (
 		<span
-			className={`inline-block size-3 rounded-full ${
-				status === "Registered" ? "bg-green-500" : "bg-red-500"
+			className={`inline-block size-2.5 rounded-full ring-4 ring-white dark:ring-[#0b1728] ${
+				status === "Registered" ? "bg-emerald-500" : "bg-red-500"
 			}`}
 			title={status}
 		/>
@@ -216,296 +225,468 @@ function ExtensionsPage() {
 
 	const visibleAgents = filteredAgents.slice(startIndex, startIndex + pageSize);
 
+	const registeredCount = agents.filter(
+		(agent) => agent.extensionStatus === "Registered"
+	).length;
+
+	const offlineCount = agents.filter(
+		(agent) => agent.agentStatus === "Offline"
+	).length;
+
 	return (
-		<div className="flex min-h-svh flex-col">
+		<div className="min-h-svh bg-[#eef3f9] dark:bg-[#07111f]">
 			<AdminTopbar />
 
-			<main className="flex-1 bg-muted/30 p-4 md:p-6">
-				<section className="overflow-hidden rounded-md border bg-background">
-					{/* Header */}
-					<div className="flex flex-col gap-3 border-b px-4 py-3 md:flex-row md:items-center md:justify-between">
-						<h1 className="font-medium text-lg">All Agents</h1>
+			<main className="p-4 md:p-6">
+				<div className="mx-auto max-w-[1600px]">
+					{/* PAGE HEADER */}
+					<div className="mb-4 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm xl:flex-row xl:items-center xl:justify-between dark:border-slate-800 dark:bg-[#0b1728]">
+						<div>
+							<div className="flex items-center gap-2">
+								<h1 className="font-bold text-[#102b55] text-xl tracking-tight dark:text-slate-100">
+									All Agents
+								</h1>
+
+								<span className="rounded-full bg-blue-50 px-2.5 py-1 font-semibold text-[#0757ff] text-[10px] dark:bg-blue-950/60 dark:text-blue-400">
+									{agents.length} AGENTS
+								</span>
+							</div>
+
+							<p className="mt-1 text-slate-500 text-xs dark:text-slate-400">
+								Manage agents, extensions and calling configuration.
+							</p>
+						</div>
 
 						<div className="flex flex-wrap gap-2">
-							<Button variant="outline">Feature Codes</Button>
-							<Button variant="outline">Upload Agents</Button>
-							<Button variant="outline">Teams (Agent Groups)</Button>
-							<Button>Add Agent</Button>
+							<Button
+								className="h-9 border-slate-200 text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								variant="outline"
+							>
+								Feature Codes
+							</Button>
+
+							<Button
+								className="h-9 border-slate-200 text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								variant="outline"
+							>
+								<Upload className="mr-1.5 size-3.5" />
+								Upload Agents
+							</Button>
+
+							<Button
+								className="h-9 border-slate-200 text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								variant="outline"
+							>
+								<Users className="mr-1.5 size-3.5" />
+								Teams
+							</Button>
+
+							<Button className="h-9 bg-[#0757ff] text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500">
+								+ Add Agent
+							</Button>
 						</div>
 					</div>
 
-					{/* Agent information */}
-					<div className="flex flex-col gap-4 px-4 py-4 xl:flex-row xl:items-start xl:justify-between">
-						<div className="space-y-3">
-							<p className="text-sm">
-								<span className="font-medium">
-									Maximum Number of Agents Allowed:
-								</span>{" "}
-								23
+					{/* SUMMARY */}
+					<div className="mb-4 grid gap-3 sm:grid-cols-3">
+						<div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
+							<p className="font-semibold text-[10px] text-slate-400 uppercase tracking-wider dark:text-slate-500">
+								Maximum Agents
 							</p>
 
-							<p className="text-sm">
-								<span className="font-medium">1 Domain</span> : 1
+							<p className="mt-1 font-bold text-[#102b55] text-lg dark:text-slate-100">
+								23
 							</p>
 						</div>
 
-						<div className="space-y-2 text-sm">
-							<div className="flex flex-wrap items-center gap-3">
-								<span className="font-semibold">Agent Status:</span>
+						<div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
+							<p className="font-semibold text-[10px] text-slate-400 uppercase tracking-wider dark:text-slate-500">
+								Registered Extensions
+							</p>
 
-								<span className="flex items-center gap-1">
+							<p className="mt-1 font-bold text-emerald-600 text-lg dark:text-emerald-400">
+								{registeredCount}
+								<span className="font-normal text-slate-400 text-xs">
+									{" "}
+									/ {agents.length}
+								</span>
+							</p>
+						</div>
+
+						<div className="rounded-xl border border-slate-200 bg-white px-4 py-3 shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
+							<p className="font-semibold text-[10px] text-slate-400 uppercase tracking-wider dark:text-slate-500">
+								Offline Agents
+							</p>
+
+							<p className="mt-1 font-bold text-lg text-slate-600 dark:text-slate-300">
+								{offlineCount}
+							</p>
+						</div>
+					</div>
+
+					{/* MAIN CARD */}
+					<div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
+						{/* STATUS LEGEND */}
+						<div className="flex flex-col gap-3 border-slate-100 border-b px-5 py-3.5 lg:flex-row lg:items-center lg:justify-between dark:border-slate-800">
+							<div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-[11px]">
+								<span className="font-semibold text-[#263b5b] dark:text-slate-200">
+									Agent Status
+								</span>
+
+								<span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
 									<AgentStatusDot status="Active" />
 									Active
 								</span>
 
-								<span className="flex items-center gap-1">
+								<span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
 									<AgentStatusDot status="Blocked" />
 									Blocked
 								</span>
 
-								<span className="flex items-center gap-1">
+								<span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
 									<AgentStatusDot status="Disabled" />
 									Disabled
 								</span>
 
-								<span className="flex items-center gap-1">
+								<span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
 									<AgentStatusDot status="Busy" />
 									Busy
 								</span>
 
-								<span className="flex items-center gap-1">
+								<span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
 									<AgentStatusDot status="Offline" />
 									Offline
 								</span>
-							</div>
 
-							<div className="flex flex-wrap items-center gap-3">
-								<span className="font-semibold">Extension Status:</span>
+								<span className="mx-1 hidden h-4 w-px bg-slate-200 sm:block dark:bg-slate-700" />
 
-								<span className="flex items-center gap-1">
+								<span className="font-semibold text-[#263b5b] dark:text-slate-200">
+									Extension
+								</span>
+
+								<span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
 									<ExtensionStatusDot status="Registered" />
 									Registered
 								</span>
 
-								<span className="flex items-center gap-1">
+								<span className="flex items-center gap-1.5 text-slate-500 dark:text-slate-400">
 									<ExtensionStatusDot status="Unregistered" />
 									Unregistered
 								</span>
 							</div>
 
-							<div className="flex flex-wrap items-center gap-2">
-								<span className="font-semibold">
-									(Filters for Calls Answered)
+							<div className="flex items-center gap-1.5">
+								<span className="font-semibold text-[11px] text-slate-500 dark:text-slate-400">
+									Calls Answered:
 								</span>
 
-								<Button size="sm">1 Day</Button>
-								<span>|</span>
-								<button className="text-sm hover:underline" type="button">
+								<Button
+									className="h-7 bg-[#0757ff] px-2.5 text-[10px] hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+									size="sm"
+								>
+									1 Day
+								</Button>
+
+								<Button
+									className="h-7 border-slate-200 px-2.5 text-[10px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									size="sm"
+									variant="outline"
+								>
 									2 Days
-								</button>
-								<span>|</span>
-								<button className="text-sm hover:underline" type="button">
-									4 Days
-								</button>
-								<span>|</span>
-								<button className="text-sm hover:underline" type="button">
+								</Button>
+
+								<Button
+									className="h-7 border-slate-200 px-2.5 text-[10px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									size="sm"
+									variant="outline"
+								>
 									7 Days
-								</button>
-								<span>|</span>
-								<button className="text-sm hover:underline" type="button">
-									10 Days
-								</button>
-								<span>|</span>
-								<button className="text-sm hover:underline" type="button">
-									Refresh
-								</button>
+								</Button>
+
+								<Button
+									className="h-7 w-7 border-slate-200 p-0 text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									size="sm"
+									title="Refresh"
+									variant="outline"
+								>
+									<RefreshCw className="size-3" />
+								</Button>
 							</div>
 						</div>
-					</div>
 
-					{/* Table controls */}
-					<div className="flex flex-col gap-3 border-t px-4 py-3 md:flex-row md:items-center md:justify-between">
-						<div className="flex items-center gap-2 text-sm">
-							<span>Show</span>
+						{/* TABLE TOOLBAR */}
+						<div className="flex flex-col gap-3 border-slate-100 border-b px-5 py-3.5 md:flex-row md:items-center md:justify-between dark:border-slate-800">
+							<div className="flex items-center gap-2 text-slate-500 text-xs dark:text-slate-400">
+								<span>Show</span>
 
-							<select
-								className="h-8 rounded-md border bg-background px-2"
-								onChange={(event) => {
-									setPageSize(Number(event.target.value));
-									setCurrentPage(1);
-								}}
-								value={pageSize}
-							>
-								<option value={10}>10</option>
-								<option value={25}>25</option>
-								<option value={50}>50</option>
-							</select>
+								<select
+									className="h-8 rounded-lg border border-slate-200 bg-white px-2.5 text-slate-700 text-xs outline-none focus:border-[#0757ff] focus:ring-2 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-blue-500"
+									onChange={(event) => {
+										setPageSize(Number(event.target.value));
+										setCurrentPage(1);
+									}}
+									value={pageSize}
+								>
+									<option value={10}>10</option>
+									<option value={25}>25</option>
+									<option value={50}>50</option>
+								</select>
 
-							<span>entries</span>
+								<span>entries</span>
+							</div>
+
+							<div className="relative">
+								<Search className="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
+
+								<Input
+									className="h-8 w-full rounded-lg border-slate-200 pl-8 text-xs md:w-[240px] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100 dark:placeholder:text-slate-500"
+									onChange={(event) => {
+										setSearch(event.target.value);
+										setCurrentPage(1);
+									}}
+									placeholder="Search agents..."
+									value={search}
+								/>
+							</div>
 						</div>
 
-						<div className="flex items-center gap-2">
-							<span className="text-sm">Search:</span>
+						{/* TABLE */}
+						<div className="overflow-x-auto">
+							<table className="w-full min-w-[1450px] border-collapse text-xs">
+								<thead>
+									<tr className="border-slate-100 border-b bg-slate-50/70 dark:border-slate-800 dark:bg-slate-900/70">
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Agent ID
+										</th>
 
-							<Input
-								className="w-[220px]"
-								onChange={(event) => {
-									setSearch(event.target.value);
-									setCurrentPage(1);
-								}}
-								placeholder=""
-								value={search}
-							/>
-						</div>
-					</div>
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Name
+										</th>
 
-					{/* Table */}
-					<div className="overflow-x-auto">
-						<table className="w-full min-w-[1500px] border-collapse text-sm">
-							<thead>
-								<tr className="border-y bg-muted/40">
-									<th className="px-3 py-3 text-left font-medium">Agent Id</th>
-									<th className="px-3 py-3 text-left font-medium">Name</th>
-									<th className="px-3 py-3 text-left font-medium">
-										Call Forward Number
-									</th>
-									<th className="px-3 py-3 text-left font-medium">
-										Alternate Numbers
-									</th>
-									<th className="px-3 py-3 text-left font-medium">
-										Intercom Number
-									</th>
-									<th className="px-3 py-3 text-left font-medium">
-										Time Group
-									</th>
-									<th className="px-3 py-3 text-left font-medium">
-										Departments
-									</th>
-									<th className="px-3 py-3 text-left font-medium">Username</th>
-									<th className="px-3 py-3 text-left font-medium">
-										Extension CallerId
-									</th>
-									<th className="px-3 py-3 text-left font-medium">
-										Agent Status
-									</th>
-									<th className="px-3 py-3 text-left font-medium">
-										Extension Status
-									</th>
-									<th className="px-3 py-3 text-left font-medium">
-										Calls Answered
-									</th>
-									<th className="px-3 py-3 text-left font-medium">Action</th>
-								</tr>
-							</thead>
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Call Forward Number
+										</th>
 
-							<tbody>
-								{visibleAgents.map((agent) => (
-									<tr className="border-b hover:bg-muted/20" key={agent.id}>
-										<td className="px-3 py-3 font-medium">{agent.id}</td>
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Alternate Numbers
+										</th>
 
-										<td className="px-3 py-3">
-											<div>
-												<span className="mb-1 inline-block rounded-sm bg-sky-500 px-2 py-1 font-semibold text-white text-xs">
-													Login Based Calling
-												</span>
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Intercom
+										</th>
 
-												<div>{agent.name}</div>
-											</div>
-										</td>
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Time Group
+										</th>
 
-										<td className="px-3 py-3">
-											<div className="flex items-center gap-2">
-												<span>{agent.callForwardNumber}</span>
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Departments
+										</th>
 
-												<span
-													className="inline-flex size-4 items-center justify-center rounded-full bg-green-600 font-bold text-[10px] text-white"
-													title="Verified"
-												>
-													✓
-												</span>
-											</div>
-										</td>
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Username
+										</th>
 
-										<td className="px-3 py-3">{agent.alternateNumbers}</td>
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Extension Caller ID
+										</th>
 
-										<td className="px-3 py-3">{agent.intercomNumber}</td>
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Agent Status
+										</th>
 
-										<td className="px-3 py-3">{agent.timeGroup}</td>
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Extension Status
+										</th>
 
-										<td className="px-3 py-3">{agent.departments}</td>
+										<th className="px-4 py-3 text-center font-semibold text-[#263b5b] dark:text-slate-300">
+											Calls
+										</th>
 
-										<td className="px-3 py-3">{agent.username}</td>
-
-										<td className="max-w-[180px] px-3 py-3">
-											<span className="break-words">
-												{agent.extensionCallerId}
-											</span>
-										</td>
-
-										<td className="px-3 py-3">
-											<AgentStatusDot status={agent.agentStatus} />
-										</td>
-
-										<td className="px-3 py-3">
-											<ExtensionStatusDot status={agent.extensionStatus} />
-										</td>
-
-										<td className="px-3 py-3 text-center">
-											{agent.callsAnswered}
-										</td>
-
-										<td className="px-3 py-3">
-											<select
-												className="h-9 min-w-[125px] rounded-md border bg-background px-2 text-sm"
-												defaultValue=""
-											>
-												<option disabled value="">
-													Select an Action
-												</option>
-												<option value="edit">Edit</option>
-												<option value="view">View</option>
-												<option value="disable">Disable</option>
-												<option value="delete">Delete</option>
-											</select>
-										</td>
+										<th className="px-4 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
+											Action
+										</th>
 									</tr>
-								))}
+								</thead>
 
-								{visibleAgents.length === 0 && (
-									<tr>
-										<td
-											className="px-4 py-10 text-center text-muted-foreground"
-											colSpan={13}
+								<tbody>
+									{visibleAgents.map((agent) => (
+										<tr
+											className="border-slate-100 border-b transition-colors last:border-0 hover:bg-blue-50/30 dark:border-slate-800 dark:hover:bg-blue-950/30"
+											key={agent.id}
 										>
-											No agents found.
-										</td>
-									</tr>
-								)}
-							</tbody>
-						</table>
-					</div>
+											<td className="px-4 py-3">
+												<span className="font-mono font-semibold text-[#102b55] dark:text-slate-200">
+													{agent.id}
+												</span>
+											</td>
 
-					{/* Pagination */}
-					<div className="flex flex-col gap-3 border-t px-4 py-4 text-sm md:flex-row md:items-center md:justify-between">
-						<span className="text-muted-foreground">
-							Showing {filteredAgents.length === 0 ? 0 : startIndex + 1} to{" "}
-							{Math.min(startIndex + pageSize, filteredAgents.length)} of{" "}
-							{filteredAgents.length} entries
-						</span>
+											<td className="px-4 py-3">
+												<div className="space-y-1">
+													<span className="inline-flex rounded-full bg-blue-50 px-2 py-0.5 font-semibold text-[#0757ff] text-[9px] dark:bg-blue-950/60 dark:text-blue-400">
+														Login Based Calling
+													</span>
 
-						<div className="flex items-center gap-1">
-							<Button
-								disabled={safePage === 1}
-								onClick={() => setCurrentPage((page) => Math.max(1, page - 1))}
-								size="sm"
-								variant="outline"
-							>
-								Previous
-							</Button>
+													<div className="font-medium text-[#263b5b] dark:text-slate-200">
+														{agent.name}
+													</div>
+												</div>
+											</td>
 
-							{Array.from({ length: totalPages }, (_, index) => index + 1).map(
-								(page) => (
+											<td className="px-4 py-3">
+												<div className="flex items-center gap-1.5 whitespace-nowrap">
+													<span className="text-slate-600 dark:text-slate-400">
+														{agent.callForwardNumber}
+													</span>
+
+													<span
+														className="flex size-4 items-center justify-center rounded-full bg-emerald-500 text-[9px] text-white"
+														title="Verified"
+													>
+														✓
+													</span>
+												</div>
+											</td>
+
+											<td className="px-4 py-3 text-slate-500 dark:text-slate-400">
+												{agent.alternateNumbers}
+											</td>
+
+											<td className="px-4 py-3 font-medium text-slate-600 dark:text-slate-400">
+												{agent.intercomNumber}
+											</td>
+
+											<td className="px-4 py-3 text-slate-500 dark:text-slate-400">
+												{agent.timeGroup}
+											</td>
+
+											<td className="px-4 py-3 text-slate-500 dark:text-slate-400">
+												{agent.departments}
+											</td>
+
+											<td className="px-4 py-3 font-mono text-slate-600 dark:text-slate-400">
+												{agent.username}
+											</td>
+
+											<td className="max-w-[210px] px-4 py-3 text-slate-500 dark:text-slate-400">
+												<span className="break-words">
+													{agent.extensionCallerId}
+												</span>
+											</td>
+
+											<td className="px-4 py-3">
+												<div className="flex items-center gap-2">
+													<AgentStatusDot status={agent.agentStatus} />
+
+													<span className="text-slate-500 dark:text-slate-400">
+														{agent.agentStatus}
+													</span>
+												</div>
+											</td>
+
+											<td className="px-4 py-3">
+												<div className="flex items-center gap-2">
+													<ExtensionStatusDot status={agent.extensionStatus} />
+
+													<span
+														className={
+															agent.extensionStatus === "Registered"
+																? "text-emerald-600 dark:text-emerald-400"
+																: "text-red-500 dark:text-red-400"
+														}
+													>
+														{agent.extensionStatus}
+													</span>
+												</div>
+											</td>
+
+											<td className="px-4 py-3 text-center">
+												<span className="font-semibold text-[#102b55] dark:text-slate-200">
+													{agent.callsAnswered}
+												</span>
+											</td>
+
+											<td className="px-4 py-3">
+												<select
+													className="h-8 min-w-[120px] rounded-lg border border-slate-200 bg-white px-2 text-[11px] text-slate-600 outline-none transition hover:border-blue-200 focus:border-[#0757ff] focus:ring-2 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:focus:border-blue-500 dark:hover:border-blue-800"
+													defaultValue=""
+												>
+													<option disabled value="">
+														Select Action
+													</option>
+
+													<option value="view">View</option>
+													<option value="edit">Edit</option>
+													<option value="disable">Disable</option>
+													<option value="delete">Delete</option>
+												</select>
+											</td>
+										</tr>
+									))}
+
+									{visibleAgents.length === 0 && (
+										<tr>
+											<td className="px-4 py-12 text-center" colSpan={13}>
+												<div className="flex flex-col items-center">
+													<Search className="mb-2 size-7 text-slate-300 dark:text-slate-600" />
+
+													<p className="font-medium text-slate-500 dark:text-slate-400">
+														No agents found
+													</p>
+
+													<p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">
+														Try changing your search.
+													</p>
+												</div>
+											</td>
+										</tr>
+									)}
+								</tbody>
+							</table>
+						</div>
+
+						{/* PAGINATION */}
+						<div className="flex flex-col gap-3 border-slate-100 border-t px-5 py-3.5 text-xs sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+							<span className="text-slate-400 dark:text-slate-500">
+								Showing{" "}
+								<span className="font-semibold text-slate-600 dark:text-slate-300">
+									{filteredAgents.length === 0 ? 0 : startIndex + 1}
+								</span>{" "}
+								to{" "}
+								<span className="font-semibold text-slate-600 dark:text-slate-300">
+									{Math.min(startIndex + pageSize, filteredAgents.length)}
+								</span>{" "}
+								of{" "}
+								<span className="font-semibold text-slate-600 dark:text-slate-300">
+									{filteredAgents.length}
+								</span>{" "}
+								entries
+							</span>
+
+							<div className="flex items-center gap-1.5">
+								<Button
+									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									disabled={safePage === 1}
+									onClick={() =>
+										setCurrentPage((page) => Math.max(1, page - 1))
+									}
+									size="sm"
+									variant="outline"
+								>
+									<ChevronLeft className="mr-1 size-3.5" />
+									Previous
+								</Button>
+
+								{Array.from(
+									{ length: totalPages },
+									(_, index) => index + 1
+								).map((page) => (
 									<Button
+										className={
+											page === safePage
+												? "h-8 min-w-8 bg-[#0757ff] px-2 text-[11px] shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+												: "h-8 min-w-8 border-slate-200 px-2 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+										}
 										key={page}
 										onClick={() => setCurrentPage(page)}
 										size="sm"
@@ -513,22 +694,30 @@ function ExtensionsPage() {
 									>
 										{page}
 									</Button>
-								)
-							)}
+								))}
 
-							<Button
-								disabled={safePage === totalPages}
-								onClick={() =>
-									setCurrentPage((page) => Math.min(totalPages, page + 1))
-								}
-								size="sm"
-								variant="outline"
-							>
-								Next
-							</Button>
+								<Button
+									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									disabled={safePage === totalPages}
+									onClick={() =>
+										setCurrentPage((page) => Math.min(totalPages, page + 1))
+									}
+									size="sm"
+									variant="outline"
+								>
+									Next
+									<ChevronRight className="ml-1 size-3.5" />
+								</Button>
+							</div>
 						</div>
 					</div>
-				</section>
+
+					{/* FOOTER */}
+					<div className="mt-3 flex items-center justify-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
+						<CheckCircle2 className="size-3.5 text-emerald-500" />
+						Agent and extension data is securely managed
+					</div>
+				</div>
 			</main>
 		</div>
 	);
