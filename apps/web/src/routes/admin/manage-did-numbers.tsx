@@ -1,6 +1,5 @@
-// biome-ignore-all lint/performance/noJsxPropsBind: Table controls use local component state.
-import { createFileRoute } from "@tanstack/react-router";
-import { Button } from "@workholo/ui/components/button";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Button, buttonVariants } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
 import { CheckCircle2, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
@@ -220,6 +219,171 @@ function ManageDidNumbersPage() {
 						</div>
 
 						<div className="flex flex-wrap gap-2">
+							<Button variant="outline">Export Numbers</Button>
+
+							<Link
+								className={buttonVariants({ variant: "outline" })}
+								to="/admin/block-calls"
+							>
+								Block a Number
+							</Link>
+
+							<Link
+								className={buttonVariants({ variant: "outline" })}
+								to="/admin/blocked-numbers"
+							>
+								All Blocked Numbers
+							</Link>
+						</div>
+					</div>
+
+					{/* Filters */}
+					<div className="flex flex-col gap-4 border-b px-6 py-4 lg:flex-row lg:items-center lg:justify-between">
+						<div className="flex items-center gap-2 text-sm">
+							<span className="text-muted-foreground">Show</span>
+
+							<select
+								className="h-9 rounded-md border bg-background px-3 text-sm outline-none"
+								onChange={(event) => handlePageSizeChange(event.target.value)}
+								value={pageSize}
+							>
+								<option value={10}>10</option>
+								<option value={25}>25</option>
+								<option value={50}>50</option>
+							</select>
+
+							<span className="text-muted-foreground">entries</span>
+						</div>
+
+						<div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+							<select
+								className="h-9 min-w-[140px] rounded-md border bg-background px-3 text-sm outline-none"
+								onChange={(event) => handleStatusChange(event.target.value)}
+								value={statusFilter}
+							>
+								<option value="All">All</option>
+								<option value="Enabled">Enabled</option>
+								<option value="Disabled">Disabled</option>
+							</select>
+
+							<select
+								className="h-9 min-w-[140px] rounded-md border bg-background px-3 text-sm outline-none"
+								onChange={(event) => handleTypeChange(event.target.value)}
+								value={typeFilter}
+							>
+								<option value="All Types">All Types</option>
+								<option value="DID">DID</option>
+								<option value="Toll Free">Toll Free</option>
+								<option value="Virtual">Virtual</option>
+							</select>
+
+							<div className="flex gap-2">
+								<Input
+									className="w-full sm:w-[220px]"
+									onChange={(event) => setSearch(event.target.value)}
+									onKeyDown={(event) => {
+										if (event.key === "Enter") {
+											handleSearch();
+										}
+									}}
+									placeholder="Search"
+									value={search}
+								/>
+
+								<Button onClick={handleSearch}>Search</Button>
+							</div>
+						</div>
+					</div>
+
+					{/* Table */}
+					<div className="overflow-x-auto">
+						<table className="w-full min-w-[1050px] text-sm">
+							<thead>
+								<tr className="border-b bg-muted/40">
+									<th className="px-4 py-3 text-left font-medium">Name</th>
+
+									<th className="px-4 py-3 text-left font-medium">
+										Description
+									</th>
+
+									<th className="px-4 py-3 text-left font-medium">Number</th>
+
+									<th className="px-4 py-3 text-left font-medium">Status</th>
+
+									<th className="px-4 py-3 text-left font-medium">
+										Assigned to
+									</th>
+
+									<th className="px-4 py-3 text-left font-medium">Action</th>
+								</tr>
+							</thead>
+
+							<tbody>
+								{visibleNumbers.length > 0 ? (
+									visibleNumbers.map((item) => (
+										<tr
+											className="border-b last:border-0 hover:bg-muted/20"
+											key={item.id}
+										>
+											<td className="px-4 py-3">{item.name || "—"}</td>
+
+											<td className="px-4 py-3">{item.description || "—"}</td>
+
+											<td className="px-4 py-3 font-medium">{item.number}</td>
+
+											<td className="px-4 py-3">
+												<span
+													className={
+														item.status === "Enabled"
+															? "font-medium text-green-600"
+															: "font-medium text-red-600"
+													}
+												>
+													{item.status}
+												</span>
+											</td>
+
+											<td className="px-4 py-3">{item.assignedTo || ""}</td>
+
+											<td className="px-4 py-3">
+												<select
+													className="h-9 rounded-md border bg-background px-3 text-sm outline-none"
+													defaultValue=""
+												>
+													<option disabled value="">
+														Select an Action
+													</option>
+													<option value="view">View</option>
+													<option value="edit">Edit</option>
+													<option value="assign">Assign</option>
+													<option value="block">Block</option>
+												</select>
+											</td>
+										</tr>
+									))
+								) : (
+									<tr>
+										<td
+											className="px-4 py-10 text-center text-muted-foreground"
+											colSpan={6}
+										>
+											No numbers found.
+										</td>
+									</tr>
+								)}
+							</tbody>
+						</table>
+					</div>
+
+					{/* Footer / Pagination */}
+					<div className="flex flex-col gap-4 border-t px-6 py-4 text-sm md:flex-row md:items-center md:justify-between">
+						<p className="text-muted-foreground">
+							Showing {filteredNumbers.length === 0 ? 0 : startIndex + 1} to{" "}
+							{Math.min(startIndex + pageSize, filteredNumbers.length)} of{" "}
+							{filteredNumbers.length} entries
+						</p>
+
+						<div className="flex items-center gap-1">
 							<Button
 								className="border-slate-200 text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 								variant="outline"
