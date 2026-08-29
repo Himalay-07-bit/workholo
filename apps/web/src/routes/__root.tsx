@@ -12,7 +12,6 @@ import type { AppRouterClient } from "@workholo/api/routers/index";
 import { Toaster } from "@workholo/ui/components/sonner";
 import { TooltipProvider } from "@workholo/ui/components/tooltip";
 import { useState } from "react";
-import Header from "@/components/header";
 import { ThemeProvider } from "@/components/theme-provider";
 import type { orpcClient, queryUtils } from "@/utils/orpc";
 import { link } from "@/utils/orpc";
@@ -60,8 +59,7 @@ function RootComponent() {
 				storageKey="vite-ui-theme"
 			>
 				<TooltipProvider>
-					<div className="grid h-svh grid-rows-[auto_1fr]">
-						<Header />
+					<div className="h-svh">
 						<Outlet />
 					</div>
 				</TooltipProvider>
