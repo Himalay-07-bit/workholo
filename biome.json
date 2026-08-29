@@ -73,6 +73,18 @@
       }
     }
   },
+  "overrides": [
+    {
+      "includes": ["apps/web/src/routes/admin/**"],
+      "linter": {
+        "rules": {
+          "performance": {
+            "noJsxPropsBind": "off"
+          }
+        }
+      }
+    }
+  ],
   "javascript": {
     "formatter": {
       "quoteStyle": "double"
