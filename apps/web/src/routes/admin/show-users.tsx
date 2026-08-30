@@ -11,6 +11,7 @@ import {
 	Search,
 	Users,
 } from "lucide-react";
+import { AdminTopbar } from "@/components/admin/admin-topbar";
 
 export const Route = createFileRoute("/admin/show-users")({
 	component: ShowUsersPage,
@@ -69,6 +70,8 @@ function ShowUsersPage() {
 
 	return (
 		<div className="min-h-svh bg-[#eef3f9] text-slate-900 dark:bg-[#0b1220] dark:text-slate-100">
+			<AdminTopbar />
+
 			{/* =====================================================
 			    PAGE HEADER
 			===================================================== */}
