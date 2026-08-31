@@ -50,13 +50,13 @@ function BlockedNumbersPage() {
 	});
 
 	return (
-		<div className="flex min-h-svh flex-col bg-[#eef3f9] dark:bg-slate-950">
+		<div className="flex min-h-svh flex-col bg-[#eef3f9] dark:bg-[#07111f]">
 			<AdminTopbar />
 
 			<main className="flex-1 p-4 md:p-6">
 				<div className="mx-auto max-w-[1500px]">
 					{/* PAGE HEADER */}
-					<div className="mb-4 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-slate-800 dark:bg-slate-900">
+					<div className="mb-4 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between dark:border-slate-800 dark:bg-[#0b1728]">
 						<div className="flex items-center gap-3">
 							<div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-red-50 text-red-500 dark:bg-red-950/40 dark:text-red-400">
 								<Ban className="size-5" />
@@ -64,7 +64,7 @@ function BlockedNumbersPage() {
 
 							<div>
 								<div className="flex items-center gap-2">
-									<h1 className="font-bold text-[#102b55] text-lg tracking-tight dark:text-white">
+									<h1 className="font-bold text-[#102b55] text-lg tracking-tight dark:text-slate-100">
 										Blocked Numbers
 									</h1>
 
@@ -79,10 +79,11 @@ function BlockedNumbersPage() {
 							</div>
 						</div>
 
+						{/* PRIMARY BUTTON */}
 						<Link
 							className={buttonVariants({
 								className:
-									"h-9 rounded-lg bg-[#0757ff] px-4 text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500",
+									"!rounded-lg !bg-[#0757ff] !text-white hover:!bg-[#004be0] dark:!bg-blue-600 dark:hover:!bg-blue-500 h-9 w-fit px-4 font-medium text-xs shadow-blue-500/20 shadow-sm transition-colors",
 							})}
 							to="/admin/block-calls"
 						>
@@ -92,11 +93,11 @@ function BlockedNumbersPage() {
 					</div>
 
 					{/* MAIN CARD */}
-					<Card className="overflow-hidden rounded-2xl border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+					<Card className="overflow-hidden rounded-2xl border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
 						<CardHeader className="border-slate-100 border-b px-5 py-4 dark:border-slate-800">
 							<div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
 								<div>
-									<CardTitle className="font-semibold text-[#102b55] text-sm dark:text-white">
+									<CardTitle className="font-semibold text-[#102b55] text-sm dark:text-slate-100">
 										Blocked Numbers
 									</CardTitle>
 
@@ -112,19 +113,19 @@ function BlockedNumbersPage() {
 										<Search className="pointer-events-none absolute top-1/2 left-3 size-3.5 -translate-y-1/2 text-slate-400 dark:text-slate-500" />
 
 										<Input
-											className="h-9 rounded-lg border-slate-200 bg-white pl-9 text-slate-700 text-xs placeholder:text-slate-400 focus:border-[#0757ff] focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:placeholder:text-slate-500"
+											className="h-9 rounded-lg border-slate-200 bg-white pl-9 text-slate-700 text-xs shadow-sm placeholder:text-slate-400 focus:border-[#0757ff] focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:placeholder:text-slate-500"
 											onChange={(event) => setSearch(event.target.value)}
 											placeholder="Search blocked numbers..."
 											value={search}
 										/>
 									</div>
 
-									{/* BACK */}
+									{/* BACK BUTTON */}
 									<Link
 										className={buttonVariants({
 											variant: "outline",
 											className:
-												"h-9 rounded-lg border-slate-200 px-3 text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/40 dark:hover:text-blue-400",
+												"h-9 rounded-lg border-slate-200 bg-white px-3 text-slate-600 text-xs shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/40 dark:hover:text-blue-400",
 										})}
 										to="/admin/manage-did-numbers"
 									>
@@ -140,7 +141,7 @@ function BlockedNumbersPage() {
 							<div className="overflow-x-auto">
 								<table className="w-full min-w-[850px] border-collapse text-xs">
 									<thead>
-										<tr className="border-slate-100 border-b bg-slate-50/70 dark:border-slate-800 dark:bg-slate-950/60">
+										<tr className="border-slate-100 border-b bg-slate-50/70 dark:border-slate-800 dark:bg-slate-900/70">
 											<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
 												Caller ID
 											</th>
@@ -211,11 +212,12 @@ function BlockedNumbersPage() {
 														</span>
 													</td>
 
-													{/* ACTION */}
+													{/* ACTION BUTTON */}
 													<td className="px-5 py-4">
 														<Button
-															className="h-8 rounded-lg border-slate-200 text-[10px] text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/40 dark:hover:text-blue-400"
+															className="h-8 rounded-lg border-slate-200 bg-white px-3 text-[10px] text-slate-600 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/40 dark:hover:text-blue-400"
 															size="sm"
+															type="button"
 															variant="outline"
 														>
 															Select an Action
@@ -242,27 +244,33 @@ function BlockedNumbersPage() {
 									entries
 								</span>
 
-								<div className="flex gap-1.5">
+								<div className="flex items-center gap-1.5">
+									{/* PREVIOUS */}
 									<Button
-										className="h-8 border-slate-200 text-[10px] text-slate-500 dark:border-slate-700 dark:text-slate-400"
+										className="h-8 rounded-lg border-slate-200 bg-white px-3 text-[10px] text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
 										disabled
 										size="sm"
+										type="button"
 										variant="outline"
 									>
 										Previous
 									</Button>
 
+									{/* ACTIVE PAGE */}
 									<Button
-										className="h-8 min-w-8 bg-[#0757ff] px-2 text-[10px] text-white hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+										className="!bg-[#0757ff] !text-white hover:!bg-[#004be0] dark:!bg-blue-600 dark:hover:!bg-blue-500 h-8 min-w-8 rounded-lg px-2 font-medium text-[10px] shadow-blue-500/20 shadow-sm"
 										size="sm"
+										type="button"
 									>
 										1
 									</Button>
 
+									{/* NEXT */}
 									<Button
-										className="h-8 border-slate-200 text-[10px] text-slate-500 dark:border-slate-700 dark:text-slate-400"
+										className="h-8 rounded-lg border-slate-200 bg-white px-3 text-[10px] text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
 										disabled
 										size="sm"
+										type="button"
 										variant="outline"
 									>
 										Next
