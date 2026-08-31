@@ -222,7 +222,8 @@ function ManageDidNumbersPage() {
 
 						<div className="flex flex-wrap gap-2">
 							<Button
-								className="border-slate-200 bg-white text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								className="h-9 rounded-lg border-slate-200 bg-white text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								type="button"
 								variant="outline"
 							>
 								Export Numbers
@@ -232,7 +233,7 @@ function ManageDidNumbersPage() {
 								className={buttonVariants({
 									variant: "outline",
 									className:
-										"border-slate-200 bg-white text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400",
+										"!h-9 !rounded-lg border-slate-200 bg-white px-4 text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400",
 								})}
 								to="/admin/block-calls"
 							>
@@ -243,7 +244,7 @@ function ManageDidNumbersPage() {
 								className={buttonVariants({
 									variant: "outline",
 									className:
-										"border-slate-200 bg-white text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400",
+										"!h-9 !rounded-lg border-slate-200 bg-white px-4 text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400",
 								})}
 								to="/admin/blocked-numbers"
 							>
@@ -459,7 +460,7 @@ function ManageDidNumbersPage() {
 
 							<div className="flex items-center gap-1.5">
 								<Button
-									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="h-8 rounded-lg px-3 text-[11px]"
 									disabled={safeCurrentPage === 1}
 									onClick={goToPreviousPage}
 									size="sm"
@@ -476,8 +477,8 @@ function ManageDidNumbersPage() {
 									<Button
 										className={
 											page === safeCurrentPage
-												? "h-8 min-w-8 bg-[#0757ff] px-2 text-[11px] shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
-												: "h-8 min-w-8 border-slate-200 px-2 text-[11px] text-slate-500 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+												? "h-8 min-w-8 rounded-lg bg-[#0757ff] px-2 text-[11px] shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+												: "h-8 min-w-8 rounded-lg border-slate-200 px-2 text-[11px] text-slate-500 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 										}
 										key={page}
 										onClick={() => setCurrentPage(page)}
@@ -489,7 +490,7 @@ function ManageDidNumbersPage() {
 								))}
 
 								<Button
-									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="h-8 rounded-lg px-3 text-[11px]"
 									disabled={safeCurrentPage === totalPages}
 									onClick={goToNextPage}
 									size="sm"
