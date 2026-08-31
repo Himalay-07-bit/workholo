@@ -1,5 +1,7 @@
 // biome-ignore-all lint/performance/noJsxPropsBind: Navigation handlers need the selected menu item.
+
 import { useLocation, useNavigate } from "@tanstack/react-router";
+
 import {
 	Sidebar,
 	SidebarContent,
@@ -12,6 +14,7 @@ import {
 	SidebarMenuButton,
 	SidebarMenuItem,
 } from "@workholo/ui/components/sidebar";
+
 import {
 	BarChart3,
 	ChevronRight,
@@ -22,6 +25,7 @@ import {
 	Users,
 	Wrench,
 } from "lucide-react";
+
 import { useState } from "react";
 
 const navigation = [
@@ -118,6 +122,25 @@ const outboundItems = [
 	},
 ];
 
+const templateNavigation = [
+	{
+		title: "Template Management",
+		url: "/admin/sms-templates",
+	},
+	{
+		title: "Agent Dispositions",
+		url: "/admin/agent-dispositions",
+	},
+	{
+		title: "Survey Campaign",
+		url: "/admin/survey-campaigns",
+	},
+	{
+		title: "Scheduled Calls",
+		url: "/admin/scheduled-calls",
+	},
+];
+
 const otherNavigation = [
 	{
 		icon: Phone,
@@ -139,13 +162,19 @@ export function AdminSidebar() {
 	const [servicesOpen, setServicesOpen] = useState(true);
 	const [outboundOpen, setOutboundOpen] = useState(true);
 
+	/*
+	 * TanStack Router se current route directly mil raha hai.
+	 * Isliye route change hone par sidebar automatically re-render hoga.
+	 */
 	const currentPath = location.pathname;
 
 	const isActive = (url: string) => {
+		// Dashboard ko sirf exact /admin route par active rakho.
 		if (url === "/admin") {
 			return currentPath === "/admin" || currentPath === "/admin/";
 		}
 
+		// Baaki pages ke liye exact route ya uske child route ko active rakho.
 		return currentPath === url || currentPath.startsWith(`${url}/`);
 	};
 
@@ -364,6 +393,32 @@ export function AdminSidebar() {
 												</div>
 											)}
 										</SidebarMenuItem>
+
+										{/* TEMPLATE MANAGEMENT */}
+										{templateNavigation.map((item) => {
+											const active = isActive(item.url);
+
+											return (
+												<SidebarMenuItem className="mt-1" key={item.title}>
+													<SidebarMenuButton
+														className={`h-8 rounded-md px-3 ${
+															active
+																? "bg-blue-50 font-semibold text-[#0757ff] dark:bg-blue-950/60 dark:text-blue-400"
+																: "text-slate-500 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
+														}`}
+														onClick={() =>
+															navigate({
+																to: item.url,
+															})
+														}
+														size="sm"
+														tooltip={item.title}
+													>
+														<span className="text-[11px]">{item.title}</span>
+													</SidebarMenuButton>
+												</SidebarMenuItem>
+											);
+										})}
 									</div>
 								)}
 							</SidebarMenuItem>
