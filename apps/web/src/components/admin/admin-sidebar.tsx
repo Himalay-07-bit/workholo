@@ -62,36 +62,12 @@ const serviceItems = [
 		url: "/admin/manage-did-numbers",
 	},
 	{
-		title: "Time Groups",
-		url: "/admin/time-groups",
-	},
-	{
-		title: "Time Conditions",
-		url: "/admin/time-conditions",
-	},
-	{
-		title: "IVR",
-		url: "/admin/ivr",
-	},
-	{
-		title: "Auto-Attendant",
-		url: "/admin/auto-attendant",
-	},
-	{
 		title: "Agents",
 		url: "/admin/extensions",
 	},
 	{
 		title: "Departments",
 		url: "/admin/departments",
-	},
-	{
-		title: "System Recordings",
-		url: "/admin/system-recordings",
-	},
-	{
-		title: "Voicemail",
-		url: "/admin/voicemail",
 	},
 ];
 
@@ -114,7 +90,7 @@ const outboundItems = [
 	},
 	{
 		title: "Pause Code Lists",
-		url: "/admin/pause-code-lists",
+		url: "/admin/break-lists",
 	},
 	{
 		title: "Account DND Lists",
@@ -122,11 +98,11 @@ const outboundItems = [
 	},
 	{
 		title: "Quick Transfer Lists",
-		url: "/admin/quick-transfer-lists",
+		url: "/admin/manage-quick-transfer-list",
 	},
 	{
 		title: "CSAT Survey",
-		url: "/admin/csat-survey",
+		url: "/admin/manage-csat-survey",
 	},
 	{
 		title: "Dialer Skill Lists",
