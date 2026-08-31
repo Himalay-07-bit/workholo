@@ -1,10 +1,12 @@
 // biome-ignore-all lint/performance/noJsxPropsBind: UI event handlers require access to component state.
 
 import { createFileRoute } from "@tanstack/react-router";
+
 import { Button } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
-import { useMemo, useState } from "react";
 
+import { Search, X } from "lucide-react";
+import { useMemo, useState } from "react";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
 
 export const Route = createFileRoute("/admin/break-lists")({
@@ -37,6 +39,10 @@ function BreakListsPage() {
 	const [status, setStatus] = useState("All");
 	const [pageSize, setPageSize] = useState(10);
 
+	const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+	const [newListName, setNewListName] = useState("");
+	const [newListDescription, setNewListDescription] = useState("");
+
 	const filteredLists = useMemo(() => {
 		const nameValue = name.trim().toLowerCase();
 		const descriptionValue = description.trim().toLowerCase();
@@ -53,7 +59,7 @@ function BreakListsPage() {
 
 			return matchesName && matchesDescription && matchesStatus;
 		});
-	}, [name, description, status]);
+	}, [description, name, status]);
 
 	const visibleLists = filteredLists.slice(0, pageSize);
 
@@ -63,6 +69,12 @@ function BreakListsPage() {
 		setStatus("All");
 	};
 
+	const closeAddDialog = () => {
+		setIsAddDialogOpen(false);
+		setNewListName("");
+		setNewListDescription("");
+	};
+
 	return (
 		<div className="flex min-h-svh flex-col bg-[#eef3f9] dark:bg-[#07111f]">
 			<AdminTopbar />
@@ -70,7 +82,6 @@ function BreakListsPage() {
 			<main className="flex-1 p-4 md:p-6">
 				<div className="mx-auto max-w-[1500px]">
 					<section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
-						{/* PAGE HEADER */}
 						<div className="flex flex-col gap-3 border-slate-100 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
 							<div>
 								<h1 className="font-bold text-[#102b55] text-base tracking-tight dark:text-white">
@@ -82,12 +93,14 @@ function BreakListsPage() {
 								</p>
 							</div>
 
-							<Button className="rounded-lg bg-[#0757ff] text-xs shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500">
+							<Button
+								className="rounded-lg bg-[#0757ff] text-xs shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+								onClick={() => setIsAddDialogOpen(true)}
+							>
 								Add Pause Code List
 							</Button>
 						</div>
 
-						{/* FILTERS */}
 						<div className="border-slate-100 border-b px-5 py-5 dark:border-slate-800">
 							<div className="grid gap-4 lg:grid-cols-[250px_330px_220px_auto] lg:items-end">
 								<div className="space-y-1.5">
@@ -144,6 +157,7 @@ function BreakListsPage() {
 
 								<div className="flex gap-2">
 									<Button className="h-9 rounded-lg bg-[#0757ff] px-4 text-xs shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500">
+										<Search className="mr-1.5 size-3.5" />
 										Search
 									</Button>
 
@@ -158,7 +172,6 @@ function BreakListsPage() {
 							</div>
 						</div>
 
-						{/* TABLE CONTROLS */}
 						<div className="flex items-center gap-2 border-slate-100 border-b px-5 py-4 text-xs dark:border-slate-800">
 							<span className="text-slate-500 dark:text-slate-400">Show</span>
 
@@ -177,7 +190,6 @@ function BreakListsPage() {
 							</span>
 						</div>
 
-						{/* TABLE */}
 						<div className="overflow-x-auto">
 							<table className="w-full min-w-[1100px] border-collapse text-xs">
 								<thead>
@@ -291,7 +303,6 @@ function BreakListsPage() {
 							</table>
 						</div>
 
-						{/* FOOTER */}
 						<div className="flex flex-col gap-3 border-slate-100 border-t px-5 py-4 text-xs sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
 							<span className="text-slate-400 dark:text-slate-500">
 								Showing{" "}
@@ -357,6 +368,74 @@ function BreakListsPage() {
 					</section>
 				</div>
 			</main>
+
+			{isAddDialogOpen ? (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+					<div className="w-full max-w-[520px] overflow-hidden rounded-md bg-white shadow-2xl dark:bg-[#0b1728]">
+						<div className="flex items-center justify-between bg-[#0757ff] px-4 py-3">
+							<h2 className="font-semibold text-sm text-white">
+								Add Pause Code List
+							</h2>
+
+							<button
+								aria-label="Close Add Pause Code List dialog"
+								className="text-white/90 transition-colors hover:text-white"
+								onClick={closeAddDialog}
+								type="button"
+							>
+								<X className="size-4" />
+							</button>
+						</div>
+
+						<div className="px-9 py-8">
+							<div className="space-y-7">
+								<div className="space-y-1.5">
+									<label
+										className="text-slate-500 text-xs dark:text-slate-400"
+										htmlFor="new-pause-code-list-name"
+									>
+										Name*
+									</label>
+
+									<Input
+										className="h-9 rounded-none border-0 border-slate-200 border-b bg-transparent px-0 text-sm shadow-none focus:border-[#0757ff] focus:ring-0 dark:border-slate-700"
+										id="new-pause-code-list-name"
+										onChange={(event) => setNewListName(event.target.value)}
+										value={newListName}
+									/>
+								</div>
+
+								<div className="space-y-1.5">
+									<label
+										className="text-slate-500 text-xs dark:text-slate-400"
+										htmlFor="new-pause-code-list-description"
+									>
+										Description
+									</label>
+
+									<textarea
+										className="min-h-[55px] w-full resize-y rounded-none border-0 border-slate-200 border-b bg-transparent px-0 py-2 text-sm outline-none focus:border-[#0757ff] dark:border-slate-700 dark:bg-transparent"
+										id="new-pause-code-list-description"
+										onChange={(event) =>
+											setNewListDescription(event.target.value)
+										}
+										value={newListDescription}
+									/>
+								</div>
+							</div>
+
+							<div className="mt-9 flex justify-end">
+								<Button
+									className="h-9 bg-[#0757ff] text-xs hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+									onClick={closeAddDialog}
+								>
+									Submit
+								</Button>
+							</div>
+						</div>
+					</div>
+				</div>
+			) : null}
 		</div>
 	);
 }

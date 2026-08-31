@@ -1,11 +1,12 @@
 // biome-ignore-all lint/performance/noJsxPropsBind: UI event handlers require access to component state.
 
 import { createFileRoute } from "@tanstack/react-router";
+
 import { Button } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
-import { Plus, Search } from "lucide-react";
-import { useState } from "react";
 
+import { Plus, Search, X } from "lucide-react";
+import { useState } from "react";
 import { AdminTopbar } from "@/components/admin/admin-topbar";
 
 export const Route = createFileRoute("/admin/dnd/manage-list")({
@@ -32,6 +33,10 @@ function ManageDndListPage() {
 	const [search, setSearch] = useState("");
 	const [pageSize, setPageSize] = useState(10);
 
+	const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+	const [newDndName, setNewDndName] = useState("");
+	const [newDndDescription, setNewDndDescription] = useState("");
+
 	const filteredLists = dndLists.filter((item) =>
 		`${item.name} ${item.description}`
 			.toLowerCase()
@@ -40,6 +45,12 @@ function ManageDndListPage() {
 
 	const visibleLists = filteredLists.slice(0, pageSize);
 
+	const closeAddDialog = () => {
+		setIsAddDialogOpen(false);
+		setNewDndName("");
+		setNewDndDescription("");
+	};
+
 	return (
 		<div className="flex min-h-svh flex-col bg-[#eef3f9] dark:bg-[#07111f]">
 			<AdminTopbar />
@@ -47,7 +58,6 @@ function ManageDndListPage() {
 			<main className="flex-1 p-4 md:p-6">
 				<div className="mx-auto max-w-[1500px]">
 					<section className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
-						{/* PAGE HEADER */}
 						<div className="flex flex-col gap-3 border-slate-100 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
 							<div>
 								<h1 className="font-bold text-[#102b55] text-base tracking-tight dark:text-white">
@@ -59,13 +69,15 @@ function ManageDndListPage() {
 								</p>
 							</div>
 
-							<Button className="h-9 rounded-lg bg-[#0757ff] px-4 text-xs shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500">
+							<Button
+								className="h-9 rounded-lg bg-[#0757ff] px-4 text-xs shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+								onClick={() => setIsAddDialogOpen(true)}
+							>
 								<Plus className="mr-1.5 size-3.5" />
 								Add Account DND List
 							</Button>
 						</div>
 
-						{/* CONTROLS */}
 						<div className="flex flex-col gap-3 border-slate-100 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
 							<div className="flex items-center gap-2 text-xs">
 								<span className="text-slate-500 dark:text-slate-400">Show</span>
@@ -97,7 +109,6 @@ function ManageDndListPage() {
 							</div>
 						</div>
 
-						{/* TABLE */}
 						<div className="overflow-x-auto">
 							<table className="w-full min-w-[900px] border-collapse text-xs">
 								<thead>
@@ -195,8 +206,7 @@ function ManageDndListPage() {
 							</table>
 						</div>
 
-						{/* FOOTER */}
-						<div className="flex flex-col gap-3 border-slate-100 border-t px-5 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
+						<div className="flex flex-col gap-3 border-slate-100 border-t px-5 py-4 sm:flex-row sm:items-center sm:justify-between">
 							<span className="text-slate-400 text-xs dark:text-slate-500">
 								Showing{" "}
 								<span className="font-semibold text-slate-600 dark:text-slate-300">
@@ -243,6 +253,93 @@ function ManageDndListPage() {
 					</section>
 				</div>
 			</main>
+
+			{isAddDialogOpen ? (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+					<div className="w-full max-w-[525px] overflow-hidden rounded-md bg-white shadow-2xl dark:bg-[#0b1728]">
+						<div className="flex items-center justify-between bg-[#0757ff] px-4 py-3">
+							<h2 className="font-semibold text-sm text-white">
+								Add Account DND List
+							</h2>
+
+							<button
+								aria-label="Close Add Account DND List dialog"
+								className="text-white/90 transition-colors hover:text-white"
+								onClick={closeAddDialog}
+								type="button"
+							>
+								<X className="size-4" />
+							</button>
+						</div>
+
+						<div className="px-5 py-7">
+							<div className="space-y-6">
+								<div className="relative">
+									<label className="sr-only" htmlFor="dnd-list-name">
+										Enter Name
+									</label>
+
+									<Input
+										className="h-9 rounded-none border-0 border-slate-200 border-b bg-transparent px-0 pr-8 text-sm shadow-none focus:border-[#0757ff] focus:ring-0 dark:border-slate-700"
+										id="dnd-list-name"
+										onChange={(event) => setNewDndName(event.target.value)}
+										placeholder="Enter Name"
+										value={newDndName}
+									/>
+
+									<button
+										aria-label="Name help"
+										className="absolute right-0 bottom-2 flex size-5 items-center justify-center rounded-full border border-blue-500 text-blue-500 text-xs"
+										type="button"
+									>
+										?
+									</button>
+								</div>
+
+								<div className="relative">
+									<label className="sr-only" htmlFor="dnd-list-description">
+										Enter Description
+									</label>
+
+									<Input
+										className="h-9 rounded-none border-0 border-slate-200 border-b bg-transparent px-0 pr-8 text-sm shadow-none focus:border-[#0757ff] focus:ring-0 dark:border-slate-700"
+										id="dnd-list-description"
+										onChange={(event) =>
+											setNewDndDescription(event.target.value)
+										}
+										placeholder="Enter Description"
+										value={newDndDescription}
+									/>
+
+									<button
+										aria-label="Description help"
+										className="absolute right-0 bottom-2 flex size-5 items-center justify-center rounded-full border border-blue-500 text-blue-500 text-xs"
+										type="button"
+									>
+										?
+									</button>
+								</div>
+							</div>
+
+							<div className="mt-7 flex justify-end gap-1">
+								<Button
+									className="h-8 rounded-sm bg-[#f5f5f5] px-3 text-slate-600 text-xs shadow-none hover:bg-[#e8e8e8] dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+									onClick={closeAddDialog}
+								>
+									SAVE
+								</Button>
+
+								<Button
+									className="h-8 rounded-sm bg-[#f5f5f5] px-3 text-slate-600 text-xs shadow-none hover:bg-[#e8e8e8] dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+									onClick={closeAddDialog}
+								>
+									CLOSE
+								</Button>
+							</div>
+						</div>
+					</div>
+				</div>
+			) : null}
 		</div>
 	);
 }

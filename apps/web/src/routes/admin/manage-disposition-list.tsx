@@ -9,6 +9,7 @@ import {
 	List,
 	Plus,
 	Search,
+	X,
 } from "lucide-react";
 import { useMemo, useState } from "react";
 
@@ -77,6 +78,10 @@ function ManageDispositionListPage() {
 	const [pageSize, setPageSize] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
 
+	const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+	const [newListName, setNewListName] = useState("");
+	const [newListDescription, setNewListDescription] = useState("");
+
 	const filteredLists = useMemo(() => {
 		const searchValue = search.trim().toLowerCase();
 		const nameValue = name.trim().toLowerCase();
@@ -131,7 +136,10 @@ function ManageDispositionListPage() {
 							</p>
 						</div>
 
-						<Button className="h-9 w-fit bg-[#0757ff] text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500">
+						<Button
+							className="h-9 w-fit bg-[#0757ff] text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+							onClick={() => setIsAddDialogOpen(true)}
+						>
 							<Plus className="mr-1.5 size-4" />
 							Add Disposition List
 						</Button>
@@ -520,6 +528,81 @@ function ManageDispositionListPage() {
 					</div>
 				</div>
 			</main>
+
+			{isAddDialogOpen ? (
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+					<div className="w-full max-w-[520px] overflow-hidden rounded-md bg-white shadow-2xl dark:bg-[#0b1728]">
+						{/* Dialog Header */}
+						<div className="flex items-center justify-between bg-[#0757ff] px-4 py-3">
+							<h2 className="font-semibold text-sm text-white">
+								Add Disposition List
+							</h2>
+
+							<button
+								aria-label="Close dialog"
+								className="text-white/90 transition-colors hover:text-white"
+								onClick={() => setIsAddDialogOpen(false)}
+								type="button"
+							>
+								<X className="size-4" />
+							</button>
+						</div>
+
+						{/* Dialog Body */}
+						<div className="px-9 py-7">
+							<div className="space-y-6">
+								<div className="space-y-1.5">
+									<label
+										className="text-slate-500 text-xs dark:text-slate-400"
+										htmlFor="new-disposition-name"
+									>
+										Name*
+									</label>
+
+									<Input
+										className="h-9 rounded-none border-0 border-slate-200 border-b bg-transparent px-0 text-sm shadow-none focus:border-[#0757ff] focus:ring-0 dark:border-slate-700"
+										id="new-disposition-name"
+										onChange={(event) => setNewListName(event.target.value)}
+										value={newListName}
+									/>
+								</div>
+
+								<div className="space-y-1.5">
+									<label
+										className="text-slate-500 text-xs dark:text-slate-400"
+										htmlFor="new-disposition-description"
+									>
+										Description
+									</label>
+
+									<textarea
+										className="min-h-[55px] w-full resize-y rounded-none border-0 border-slate-200 border-b bg-transparent px-0 py-2 text-sm outline-none focus:border-[#0757ff] dark:border-slate-700 dark:bg-transparent"
+										id="new-disposition-description"
+										onChange={(event) =>
+											setNewListDescription(event.target.value)
+										}
+										value={newListDescription}
+									/>
+								</div>
+							</div>
+
+							{/* Submit */}
+							<div className="mt-8 flex justify-end">
+								<Button
+									className="h-9 bg-[#0757ff] text-xs hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+									onClick={() => {
+										setIsAddDialogOpen(false);
+										setNewListName("");
+										setNewListDescription("");
+									}}
+								>
+									Submit
+								</Button>
+							</div>
+						</div>
+					</div>
+				</div>
+			) : null}
 		</div>
 	);
 }
