@@ -63,6 +63,7 @@ function ManageLeadsPage() {
 	const totalPages = Math.max(1, Math.ceil(filteredLists.length / pageSize));
 
 	const safePage = Math.min(currentPage, totalPages);
+
 	const startIndex = (safePage - 1) * pageSize;
 
 	const visibleLists = filteredLists.slice(startIndex, startIndex + pageSize);
@@ -96,8 +97,13 @@ function ManageLeadsPage() {
 						{/* HEADER BUTTONS */}
 						<div className="flex flex-wrap gap-2">
 							<Button
-								className="h-9 border-slate-200 text-slate-600 text-xs hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
-								onClick={() => navigate({ to: "/admin/upload-lead-logs" })}
+								className="h-9 rounded-lg border-slate-200 bg-white px-3 text-slate-600 text-xs shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								onClick={() =>
+									navigate({
+										to: "/admin/upload-lead-logs",
+									})
+								}
+								type="button"
 								variant="outline"
 							>
 								<FileText className="mr-1.5 size-3.5" />
@@ -105,7 +111,8 @@ function ManageLeadsPage() {
 							</Button>
 
 							<Button
-								className="h-9 border-slate-200 text-slate-600 text-xs hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								className="h-9 rounded-lg border-slate-200 bg-white px-3 text-slate-600 text-xs shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								type="button"
 								variant="outline"
 							>
 								<Upload className="mr-1.5 size-3.5" />
@@ -113,15 +120,21 @@ function ManageLeadsPage() {
 							</Button>
 
 							<Button
-								className="h-9 border-slate-200 text-slate-600 text-xs hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+								className="h-9 rounded-lg border-slate-200 bg-white px-3 text-slate-600 text-xs shadow-sm transition-colors hover:border-red-200 hover:bg-red-50 hover:text-red-600 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-red-950/40 dark:hover:text-red-400"
+								type="button"
 								variant="outline"
 							>
 								Master Delete
 							</Button>
 
 							<Button
-								className="h-9 bg-[#0757ff] text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
-								onClick={() => navigate({ to: "/admin/add-list" })}
+								className="h-9 rounded-lg bg-[#0757ff] px-4 font-medium text-white text-xs shadow-blue-500/20 shadow-sm transition-colors hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+								onClick={() =>
+									navigate({
+										to: "/admin/add-list",
+									})
+								}
+								type="button"
 							>
 								<Plus className="mr-1.5 size-4" />
 								Add Lead List
@@ -286,11 +299,8 @@ function ManageLeadsPage() {
 													</option>
 
 													<option value="view">View</option>
-
 													<option value="edit">Edit</option>
-
 													<option value="upload">Upload</option>
-
 													<option value="delete">Delete</option>
 												</select>
 											</td>
@@ -339,22 +349,24 @@ function ManageLeadsPage() {
 
 							<div className="flex items-center gap-1.5">
 								<Button
-									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="h-8 rounded-lg border-slate-200 bg-white px-3 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									disabled={safePage === 1}
 									onClick={() => setCurrentPage(1)}
 									size="sm"
+									type="button"
 									variant="outline"
 								>
 									First
 								</Button>
 
 								<Button
-									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="h-8 rounded-lg border-slate-200 bg-white px-3 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									disabled={safePage === 1}
 									onClick={() =>
 										setCurrentPage((page) => Math.max(1, page - 1))
 									}
 									size="sm"
+									type="button"
 									variant="outline"
 								>
 									<ChevronLeft className="mr-1 size-3.5" />
@@ -368,12 +380,13 @@ function ManageLeadsPage() {
 									<Button
 										className={
 											page === safePage
-												? "h-8 min-w-8 bg-[#0757ff] px-2 text-[11px] shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
-												: "h-8 min-w-8 border-slate-200 px-2 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+												? "h-8 min-w-8 rounded-lg bg-[#0757ff] px-2 font-medium text-[11px] text-white shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+												: "h-8 min-w-8 rounded-lg border-slate-200 bg-white px-2 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 										}
 										key={page}
 										onClick={() => setCurrentPage(page)}
 										size="sm"
+										type="button"
 										variant={page === safePage ? "default" : "outline"}
 									>
 										{page}
@@ -381,12 +394,13 @@ function ManageLeadsPage() {
 								))}
 
 								<Button
-									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="h-8 rounded-lg border-slate-200 bg-white px-3 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									disabled={safePage === totalPages}
 									onClick={() =>
 										setCurrentPage((page) => Math.min(totalPages, page + 1))
 									}
 									size="sm"
+									type="button"
 									variant="outline"
 								>
 									Next
@@ -394,10 +408,11 @@ function ManageLeadsPage() {
 								</Button>
 
 								<Button
-									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="h-8 rounded-lg border-slate-200 bg-white px-3 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									disabled={safePage === totalPages}
 									onClick={() => setCurrentPage(totalPages)}
 									size="sm"
+									type="button"
 									variant="outline"
 								>
 									Last

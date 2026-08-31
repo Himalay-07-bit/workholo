@@ -1,6 +1,10 @@
+// biome-ignore-all lint/performance/noJsxPropsBind: UI event handlers require access to component state.
+
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
+
 import { Button } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
+
 import {
 	ChevronLeft,
 	ChevronRight,
@@ -113,6 +117,7 @@ const campaigns: Campaign[] = [
 
 function DialerCampaignsPage() {
 	const navigate = useNavigate();
+
 	const [search, setSearch] = useState("");
 	const [pageSize, setPageSize] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -179,12 +184,13 @@ function DialerCampaignsPage() {
 						</div>
 
 						<Button
-							className="h-9 bg-[#0757ff] text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:shadow-blue-900/30 dark:hover:bg-blue-500"
+							className="!rounded-lg !bg-[#0757ff] !text-white hover:!bg-[#004be0] dark:!bg-blue-600 dark:hover:!bg-blue-500 h-9 px-4 font-medium text-xs shadow-blue-500/20 shadow-sm transition-colors"
 							onClick={() =>
 								navigate({
 									to: "/admin/add-dialer-campaign",
 								})
 							}
+							type="button"
 						>
 							<Plus className="mr-1.5 size-4" />
 							Add Dialer Campaign
@@ -468,22 +474,24 @@ function DialerCampaignsPage() {
 
 							<div className="flex items-center gap-1.5">
 								<Button
-									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="!rounded-lg h-8 border-slate-200 px-3 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									disabled={safePage === 1}
 									onClick={() => setCurrentPage(1)}
 									size="sm"
+									type="button"
 									variant="outline"
 								>
 									First
 								</Button>
 
 								<Button
-									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="!rounded-lg h-8 border-slate-200 px-3 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									disabled={safePage === 1}
 									onClick={() =>
 										setCurrentPage((page) => Math.max(1, page - 1))
 									}
 									size="sm"
+									type="button"
 									variant="outline"
 								>
 									<ChevronLeft className="mr-1 size-3.5" />
@@ -497,12 +505,13 @@ function DialerCampaignsPage() {
 									<Button
 										className={
 											page === safePage
-												? "h-8 min-w-8 bg-[#0757ff] px-2 text-[11px] shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
-												: "h-8 min-w-8 border-slate-200 px-2 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+												? "!rounded-lg !bg-[#0757ff] !text-white hover:!bg-[#004be0] dark:!bg-blue-600 dark:hover:!bg-blue-500 h-8 min-w-8 px-2 text-[11px] shadow-blue-500/20 shadow-sm"
+												: "!rounded-lg h-8 min-w-8 border-slate-200 px-2 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 										}
 										key={page}
 										onClick={() => setCurrentPage(page)}
 										size="sm"
+										type="button"
 										variant={page === safePage ? "default" : "outline"}
 									>
 										{page}
@@ -510,12 +519,13 @@ function DialerCampaignsPage() {
 								))}
 
 								<Button
-									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="!rounded-lg h-8 border-slate-200 px-3 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									disabled={safePage === totalPages}
 									onClick={() =>
 										setCurrentPage((page) => Math.min(totalPages, page + 1))
 									}
 									size="sm"
+									type="button"
 									variant="outline"
 								>
 									Next
@@ -523,10 +533,11 @@ function DialerCampaignsPage() {
 								</Button>
 
 								<Button
-									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="!rounded-lg h-8 border-slate-200 px-3 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									disabled={safePage === totalPages}
 									onClick={() => setCurrentPage(totalPages)}
 									size="sm"
+									type="button"
 									variant="outline"
 								>
 									Last

@@ -252,17 +252,25 @@ function ManageQuickTransferListPage() {
 				</div>
 			</main>
 
+			{/* ADD QUICK TRANSFER LIST DIALOG */}
 			{isAddDialogOpen ? (
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
-					<div className="w-full max-w-[525px] overflow-hidden rounded-md bg-white shadow-2xl dark:bg-[#0b1728]">
-						<div className="flex items-center justify-between bg-[#0757ff] px-4 py-3">
-							<h2 className="font-semibold text-sm text-white">
-								Add Quick Transfer List
-							</h2>
+				<div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 backdrop-blur-[2px]">
+					<div className="w-full max-w-[525px] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-2xl dark:border-slate-700 dark:bg-[#0b1728]">
+						{/* Dialog Header */}
+						<div className="relative bg-[#0757ff] px-5 py-4">
+							<div>
+								<h2 className="font-bold text-base text-white">
+									Add Quick Transfer List
+								</h2>
+
+								<p className="mt-0.5 text-blue-100 text-xs">
+									Create a new quick transfer list.
+								</p>
+							</div>
 
 							<button
 								aria-label="Close Add Quick Transfer List dialog"
-								className="text-white/90 transition-colors hover:text-white"
+								className="absolute top-1/2 right-4 flex size-7 -translate-y-1/2 items-center justify-center rounded-lg text-white/80 transition hover:bg-white/10 hover:text-white"
 								onClick={closeAddDialog}
 								type="button"
 							>
@@ -270,47 +278,63 @@ function ManageQuickTransferListPage() {
 							</button>
 						</div>
 
-						<div className="px-9 py-8">
-							<div className="space-y-7">
+						{/* Dialog Body */}
+						<div className="px-7 py-6 md:px-8">
+							<div className="space-y-6">
+								{/* Name */}
 								<div className="space-y-1.5">
 									<label
-										className="text-slate-500 text-xs dark:text-slate-400"
+										className="font-medium text-[#52698a] text-xs dark:text-slate-400"
 										htmlFor="new-quick-transfer-name"
 									>
 										Name*
 									</label>
 
 									<Input
-										className="h-9 rounded-none border-0 border-slate-200 border-b bg-transparent px-0 text-sm shadow-none focus:border-[#0757ff] focus:ring-0 dark:border-slate-700"
+										className="h-10 rounded-lg border-slate-200 bg-white px-3 text-slate-700 text-sm shadow-sm transition placeholder:text-slate-400 focus:border-[#0757ff] focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
 										id="new-quick-transfer-name"
 										onChange={(event) => setNewListName(event.target.value)}
+										placeholder="Enter quick transfer list name"
 										value={newListName}
 									/>
 								</div>
 
+								{/* Description */}
 								<div className="space-y-1.5">
 									<label
-										className="text-slate-500 text-xs dark:text-slate-400"
+										className="font-medium text-[#52698a] text-xs dark:text-slate-400"
 										htmlFor="new-quick-transfer-description"
 									>
 										Description
 									</label>
 
 									<textarea
-										className="min-h-[55px] w-full resize-y rounded-none border-0 border-slate-200 border-b bg-transparent px-0 py-2 text-sm outline-none focus:border-[#0757ff] dark:border-slate-700 dark:bg-transparent"
+										className="min-h-[80px] w-full resize-y rounded-lg border border-slate-200 bg-white px-3 py-2 text-slate-700 text-sm shadow-sm outline-none transition placeholder:text-slate-400 focus:border-[#0757ff] focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100 dark:placeholder:text-slate-500"
 										id="new-quick-transfer-description"
 										onChange={(event) =>
 											setNewListDescription(event.target.value)
 										}
+										placeholder="Enter description"
 										value={newListDescription}
 									/>
 								</div>
 							</div>
 
-							<div className="mt-9 flex justify-end">
+							{/* Dialog Actions */}
+							<div className="mt-6 flex justify-end gap-2">
 								<Button
-									className="h-9 bg-[#0757ff] text-xs hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+									className="h-9 rounded-lg border-slate-200 px-4 text-slate-600 text-xs shadow-sm hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-slate-800"
 									onClick={closeAddDialog}
+									type="button"
+									variant="outline"
+								>
+									Cancel
+								</Button>
+
+								<Button
+									className="h-9 rounded-lg bg-[#0757ff] px-5 text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+									onClick={closeAddDialog}
+									type="button"
 								>
 									Submit
 								</Button>

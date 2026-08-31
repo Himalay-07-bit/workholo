@@ -1,3 +1,5 @@
+// biome-ignore-all lint/performance/noJsxPropsBind: UI event handlers require access to component state.
+
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
@@ -258,30 +260,40 @@ function ExtensionsPage() {
 						</div>
 
 						<div className="flex flex-wrap gap-2">
+							{/* FEATURE CODES */}
 							<Button
-								className="h-9 border-slate-200 text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								className="!rounded-lg h-9 border-slate-200 px-3 text-slate-600 text-xs shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								type="button"
 								variant="outline"
 							>
 								Feature Codes
 							</Button>
 
+							{/* UPLOAD AGENTS */}
 							<Button
-								className="h-9 border-slate-200 text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								className="!rounded-lg h-9 border-slate-200 px-3 text-slate-600 text-xs shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								type="button"
 								variant="outline"
 							>
 								<Upload className="mr-1.5 size-3.5" />
 								Upload Agents
 							</Button>
 
+							{/* TEAMS */}
 							<Button
-								className="h-9 border-slate-200 text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								className="!rounded-lg h-9 border-slate-200 px-3 text-slate-600 text-xs shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								type="button"
 								variant="outline"
 							>
 								<Users className="mr-1.5 size-3.5" />
 								Teams
 							</Button>
 
-							<Button className="h-9 bg-[#0757ff] text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500">
+							{/* ADD AGENT */}
+							<Button
+								className="!rounded-lg !bg-[#0757ff] !text-white hover:!bg-[#004be0] dark:!bg-blue-600 dark:hover:!bg-blue-500 h-9 px-4 font-medium text-xs shadow-blue-500/20 shadow-sm transition-colors"
+								type="button"
+							>
 								+ Add Agent
 							</Button>
 						</div>
@@ -380,33 +392,41 @@ function ExtensionsPage() {
 									Calls Answered:
 								</span>
 
+								{/* 1 DAY */}
 								<Button
-									className="h-7 bg-[#0757ff] px-2.5 text-[10px] hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+									className="!rounded-lg !bg-[#0757ff] !text-white hover:!bg-[#004be0] dark:!bg-blue-600 dark:hover:!bg-blue-500 h-7 px-2.5 font-medium text-[10px] shadow-blue-500/20 shadow-sm transition-colors"
 									size="sm"
+									type="button"
 								>
 									1 Day
 								</Button>
 
+								{/* 2 DAYS */}
 								<Button
-									className="h-7 border-slate-200 px-2.5 text-[10px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="!rounded-lg h-7 border-slate-200 px-2.5 text-[10px] text-slate-500 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									size="sm"
+									type="button"
 									variant="outline"
 								>
 									2 Days
 								</Button>
 
+								{/* 7 DAYS */}
 								<Button
-									className="h-7 border-slate-200 px-2.5 text-[10px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="!rounded-lg h-7 border-slate-200 px-2.5 text-[10px] text-slate-500 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									size="sm"
+									type="button"
 									variant="outline"
 								>
 									7 Days
 								</Button>
 
+								{/* REFRESH */}
 								<Button
-									className="h-7 w-7 border-slate-200 p-0 text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="!rounded-lg h-7 w-7 border-slate-200 p-0 text-slate-500 shadow-sm transition-colors hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									size="sm"
 									title="Refresh"
+									type="button"
 									variant="outline"
 								>
 									<RefreshCw className="size-3" />
@@ -664,19 +684,22 @@ function ExtensionsPage() {
 							</span>
 
 							<div className="flex items-center gap-1.5">
+								{/* PREVIOUS */}
 								<Button
-									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="!rounded-lg h-8 border-slate-200 px-3 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									disabled={safePage === 1}
 									onClick={() =>
 										setCurrentPage((page) => Math.max(1, page - 1))
 									}
 									size="sm"
+									type="button"
 									variant="outline"
 								>
 									<ChevronLeft className="mr-1 size-3.5" />
 									Previous
 								</Button>
 
+								{/* PAGE NUMBERS */}
 								{Array.from(
 									{ length: totalPages },
 									(_, index) => index + 1
@@ -684,25 +707,28 @@ function ExtensionsPage() {
 									<Button
 										className={
 											page === safePage
-												? "h-8 min-w-8 bg-[#0757ff] px-2 text-[11px] shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
-												: "h-8 min-w-8 border-slate-200 px-2 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+												? "!rounded-lg !bg-[#0757ff] !text-white hover:!bg-[#004be0] dark:!bg-blue-600 dark:hover:!bg-blue-500 h-8 min-w-8 px-2 text-[11px] shadow-blue-500/20 shadow-sm"
+												: "!rounded-lg h-8 min-w-8 border-slate-200 px-2 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 										}
 										key={page}
 										onClick={() => setCurrentPage(page)}
 										size="sm"
+										type="button"
 										variant={page === safePage ? "default" : "outline"}
 									>
 										{page}
 									</Button>
 								))}
 
+								{/* NEXT */}
 								<Button
-									className="h-8 border-slate-200 px-3 text-[11px] text-slate-500 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+									className="!rounded-lg h-8 border-slate-200 px-3 text-[11px] text-slate-500 shadow-sm hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 									disabled={safePage === totalPages}
 									onClick={() =>
 										setCurrentPage((page) => Math.min(totalPages, page + 1))
 									}
 									size="sm"
+									type="button"
 									variant="outline"
 								>
 									Next
