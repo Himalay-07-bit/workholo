@@ -1,5 +1,6 @@
 // biome-ignore-all lint/performance/noJsxPropsBind: Table controls use local component state.
-import { createFileRoute } from "@tanstack/react-router";
+
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
 import {
@@ -41,6 +42,8 @@ const leadLists: LeadList[] = [
 ];
 
 function ManageLeadsPage() {
+	const navigate = useNavigate();
+
 	const [search, setSearch] = useState("");
 	const [pageSize, setPageSize] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -90,9 +93,11 @@ function ManageLeadsPage() {
 							</p>
 						</div>
 
+						{/* HEADER BUTTONS */}
 						<div className="flex flex-wrap gap-2">
 							<Button
 								className="h-9 border-slate-200 text-slate-600 text-xs hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								onClick={() => navigate({ to: "/admin/upload-lead-logs" })}
 								variant="outline"
 							>
 								<FileText className="mr-1.5 size-3.5" />
@@ -114,7 +119,10 @@ function ManageLeadsPage() {
 								Master Delete
 							</Button>
 
-							<Button className="h-9 bg-[#0757ff] text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500">
+							<Button
+								className="h-9 bg-[#0757ff] text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+								onClick={() => navigate({ to: "/admin/add-list" })}
+							>
 								<Plus className="mr-1.5 size-4" />
 								Add Lead List
 							</Button>
@@ -278,8 +286,11 @@ function ManageLeadsPage() {
 													</option>
 
 													<option value="view">View</option>
+
 													<option value="edit">Edit</option>
+
 													<option value="upload">Upload</option>
+
 													<option value="delete">Delete</option>
 												</select>
 											</td>
