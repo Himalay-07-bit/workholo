@@ -24,6 +24,7 @@ import {
 	Users,
 } from "lucide-react";
 import { useState } from "react";
+import { AdminTopbar } from "@/components/admin/admin-topbar";
 
 export const Route = createFileRoute("/admin/add-new-user")({
 	component: AddUserPage,
@@ -140,6 +141,7 @@ function AddUserPage() {
 
 	return (
 		<div className="min-h-svh bg-[#eef3f9] dark:bg-[#07111f]">
+			<AdminTopbar />
 			{/* =====================================================
 			    PAGE HEADER
 			===================================================== */}

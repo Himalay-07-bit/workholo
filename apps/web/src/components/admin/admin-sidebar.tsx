@@ -139,26 +139,20 @@ export function AdminSidebar() {
 	const [servicesOpen, setServicesOpen] = useState(true);
 	const [outboundOpen, setOutboundOpen] = useState(true);
 
-	/*
-	 * TanStack Router se current route directly mil raha hai.
-	 * Isliye route change hone par sidebar automatically re-render hoga.
-	 */
 	const currentPath = location.pathname;
 
 	const isActive = (url: string) => {
-		// Dashboard ko sirf exact /admin route par active rakho.
 		if (url === "/admin") {
 			return currentPath === "/admin" || currentPath === "/admin/";
 		}
 
-		// Baaki pages ke liye exact route ya uske child route ko active rakho.
 		return currentPath === url || currentPath.startsWith(`${url}/`);
 	};
 
 	return (
 		<Sidebar
 			className="border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950"
-			collapsible="none"
+			collapsible="offcanvas"
 		>
 			{/* BRAND */}
 			<SidebarHeader className="border-slate-100 border-b bg-white px-4 py-4 dark:border-slate-800 dark:bg-slate-950">
