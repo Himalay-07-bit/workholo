@@ -1,9 +1,10 @@
-// biome-ignore-all lint/performance/noJsxPropsBind: Table controls use local component state.
-import { createFileRoute } from "@tanstack/react-router";
-import { Button } from "@workholo/ui/components/button";
+// biome-ignore-all lint/performance/noJsxPropsBind: Search and navigation use route-local state.
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Button, buttonVariants } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
 import { CheckCircle2, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { useMemo, useState } from "react";
+
 import { AdminTopbar } from "@/components/admin/admin-topbar";
 
 export const Route = createFileRoute("/admin/manage-did-numbers")({
@@ -199,13 +200,13 @@ function ManageDidNumbersPage() {
 		<div className="min-h-svh bg-[#eef3f9] dark:bg-[#07111f]">
 			<AdminTopbar />
 
-			<main className="p-4 md:p-6">
+			<main className="flex-1 p-4 md:p-6">
 				<div className="mx-auto max-w-7xl">
 					{/* PAGE HEADER */}
 					<div className="mb-5 flex flex-col gap-4 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm md:flex-row md:items-center md:justify-between dark:border-slate-800 dark:bg-[#0b1728]">
 						<div>
 							<div className="flex items-center gap-2">
-								<h1 className="font-bold text-[#102b55] text-xl tracking-tight dark:text-slate-100">
+								<h1 className="font-bold text-[#102b55] text-xl tracking-tight dark:text-white">
 									My Numbers
 								</h1>
 
@@ -221,25 +222,33 @@ function ManageDidNumbersPage() {
 
 						<div className="flex flex-wrap gap-2">
 							<Button
-								className="border-slate-200 text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
+								className="border-slate-200 bg-white text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
 								variant="outline"
 							>
 								Export Numbers
 							</Button>
 
-							<Button
-								className="border-slate-200 text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
-								variant="outline"
+							<Link
+								className={buttonVariants({
+									variant: "outline",
+									className:
+										"border-slate-200 bg-white text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400",
+								})}
+								to="/admin/block-calls"
 							>
 								Block a Number
-							</Button>
+							</Link>
 
-							<Button
-								className="border-slate-200 text-slate-600 hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400"
-								variant="outline"
+							<Link
+								className={buttonVariants({
+									variant: "outline",
+									className:
+										"border-slate-200 bg-white text-slate-600 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300 dark:hover:border-blue-800 dark:hover:bg-blue-950/50 dark:hover:text-blue-400",
+								})}
+								to="/admin/blocked-numbers"
 							>
 								All Blocked Numbers
-							</Button>
+							</Link>
 						</div>
 					</div>
 
@@ -399,11 +408,8 @@ function ManageDidNumbersPage() {
 														</option>
 
 														<option value="view">View</option>
-
 														<option value="edit">Edit</option>
-
 														<option value="assign">Assign</option>
-
 														<option value="block">Block</option>
 													</select>
 												</td>
@@ -433,7 +439,7 @@ function ManageDidNumbersPage() {
 							</table>
 						</div>
 
-						{/* FOOTER */}
+						{/* FOOTER / PAGINATION */}
 						<div className="flex flex-col gap-3 border-slate-100 border-t px-5 py-3.5 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
 							<p className="text-slate-400 text-xs dark:text-slate-500">
 								Showing{" "}
@@ -497,7 +503,7 @@ function ManageDidNumbersPage() {
 					</div>
 
 					{/* SECURITY FOOTER */}
-					<div className="mt-3 flex items-center justify-center gap-1.5 text-[10px] text-slate-400 dark:text-slate-500">
+					<div className="mt-3 flex items-center justify-center gap-1.5 pb-2 text-[10px] text-slate-400 dark:text-slate-500">
 						<CheckCircle2 className="size-3.5 text-emerald-500" />
 						DID numbers are securely managed
 					</div>

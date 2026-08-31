@@ -4,42 +4,14 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
 import { Plus, Search } from "lucide-react";
-import { useState } from "react";
 
 import { AdminTopbar } from "@/components/admin/admin-topbar";
 
-export const Route = createFileRoute("/admin/dnd/manage-list")({
-	component: ManageDndListPage,
+export const Route = createFileRoute("/admin/manage-csat-survey")({
+	component: ManageCsatSurveyPage,
 });
 
-type DndList = {
-	id: number;
-	name: string;
-	description: string;
-	assigned: number;
-};
-
-const dndLists: DndList[] = [
-	{
-		id: 1,
-		name: "DND",
-		description: "",
-		assigned: 3,
-	},
-];
-
-function ManageDndListPage() {
-	const [search, setSearch] = useState("");
-	const [pageSize, setPageSize] = useState(10);
-
-	const filteredLists = dndLists.filter((item) =>
-		`${item.name} ${item.description}`
-			.toLowerCase()
-			.includes(search.toLowerCase())
-	);
-
-	const visibleLists = filteredLists.slice(0, pageSize);
-
+function ManageCsatSurveyPage() {
 	return (
 		<div className="flex min-h-svh flex-col bg-[#eef3f9] dark:bg-[#07111f]">
 			<AdminTopbar />
@@ -51,17 +23,17 @@ function ManageDndListPage() {
 						<div className="flex flex-col gap-3 border-slate-100 border-b px-5 py-4 sm:flex-row sm:items-center sm:justify-between dark:border-slate-800">
 							<div>
 								<h1 className="font-bold text-[#102b55] text-base tracking-tight dark:text-white">
-									Account DND Lists
+									CSAT Survey
 								</h1>
 
 								<p className="mt-0.5 text-slate-400 text-xs dark:text-slate-500">
-									Manage account Do Not Disturb lists.
+									Manage customer satisfaction survey configurations.
 								</p>
 							</div>
 
 							<Button className="h-9 rounded-lg bg-[#0757ff] px-4 text-xs shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500">
 								<Plus className="mr-1.5 size-3.5" />
-								Add Account DND List
+								Create CSAT Configuration
 							</Button>
 						</div>
 
@@ -72,12 +44,11 @@ function ManageDndListPage() {
 
 								<select
 									className="h-8 rounded-lg border border-slate-200 bg-white px-2.5 text-slate-700 text-xs shadow-sm outline-none focus:border-[#0757ff] focus:ring-2 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
-									onChange={(event) => setPageSize(Number(event.target.value))}
-									value={pageSize}
+									defaultValue="10"
 								>
-									<option value={10}>10</option>
-									<option value={25}>25</option>
-									<option value={50}>50</option>
+									<option value="10">10</option>
+									<option value="25">25</option>
+									<option value="50">50</option>
 								</select>
 
 								<span className="text-slate-500 dark:text-slate-400">
@@ -90,9 +61,7 @@ function ManageDndListPage() {
 
 								<Input
 									className="h-8 w-full rounded-lg border-slate-200 bg-white pl-8 text-xs shadow-sm focus:border-[#0757ff] focus:ring-2 focus:ring-blue-500/10 sm:w-[240px] dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
-									onChange={(event) => setSearch(event.target.value)}
 									placeholder="Search..."
-									value={search}
 								/>
 							</div>
 						</div>
@@ -103,7 +72,7 @@ function ManageDndListPage() {
 								<thead>
 									<tr className="border-slate-100 border-y bg-slate-50/70 dark:border-slate-800 dark:bg-slate-950/60">
 										<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
-											S.No.
+											S no.
 										</th>
 
 										<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
@@ -115,7 +84,7 @@ function ManageDndListPage() {
 										</th>
 
 										<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
-											Availability/Assigned To
+											No. of Questions
 										</th>
 
 										<th className="px-5 py-3 text-left font-semibold text-[#263b5b] dark:text-slate-300">
@@ -125,72 +94,26 @@ function ManageDndListPage() {
 								</thead>
 
 								<tbody>
-									{visibleLists.map((item) => (
-										<tr
-											className="border-slate-100 border-b transition-colors last:border-0 hover:bg-blue-50/30 dark:border-slate-800 dark:hover:bg-blue-950/20"
-											key={item.id}
+									<tr>
+										<td
+											className="px-5 py-14 text-center text-slate-400 dark:text-slate-500"
+											colSpan={5}
 										>
-											<td className="px-5 py-4 font-medium text-slate-600 dark:text-slate-300">
-												{item.id}.
-											</td>
+											<div className="flex flex-col items-center">
+												<div className="mb-2 flex size-10 items-center justify-center rounded-xl bg-blue-50 text-[#0757ff] dark:bg-blue-950/60 dark:text-blue-400">
+													<Search className="size-5" />
+												</div>
 
-											<td className="px-5 py-4">
-												<button
-													className="font-medium text-[#0757ff] hover:underline dark:text-blue-400"
-													type="button"
-												>
-													{item.name}
-												</button>
-											</td>
-
-											<td className="px-5 py-4 text-slate-600 dark:text-slate-300">
-												{item.description || "—"}
-											</td>
-
-											<td className="px-5 py-4">
-												<button
-													className="font-medium text-[#0757ff] hover:underline dark:text-blue-400"
-													type="button"
-												>
-													Assigned ({item.assigned})
-												</button>
-											</td>
-
-											<td className="px-5 py-4">
-												<select
-													className="h-8 min-w-[135px] rounded-lg border border-slate-200 bg-white px-2.5 text-slate-600 text-xs shadow-sm outline-none focus:border-[#0757ff] focus:ring-2 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-300"
-													defaultValue=""
-												>
-													<option disabled value="">
-														Select an Action
-													</option>
-
-													<option value="view">View</option>
-													<option value="edit">Edit</option>
-													<option value="delete">Delete</option>
-												</select>
-											</td>
-										</tr>
-									))}
-
-									{filteredLists.length === 0 && (
-										<tr>
-											<td
-												className="px-5 py-12 text-center text-slate-400 dark:text-slate-500"
-												colSpan={5}
-											>
-												<Search className="mx-auto mb-2 size-6 text-slate-300 dark:text-slate-600" />
-
-												<p className="font-medium text-slate-500 dark:text-slate-400">
-													No DND lists found
+												<p className="font-medium text-slate-500 text-xs dark:text-slate-400">
+													No data available in table
 												</p>
 
-												<p className="mt-1 text-[11px]">
-													Try changing your search.
+												<p className="mt-1 text-[10px] text-slate-400 dark:text-slate-500">
+													Create a CSAT configuration to get started.
 												</p>
-											</td>
-										</tr>
-									)}
+											</div>
+										</td>
+									</tr>
 								</tbody>
 							</table>
 						</div>
@@ -200,15 +123,15 @@ function ManageDndListPage() {
 							<span className="text-slate-400 text-xs dark:text-slate-500">
 								Showing{" "}
 								<span className="font-semibold text-slate-600 dark:text-slate-300">
-									{filteredLists.length === 0 ? 0 : 1}
+									0
 								</span>{" "}
 								to{" "}
 								<span className="font-semibold text-slate-600 dark:text-slate-300">
-									{visibleLists.length}
+									0
 								</span>{" "}
 								of{" "}
 								<span className="font-semibold text-slate-600 dark:text-slate-300">
-									{filteredLists.length}
+									0
 								</span>{" "}
 								entries
 							</span>
@@ -220,14 +143,16 @@ function ManageDndListPage() {
 									size="sm"
 									variant="outline"
 								>
-									Previous
+									First
 								</Button>
 
 								<Button
-									className="h-8 min-w-8 rounded-lg bg-[#0757ff] px-2 text-[11px] shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500"
+									className="h-8 rounded-lg border-slate-200 px-3 text-[11px] text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
+									disabled
 									size="sm"
+									variant="outline"
 								>
-									1
+									Previous
 								</Button>
 
 								<Button
@@ -237,6 +162,15 @@ function ManageDndListPage() {
 									variant="outline"
 								>
 									Next
+								</Button>
+
+								<Button
+									className="h-8 rounded-lg border-slate-200 px-3 text-[11px] text-slate-500 shadow-sm dark:border-slate-700 dark:bg-slate-900 dark:text-slate-400"
+									disabled
+									size="sm"
+									variant="outline"
+								>
+									Last
 								</Button>
 							</div>
 						</div>
