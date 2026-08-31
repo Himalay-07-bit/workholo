@@ -162,7 +162,7 @@ export function AdminSidebar() {
 							className="h-auto cursor-default p-0 hover:bg-transparent dark:hover:bg-transparent"
 							size="lg"
 						>
-							<div className="flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#0757ff] text-white shadow-blue-500/20 shadow-sm dark:bg-blue-600">
+							<div className="flex size-8 shrink-0 items-center justify-center rounded-xl bg-[#0757ff] text-white shadow-blue-500/20 shadow-sm dark:bg-blue-600">
 								<span className="font-bold text-lg">W</span>
 							</div>
 
