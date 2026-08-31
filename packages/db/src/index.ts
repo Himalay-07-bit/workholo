@@ -1,10 +1,45 @@
 import { env } from "@workholo/env/server";
+import type { NodePgDatabase } from "drizzle-orm/node-postgres";
 import { drizzle } from "drizzle-orm/node-postgres";
 
-import * as schema from "./schema";
+import {
+	account,
+	accountRelations,
+	agentGroup,
+	blockedNumber,
+	department,
+	dialerCampaign,
+	inboundQueue,
+	leadList,
+	leadListField,
+	platformUser,
+	session,
+	sessionRelations,
+	user,
+	userRelations,
+	verification,
+} from "./schema";
 
-export function createDb() {
+const schema = {
+	account,
+	accountRelations,
+	agentGroup,
+	blockedNumber,
+	department,
+	dialerCampaign,
+	inboundQueue,
+	leadList,
+	leadListField,
+	platformUser,
+	session,
+	sessionRelations,
+	user,
+	userRelations,
+	verification,
+};
+
+export function createDb(): NodePgDatabase<typeof schema> {
 	return drizzle(env.DATABASE_URL, { schema });
 }
 
-export const db = createDb();
+export const db: NodePgDatabase<typeof schema> = createDb();

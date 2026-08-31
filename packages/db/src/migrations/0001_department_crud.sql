@@ -1,0 +1,21 @@
+CREATE TABLE "department" (
+	"id" text PRIMARY KEY NOT NULL,
+	"name" text NOT NULL,
+	"description" text DEFAULT '' NOT NULL,
+	"ring_strategy" text DEFAULT 'Simultaneously' NOT NULL,
+	"music_on_hold" text DEFAULT 'Select any Option' NOT NULL,
+	"missed_call_sms" text DEFAULT 'Select any Option' NOT NULL,
+	"sticky_agent" boolean DEFAULT false NOT NULL,
+	"use_it_as_queue" boolean DEFAULT true NOT NULL,
+	"transfer_code" text DEFAULT '' NOT NULL,
+	"failover_music" text DEFAULT 'Select any Option' NOT NULL,
+	"queue_timeout" integer DEFAULT 90 NOT NULL,
+	"simultaneous_call_patching_caps_limit" integer DEFAULT 0 NOT NULL,
+	"queue_limit" boolean DEFAULT false NOT NULL,
+	"queue_welcome_announcement" boolean DEFAULT false NOT NULL,
+	"queue_announce_holdtime" boolean DEFAULT false NOT NULL,
+	"queue_position_announcement" boolean DEFAULT false NOT NULL,
+	"queue_periodic_announcement" boolean DEFAULT false NOT NULL,
+	"created_at" timestamp DEFAULT now() NOT NULL,
+	"updated_at" timestamp DEFAULT now() NOT NULL
+);

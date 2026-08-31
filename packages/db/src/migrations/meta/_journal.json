@@ -8,6 +8,55 @@
       "when": 1787820140016,
       "tag": "0000_legal_steve_rogers",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1787820140017,
+      "tag": "0001_department_crud",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1787820140018,
+      "tag": "0002_dialer_campaign_crud",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1787820140019,
+      "tag": "0003_inbound_queue_crud",
+      "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1787820140020,
+      "tag": "0004_lead_list_crud",
+      "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1787820140021,
+      "tag": "0005_platform_user_crud",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1787820140022,
+      "tag": "0006_agent_group_crud",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1787820140023,
+      "tag": "0007_blocked_number_crud",
+      "breakpoints": true
     }
   ]
 }
