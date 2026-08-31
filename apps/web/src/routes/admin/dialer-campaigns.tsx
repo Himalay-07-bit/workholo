@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
 import {
@@ -112,6 +112,7 @@ const campaigns: Campaign[] = [
 ];
 
 function DialerCampaignsPage() {
+	const navigate = useNavigate();
 	const [search, setSearch] = useState("");
 	const [pageSize, setPageSize] = useState(10);
 	const [currentPage, setCurrentPage] = useState(1);
@@ -177,7 +178,14 @@ function DialerCampaignsPage() {
 							</p>
 						</div>
 
-						<Button className="h-9 bg-[#0757ff] text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:shadow-blue-900/30 dark:hover:bg-blue-500">
+						<Button
+							className="h-9 bg-[#0757ff] text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:shadow-blue-900/30 dark:hover:bg-blue-500"
+							onClick={() =>
+								navigate({
+									to: "/admin/add-dialer-campaign",
+								})
+							}
+						>
 							<Plus className="mr-1.5 size-4" />
 							Add Dialer Campaign
 						</Button>
