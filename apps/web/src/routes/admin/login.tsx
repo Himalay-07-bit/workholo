@@ -291,7 +291,7 @@ function AdminLoginPage() {
 										<UserRound className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-[#0757ff]" />
 
 										<Input
-											className="h-12 rounded-lg border-slate-200 bg-white pl-10 text-xs shadow-none transition-all placeholder:text-slate-400 focus-visible:border-[#0757ff] focus-visible:ring-4 focus-visible:ring-blue-500/10"
+											className="h-12 rounded-lg border-slate-200 bg-white pl-10 text-slate-700 text-xs shadow-none transition-all placeholder:text-slate-400 focus-visible:border-[#0757ff] focus-visible:ring-4 focus-visible:ring-blue-500/10"
 											id="login-id"
 											onChange={(event) => setLoginId(event.target.value)}
 											placeholder="Enter your login ID"
@@ -313,14 +313,13 @@ function AdminLoginPage() {
 										<LockKeyhole className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-[#0757ff]" />
 
 										<Input
-											className="h-12 rounded-lg border-slate-200 bg-white pr-11 pl-10 text-xs shadow-none transition-all placeholder:text-slate-400 focus-visible:border-[#0757ff] focus-visible:ring-4 focus-visible:ring-blue-500/10"
+											className="h-12 rounded-lg border-slate-200 bg-white pr-11 pl-10 text-slate-700 text-xs shadow-none transition-all placeholder:text-slate-400 focus-visible:border-[#0757ff] focus-visible:ring-4 focus-visible:ring-blue-500/10"
 											id="password"
 											onChange={(event) => setPassword(event.target.value)}
 											placeholder="Enter your password"
 											type={showPassword ? "text" : "password"}
 											value={password}
 										/>
-
 										<button
 											aria-label={
 												showPassword ? "Hide password" : "Show password"
@@ -359,7 +358,7 @@ function AdminLoginPage() {
 
 								{/* Login */}
 								<Button
-									className="h-12 w-full rounded-lg bg-[#0757ff] font-semibold text-xs shadow-blue-500/20 shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#004be0] hover:shadow-blue-500/25 hover:shadow-lg active:translate-y-0"
+									className="h-12 w-full rounded-lg bg-[#0757ff] font-semibold text-white text-xs shadow-blue-500/20 shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#004be0] hover:shadow-blue-500/25 hover:shadow-lg active:translate-y-0"
 									onClick={handleLogin}
 									type="button"
 								>

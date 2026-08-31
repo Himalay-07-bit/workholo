@@ -44,232 +44,272 @@ function AdminDashboard() {
 		<div className="flex min-h-svh flex-col bg-[#eef3f9] dark:bg-slate-950">
 			<AdminTopbar />
 
-			<main className="flex-1 bg-muted/30 p-4 md:p-6">
-				<div className="grid gap-4 xl:grid-cols-2">
-					{/* Live Data */}
-					<Card>
-						<CardHeader className="border-b px-5 py-3">
-							<div className="flex items-center gap-2">
-								<span className="h-5 w-1 rounded-full bg-primary" />
-								<CardTitle className="font-medium text-base">
-									Live Data
-								</CardTitle>
-							</div>
-						</CardHeader>
+			<main className="flex-1 p-4 md:p-6">
+				<div className="mx-auto max-w-[1500px]">
+					<div className="grid gap-4 xl:grid-cols-2">
+						{/* ================================
+						    LIVE DATA
+						================================ */}
+						<Card className="rounded-2xl border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+							<CardHeader className="border-slate-100 border-b px-5 py-4 dark:border-slate-800">
+								<div className="flex items-center gap-2">
+									<span className="h-5 w-1 rounded-full bg-[#0757ff] dark:bg-blue-500" />
 
-						<CardContent className="p-5">
-							<div className="grid grid-cols-3 divide-x">
-								<div className="flex flex-col items-center gap-2 px-3 text-center">
-									<PhoneCall className="size-7 text-orange-500" />
-
-									<span className="font-semibold text-2xl">8</span>
-
-									<span className="text-muted-foreground text-sm">
-										Active Calls
-									</span>
+									<CardTitle className="font-semibold text-[#102b55] text-sm dark:text-white">
+										Live Data
+									</CardTitle>
 								</div>
+							</CardHeader>
 
-								<div className="flex flex-col items-center gap-2 px-3 text-center">
-									<ArrowDownLeft className="size-7 text-red-500" />
-
-									<span className="flex items-center gap-1 font-semibold text-2xl">
-										42
-										<span className="text-orange-500 text-sm">↻</span>
-									</span>
-
-									<span className="text-muted-foreground text-sm">
-										Total Missed Calls
-									</span>
-								</div>
-
-								<div className="flex flex-col items-center gap-2 px-3 text-center">
-									<PhoneCall className="size-7 text-green-600" />
-
-									<span className="flex items-center gap-1 font-semibold text-2xl">
-										0<span className="text-orange-500 text-sm">↻</span>
-									</span>
-
-									<span className="text-muted-foreground text-sm">
-										Total Answered Calls
-									</span>
-								</div>
-							</div>
-
-							<div className="mt-5 border-t pt-3 text-xs">
-								<span className="font-medium text-blue-600">Note:</span>{" "}
-								<span className="text-muted-foreground">
-									The call count displaying here represents only incoming calls
-								</span>
-							</div>
-						</CardContent>
-					</Card>
-
-					{/* Quick Access */}
-					<Card>
-						<CardHeader className="flex flex-row items-center justify-between border-b px-5 py-3">
-							<div className="flex items-center gap-2">
-								<span className="h-5 w-1 rounded-full bg-primary" />
-
-								<CardTitle className="font-medium text-base">
-									Quick Access
-								</CardTitle>
-							</div>
-
-							<Button size="sm" variant="outline">
-								Customize
-							</Button>
-						</CardHeader>
-
-						<CardContent className="p-5">
-							<div className="grid grid-cols-2 gap-4">
-								<Button
-									className="h-32 flex-col gap-3"
-									onClick={() =>
-										navigate({
-											to: "/admin/manage-did-numbers",
-										})
-									}
-									variant="ghost"
-								>
-									<span className="font-bold text-3xl text-blue-600">⠿</span>
-
-									<span className="font-normal text-sm">My Numbers</span>
-								</Button>
-
-								<Button className="h-32 flex-col gap-3" variant="ghost">
-									<CreditCard className="size-8 text-blue-600" />
-
-									<span className="font-normal text-sm">
-										Manage Contact Groups
-									</span>
-								</Button>
-							</div>
-						</CardContent>
-					</Card>
-
-					{/* Billing Summary */}
-					<Card>
-						<CardHeader className="border-b px-5 py-3">
-							<div className="flex items-center gap-2">
-								<span className="h-5 w-1 rounded-full bg-primary" />
-
-								<CardTitle className="font-medium text-base">
-									Billing Summary
-								</CardTitle>
-							</div>
-						</CardHeader>
-
-						<CardContent className="p-5">
-							<div className="grid grid-cols-3 divide-x">
-								<div className="flex flex-col items-center gap-2 px-3 text-center">
-									<WalletCards className="size-7 text-blue-600" />
-
-									<span className="font-semibold text-xl">INR 0</span>
-
-									<span className="text-muted-foreground text-sm">
-										Available Balance
-									</span>
-
-									<button className="text-blue-600 text-xl" type="button">
-										+
-									</button>
-								</div>
-
-								<div className="flex flex-col items-center gap-2 px-3 text-center">
-									<CreditCard className="size-7 text-blue-600" />
-
-									<span className="font-semibold text-xl">INR34897</span>
-
-									<button
-										className="text-blue-600 text-sm hover:underline"
-										type="button"
-									>
-										Due Charge
-									</button>
-								</div>
-
-								<div className="flex flex-col items-center gap-2 px-3 text-center">
-									<CalendarDays className="size-7 text-blue-600" />
-
-									<span className="font-semibold text-xl">24-Sep-2026</span>
-
-									<span className="text-muted-foreground text-sm">
-										Next Billing Date
-									</span>
-								</div>
-							</div>
-						</CardContent>
-					</Card>
-
-					{/* FAQs */}
-					<Card>
-						<CardHeader className="border-b px-5 py-3">
-							<div className="flex items-center gap-2">
-								<span className="h-5 w-1 rounded-full bg-primary" />
-
-								<CardTitle className="font-medium text-base">FAQs</CardTitle>
-							</div>
-						</CardHeader>
-
-						<CardContent className="p-0">
-							<div className="divide-y">
-								{faqs.map((faq) => (
-									<button
-										className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left hover:bg-muted/30"
-										key={faq.question}
-										type="button"
-									>
-										<div className="flex items-start gap-3">
-											<span className="mt-1 text-blue-500">•</span>
-
-											<span className="text-sm">{faq.question}</span>
+							<CardContent className="p-5">
+								<div className="grid grid-cols-3 divide-x divide-slate-200 dark:divide-slate-800">
+									{/* Active Calls */}
+									<div className="flex flex-col items-center gap-2 px-3 text-center">
+										<div className="flex size-10 items-center justify-center rounded-xl bg-orange-50 text-orange-500 dark:bg-orange-950/40 dark:text-orange-400">
+											<PhoneCall className="size-5" />
 										</div>
 
-										<ChevronDown className="size-4 shrink-0 text-muted-foreground" />
-									</button>
-								))}
-							</div>
-						</CardContent>
-					</Card>
-				</div>
+										<span className="font-bold text-2xl text-[#102b55] dark:text-white">
+											8
+										</span>
 
-				{/* Footer spacing */}
-				<div className="mt-4">
-					<Card>
-						<CardContent className="flex h-14 items-center justify-center p-3">
-							<span className="text-muted-foreground text-sm">Follow Us:</span>
+										<span className="text-slate-500 text-xs dark:text-slate-400">
+											Active Calls
+										</span>
+									</div>
 
-							<span className="ml-2 inline-flex size-8 items-center justify-center rounded-full border font-semibold text-sm">
-								in
-							</span>
-						</CardContent>
-					</Card>
+									{/* Missed Calls */}
+									<div className="flex flex-col items-center gap-2 px-3 text-center">
+										<div className="flex size-10 items-center justify-center rounded-xl bg-red-50 text-red-500 dark:bg-red-950/40 dark:text-red-400">
+											<ArrowDownLeft className="size-5" />
+										</div>
+
+										<span className="flex items-center gap-1 font-bold text-2xl text-[#102b55] dark:text-white">
+											42
+											<span className="text-orange-500 text-sm">↻</span>
+										</span>
+
+										<span className="text-slate-500 text-xs dark:text-slate-400">
+											Total Missed Calls
+										</span>
+									</div>
+
+									{/* Answered Calls */}
+									<div className="flex flex-col items-center gap-2 px-3 text-center">
+										<div className="flex size-10 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-950/40 dark:text-emerald-400">
+											<PhoneCall className="size-5" />
+										</div>
+
+										<span className="flex items-center gap-1 font-bold text-2xl text-[#102b55] dark:text-white">
+											0<span className="text-orange-500 text-sm">↻</span>
+										</span>
+
+										<span className="text-slate-500 text-xs dark:text-slate-400">
+											Total Answered Calls
+										</span>
+									</div>
+								</div>
+
+								<div className="mt-5 border-slate-100 border-t pt-3 text-xs dark:border-slate-800">
+									<span className="font-semibold text-[#0757ff] dark:text-blue-400">
+										Note:
+									</span>{" "}
+									<span className="text-slate-500 dark:text-slate-400">
+										The call count displaying here represents only incoming
+										calls
+									</span>
+								</div>
+							</CardContent>
+						</Card>
+
+						{/* ================================
+						    QUICK ACCESS
+						================================ */}
+						<Card className="rounded-2xl border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+							<CardHeader className="flex flex-row items-center justify-between border-slate-100 border-b px-5 py-4 dark:border-slate-800">
+								<div className="flex items-center gap-2">
+									<span className="h-5 w-1 rounded-full bg-[#0757ff] dark:bg-blue-500" />
+
+									<CardTitle className="font-semibold text-[#102b55] text-sm dark:text-white">
+										Quick Access
+									</CardTitle>
+								</div>
+
+								<Button
+									className="h-8 rounded-lg border-slate-200 text-slate-500 text-xs hover:border-blue-200 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-700 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/40 dark:hover:text-blue-400"
+									size="sm"
+									variant="outline"
+								>
+									Customize
+								</Button>
+							</CardHeader>
+
+							<CardContent className="p-5">
+								<div className="grid grid-cols-2 gap-4">
+									<Button
+										className="h-32 flex-col gap-3 rounded-xl border border-blue-100 bg-blue-50/50 text-[#0757ff] hover:bg-blue-50 dark:border-blue-900/50 dark:bg-blue-950/20 dark:text-blue-400 dark:hover:bg-blue-950/40"
+										onClick={() =>
+											navigate({
+												to: "/admin/manage-did-numbers",
+											})
+										}
+										variant="ghost"
+									>
+										<div className="flex size-10 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-950">
+											<span className="font-bold text-xl">⠿</span>
+										</div>
+
+										<span className="font-medium text-xs">My Numbers</span>
+									</Button>
+
+									<Button
+										className="h-32 flex-col gap-3 rounded-xl border border-slate-200 bg-slate-50/50 text-slate-600 hover:border-blue-100 hover:bg-blue-50 hover:text-[#0757ff] dark:border-slate-800 dark:bg-slate-800/40 dark:text-slate-300 dark:hover:border-blue-900 dark:hover:bg-blue-950/40 dark:hover:text-blue-400"
+										variant="ghost"
+									>
+										<div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-[#0757ff] dark:bg-blue-950 dark:text-blue-400">
+											<CreditCard className="size-5" />
+										</div>
+
+										<span className="font-medium text-xs">
+											Manage Contact Groups
+										</span>
+									</Button>
+								</div>
+							</CardContent>
+						</Card>
+
+						{/* ================================
+						    BILLING SUMMARY
+						================================ */}
+						<Card className="rounded-2xl border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+							<CardHeader className="border-slate-100 border-b px-5 py-4 dark:border-slate-800">
+								<div className="flex items-center gap-2">
+									<span className="h-5 w-1 rounded-full bg-[#0757ff] dark:bg-blue-500" />
+
+									<CardTitle className="font-semibold text-[#102b55] text-sm dark:text-white">
+										Billing Summary
+									</CardTitle>
+								</div>
+							</CardHeader>
+
+							<CardContent className="p-5">
+								<div className="grid grid-cols-3 divide-x divide-slate-200 dark:divide-slate-800">
+									{/* Balance */}
+									<div className="flex flex-col items-center gap-2 px-3 text-center">
+										<div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-[#0757ff] dark:bg-blue-950 dark:text-blue-400">
+											<WalletCards className="size-5" />
+										</div>
+
+										<span className="font-bold text-[#102b55] text-lg dark:text-white">
+											INR 0
+										</span>
+
+										<span className="text-slate-500 text-xs dark:text-slate-400">
+											Available Balance
+										</span>
+
+										<button
+											className="font-medium text-[#0757ff] text-lg hover:text-blue-700 dark:text-blue-400 dark:hover:text-blue-300"
+											type="button"
+										>
+											+
+										</button>
+									</div>
+
+									{/* Due Charge */}
+									<div className="flex flex-col items-center gap-2 px-3 text-center">
+										<div className="flex size-10 items-center justify-center rounded-xl bg-blue-50 text-[#0757ff] dark:bg-blue-950 dark:text-blue-400">
+											<CreditCard className="size-5" />
+										</div>
+
+										<span className="font-bold text-[#102b55] text-lg dark:text-white">
+											INR 34897
+										</span>
+
+										<button
+											className="text-[#0757ff] text-xs hover:underline dark:text-blue-400"
+											type="button"
+										>
+											Due Charge
+										</button>
+									</div>
+
+									{/* Billing Date */}
+									<div className="flex flex-col items-center gap-2 px-3 text-center">
+										<div className="flex size-10 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-950/50 dark:text-indigo-400">
+											<CalendarDays className="size-5" />
+										</div>
+
+										<span className="font-bold text-[#102b55] text-lg dark:text-white">
+											24-Sep-2026
+										</span>
+
+										<span className="text-slate-500 text-xs dark:text-slate-400">
+											Next Billing Date
+										</span>
+									</div>
+								</div>
+							</CardContent>
+						</Card>
+
+						{/* ================================
+						    FAQ
+						================================ */}
+						<Card className="rounded-2xl border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+							<CardHeader className="border-slate-100 border-b px-5 py-4 dark:border-slate-800">
+								<div className="flex items-center gap-2">
+									<span className="h-5 w-1 rounded-full bg-[#0757ff] dark:bg-blue-500" />
+
+									<CardTitle className="font-semibold text-[#102b55] text-sm dark:text-white">
+										FAQs
+									</CardTitle>
+								</div>
+							</CardHeader>
+
+							<CardContent className="p-0">
+								<div className="divide-y divide-slate-100 dark:divide-slate-800">
+									{faqs.map((faq) => (
+										<button
+											className="flex w-full items-center justify-between gap-4 px-5 py-4 text-left transition-colors hover:bg-blue-50/50 dark:hover:bg-slate-800/60"
+											key={faq.question}
+											type="button"
+										>
+											<div className="flex items-start gap-3">
+												<span className="mt-0.5 font-bold text-[#0757ff] dark:text-blue-400">
+													•
+												</span>
+
+												<span className="text-slate-600 text-xs dark:text-slate-300">
+													{faq.question}
+												</span>
+											</div>
+
+											<ChevronDown className="size-4 shrink-0 text-slate-400 dark:text-slate-500" />
+										</button>
+									))}
+								</div>
+							</CardContent>
+						</Card>
+					</div>
+
+					{/* ================================
+					    FOOTER
+					================================ */}
+					<div className="mt-4">
+						<Card className="rounded-2xl border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+							<CardContent className="flex h-14 items-center justify-center gap-2 p-3">
+								<span className="text-slate-400 text-xs dark:text-slate-500">
+									Follow Us:
+								</span>
+
+								<span className="inline-flex size-8 items-center justify-center rounded-full border border-slate-200 font-semibold text-[#0757ff] text-xs dark:border-slate-700 dark:text-blue-400">
+									in
+								</span>
+							</CardContent>
+						</Card>
+					</div>
 				</div>
 			</main>
 		</div>
-	);
-}
-
-/* SMALL SECURITY ICON */
-
-function ShieldIcon() {
-	return (
-		<svg
-			className="size-3.5 text-emerald-500"
-			fill="none"
-			stroke="currentColor"
-			strokeWidth="2"
-			viewBox="0 0 24 24"
-		>
-			<title>Secure</title>
-
-			<path
-				d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"
-				strokeLinecap="round"
-				strokeLinejoin="round"
-			/>
-
-			<path d="m9 12 2 2 4-4" strokeLinecap="round" strokeLinejoin="round" />
-		</svg>
 	);
 }

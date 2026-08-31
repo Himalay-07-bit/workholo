@@ -3,6 +3,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { Button } from "@workholo/ui/components/button";
 import { Input } from "@workholo/ui/components/input";
+import { PhoneCall } from "lucide-react";
 import { useState } from "react";
 
 import { AdminTopbar } from "@/components/admin/admin-topbar";
@@ -20,25 +21,31 @@ function AddInboundQueuePage() {
 	const [callbackCrossover, setCallbackCrossover] = useState(false);
 
 	return (
-		<div className="min-h-svh bg-[#eef3f9] dark:bg-[#07111f]">
+		<div className="flex min-h-svh flex-col bg-[#eef3f9] dark:bg-slate-950">
 			<AdminTopbar />
 
-			<main className="p-4 md:p-6">
+			<main className="flex-1 p-4 md:p-6">
 				<div className="mx-auto max-w-[1500px]">
 					{/* PAGE HEADER */}
-					<div className="mb-4 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
-						<h1 className="font-bold text-[#102b55] text-xl tracking-tight dark:text-slate-100">
-							Add Inbound Queue
-						</h1>
+					<div className="mb-4 flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-5 py-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+						<div className="flex size-9 items-center justify-center rounded-lg bg-blue-50 text-[#0757ff] dark:bg-blue-950 dark:text-blue-400">
+							<PhoneCall className="size-4" />
+						</div>
+
+						<div>
+							<h1 className="font-bold text-[#102b55] text-lg tracking-tight dark:text-white">
+								Add Inbound Queue
+							</h1>
+
+							<p className="mt-0.5 text-slate-400 text-xs dark:text-slate-500">
+								Create and configure a new inbound calling queue.
+							</p>
+						</div>
 					</div>
 
 					{/* GENERAL DETAILS */}
-					<section className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
-						<div className="border-slate-100 border-b px-5 py-3.5 dark:border-slate-800">
-							<h2 className="font-semibold text-[#263b5b] text-sm dark:text-slate-200">
-								General Details
-							</h2>
-						</div>
+					<section className="rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+						<SectionHeader title="General Details" />
 
 						<div className="grid gap-x-8 gap-y-5 p-5 md:grid-cols-2">
 							{/* LEFT COLUMN */}
@@ -152,14 +159,10 @@ function AddInboundQueuePage() {
 					</section>
 
 					{/* AGENT SELECTION */}
-					<section className="mt-4 rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
-						<div className="border-slate-100 border-b px-5 py-3.5 dark:border-slate-800">
-							<h2 className="font-semibold text-[#263b5b] text-sm dark:text-slate-200">
-								Agent Selection
-							</h2>
-						</div>
+					<section className="mt-4 rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+						<SectionHeader title="Agent Selection" />
 
-						<div className="grid gap-8 p-5 md:grid-cols-2">
+						<div className="grid gap-5 p-5 md:grid-cols-2">
 							<SelectField
 								label="Agent*"
 								options={[
@@ -180,27 +183,19 @@ function AddInboundQueuePage() {
 					</section>
 
 					{/* REPORTING SETTINGS */}
-					<section className="mt-4 rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
-						<div className="border-slate-100 border-b px-5 py-3.5 dark:border-slate-800">
-							<h2 className="font-semibold text-[#263b5b] text-sm dark:text-slate-200">
-								Reporting Settings
-							</h2>
-						</div>
+					<section className="mt-4 rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+						<SectionHeader title="Reporting Settings" />
 
 						<div className="p-5">
-							<div className="max-w-[50%]">
+							<div className="max-w-xl">
 								<Field label="SLA Duration (In Seconds)" />
 							</div>
 						</div>
 					</section>
 
 					{/* CALLBACK SETTINGS */}
-					<section className="mt-4 rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#0b1728]">
-						<div className="border-slate-100 border-b px-5 py-3.5 dark:border-slate-800">
-							<h2 className="font-semibold text-[#263b5b] text-sm dark:text-slate-200">
-								Callback Settings
-							</h2>
-						</div>
+					<section className="mt-4 rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-900">
+						<SectionHeader title="Callback Settings" />
 
 						<div className="p-5">
 							<ToggleField
@@ -212,10 +207,17 @@ function AddInboundQueuePage() {
 					</section>
 
 					{/* ACTIONS */}
-					<div className="mt-4 flex justify-start gap-2">
-						<Button className="bg-[#0757ff] hover:bg-[#004be0]">Save</Button>
+					<div className="mt-4 flex gap-2 pb-2">
+						<Button className="h-9 rounded-lg bg-[#0757ff] px-5 text-xs shadow-blue-500/20 shadow-sm hover:bg-[#004be0] dark:bg-blue-600 dark:hover:bg-blue-500">
+							Save
+						</Button>
 
-						<Button variant="outline">Cancel</Button>
+						<Button
+							className="h-9 rounded-lg border-slate-200 px-5 text-slate-600 text-xs dark:border-slate-700 dark:text-slate-300"
+							variant="outline"
+						>
+							Cancel
+						</Button>
 					</div>
 				</div>
 			</main>
@@ -223,26 +225,47 @@ function AddInboundQueuePage() {
 	);
 }
 
+/* SECTION HEADER */
+
+function SectionHeader({ title }: { title: string }) {
+	return (
+		<div className="flex items-center gap-2 border-slate-100 border-b px-5 py-3.5 dark:border-slate-800">
+			<span className="h-5 w-1 rounded-full bg-[#0757ff] dark:bg-blue-500" />
+
+			<h2 className="font-semibold text-[#102b55] text-sm dark:text-white">
+				{title}
+			</h2>
+		</div>
+	);
+}
+
+/* INPUT FIELD */
+
 function Field({ label, value = "" }: { label: string; value?: string }) {
-	const inputId = `inbound-queue-${label.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-")}`;
+	const inputId = `inbound-queue-${label
+		.toLowerCase()
+		.replaceAll(/[^a-z0-9]+/g, "-")
+		.replace(/^-|-$/g, "")}`;
 
 	return (
 		<div className="space-y-1.5">
 			<label
-				className="text-slate-500 text-xs dark:text-slate-400"
+				className="font-medium text-slate-500 text-xs dark:text-slate-400"
 				htmlFor={inputId}
 			>
 				{label}
 			</label>
 
 			<Input
-				className="h-9 rounded-none border-0 border-slate-200 border-b bg-transparent px-0 text-sm shadow-none focus:border-[#0757ff] focus:ring-0 dark:border-slate-700"
+				className="h-9 rounded-lg border-slate-200 bg-white text-xs shadow-none focus:border-[#0757ff] focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:placeholder:text-slate-500"
 				defaultValue={value}
 				id={inputId}
 			/>
 		</div>
 	);
 }
+
+/* SELECT FIELD */
 
 function SelectField({
 	label,
@@ -253,19 +276,22 @@ function SelectField({
 	value: string;
 	options: string[];
 }) {
-	const inputId = `inbound-queue-${label.toLowerCase().replaceAll(/[^a-z0-9]+/g, "-")}`;
+	const inputId = `inbound-queue-${label
+		.toLowerCase()
+		.replaceAll(/[^a-z0-9]+/g, "-")
+		.replace(/^-|-$/g, "")}`;
 
 	return (
 		<div className="space-y-1.5">
 			<label
-				className="text-slate-500 text-xs dark:text-slate-400"
+				className="font-medium text-slate-500 text-xs dark:text-slate-400"
 				htmlFor={inputId}
 			>
 				{label}
 			</label>
 
 			<select
-				className="h-9 w-full rounded-none border-0 border-slate-200 border-b bg-transparent px-0 text-sm outline-none focus:border-[#0757ff] dark:border-slate-700 dark:bg-transparent"
+				className="h-9 w-full rounded-lg border border-slate-200 bg-white px-3 text-slate-600 text-xs outline-none focus:border-[#0757ff] focus:ring-4 focus:ring-blue-500/10 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300"
 				defaultValue={value}
 				id={inputId}
 			>
@@ -279,6 +305,8 @@ function SelectField({
 	);
 }
 
+/* TOGGLE */
+
 function ToggleField({
 	label,
 	checked,
@@ -289,17 +317,17 @@ function ToggleField({
 	onToggle: () => void;
 }) {
 	return (
-		<div className="flex items-center justify-between">
-			<span className="text-slate-600 text-sm dark:text-slate-300">
+		<div className="flex min-h-9 items-center justify-between gap-4">
+			<span className="font-medium text-slate-600 text-xs dark:text-slate-300">
 				{label}
 			</span>
 
 			<button
 				aria-pressed={checked}
-				className={`flex h-5 w-10 items-center rounded-full p-0.5 transition ${
+				className={`flex h-5 w-10 shrink-0 items-center rounded-full p-0.5 transition-colors ${
 					checked
-						? "justify-end bg-[#0757ff]"
-						: "justify-start bg-slate-300 dark:bg-slate-600"
+						? "justify-end bg-[#0757ff] dark:bg-blue-600"
+						: "justify-start bg-slate-300 dark:bg-slate-700"
 				}`}
 				onClick={onToggle}
 				type="button"
