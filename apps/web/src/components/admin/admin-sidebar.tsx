@@ -1,4 +1,5 @@
-// biome-ignore-all lint/performance/noJsxPropsBind: Navigation handlers need the selected menu item.
+// biome-ignore-all lint/performance/noJsxPropsBind: Sidebar navigation uses route-specific menu handlers.
+// biome-ignore-all lint/complexity/noExcessiveCognitiveComplexity: The component preserves the existing nested admin menu hierarchy.
 
 import { useLocation, useNavigate } from "@tanstack/react-router";
 
@@ -16,163 +17,79 @@ import {
 	useSidebar,
 } from "@workholo/ui/components/sidebar";
 
-import {
-	ChevronRight,
-	LayoutDashboard,
-	LogOut,
-	Phone,
-	Settings,
-	Users,
-	Wrench,
-} from "lucide-react";
+import { ChevronRight, LogOut, Settings, Users, Wrench } from "lucide-react";
 
 import { useState } from "react";
 
-const navigation = [
-	{
-		icon: LayoutDashboard,
-		title: "Dashboard",
-		url: "/admin",
-	},
-	{
-		icon: Phone,
-		title: "Live Calls",
-		url: "/admin/livecalls",
-	},
-];
+import { type ACL_MODULES, findACLRoute } from "@/config/acl";
 
-const userItems = [
-	{
-		title: "Add User",
-		url: "/admin/add-new-user",
-	},
-	{
-		title: "All User(s)",
-		url: "/admin/show-users",
-	},
-	{
-		title: "Teams (Agent Groups)",
-		url: "/admin/agent-groups",
-	},
-	{
-		title: "Pending User(s)",
-		url: "/admin/pending-users",
-	},
-];
+const toNavigationItem = ({
+	icon,
+	name,
+	path,
+}: (typeof ACL_MODULES)[number]) => ({
+	icon,
+	title: name,
+	url: path,
+});
 
-const serviceItems = [
-	{
-		title: "My Numbers",
-		url: "/admin/manage-did-numbers",
-	},
-	{
-		title: "Agents",
-		url: "/admin/extensions",
-	},
-	{
-		title: "Departments",
-		url: "/admin/departments",
-	},
-];
+const dashboard = findACLRoute("dashboard");
+const liveCalls = findACLRoute("live-calls");
+const users = findACLRoute("users");
+const services = findACLRoute("services");
+const settings = findACLRoute("settings");
+const calls = findACLRoute("calls");
+const callLogs = findACLRoute("call-logs");
 
-const outboundItems = [
-	{
-		title: "Dialer Campaigns",
-		url: "/admin/dialer-campaigns",
-	},
-	{
-		title: "Dialer Inbound Queue",
-		url: "/admin/show-inbound-queue",
-	},
-	{
-		title: "Lead Lists",
-		url: "/admin/manage-leads",
-	},
-	{
-		title: "Disposition Lists",
-		url: "/admin/manage-disposition-list",
-	},
-	{
-		title: "Pause Code Lists",
-		url: "/admin/break-lists",
-	},
-	{
-		title: "Account DND Lists",
-		url: "/admin/dnd/manage-list",
-	},
-	{
-		title: "Quick Transfer Lists",
-		url: "/admin/manage-quick-transfer-list",
-	},
-	{
-		title: "CSAT Survey",
-		url: "/admin/manage-csat-survey",
-	},
-	{
-		title: "Dialer Skill Lists",
-		url: "/admin/dialer-skill-lists",
-	},
-	{
-		title: "Agent Script",
-		url: "/admin/agent-script",
-	},
-	{
-		title: "Holiday Calendar",
-		url: "/admin/holiday-calendar",
-	},
-];
+if (
+	!(
+		dashboard &&
+		liveCalls &&
+		users &&
+		services &&
+		settings &&
+		calls &&
+		callLogs
+	)
+) {
+	throw new Error(
+		"The ACL navigation tree is missing a required admin module."
+	);
+}
 
-const templateNavigation = [
-	{
-		title: "Template Management",
-		url: "/admin/sms-templates",
-	},
-	{
-		title: "Agent Dispositions",
-		url: "/admin/agent-dispositions",
-	},
-	{
-		title: "Survey Campaign",
-		url: "/admin/survey-campaigns",
-	},
-	{
-		title: "Scheduled Calls",
-		url: "/admin/scheduled-calls",
-	},
-];
+const navigation = [dashboard, liveCalls].map(toNavigationItem);
+const userItems = users.children?.map(toNavigationItem) ?? [];
+const serviceItems = (services.children ?? [])
+	.filter(
+		(item) =>
+			![
+				"outbound-services",
+				"sms-templates",
+				"agent-dispositions",
+				"survey-campaigns",
+				"scheduled-calls",
+			].includes(item.id)
+	)
+	.map(toNavigationItem);
+const outboundItems =
+	findACLRoute("outbound-services")?.children?.map(toNavigationItem) ?? [];
+const templateNavigation = (services.children ?? [])
+	.filter((item) =>
+		[
+			"sms-templates",
+			"agent-dispositions",
+			"survey-campaigns",
+			"scheduled-calls",
+		].includes(item.id)
+	)
+	.map(toNavigationItem);
+const manageRoleItems =
+	findACLRoute("roles")?.children?.map(toNavigationItem) ?? [];
+const otherNavigation = [calls, callLogs].map(toNavigationItem);
 
-const manageRoleItems = [
-	{ title: "Add User Role", url: "/admin/add-role" },
-	{ title: "All Roles", url: "/admin/all-roles-and-permissions" },
-] as const;
-
-const otherNavigation = [
-	{
-		icon: Phone,
-		title: "Calls",
-		url: "/admin/calls",
-	},
-	{
-		icon: LayoutDashboard,
-		title: "Call Logs",
-		url: "/admin/call-logs",
-	},
-];
-
-// biome-ignore lint/complexity/noExcessiveCognitiveComplexity: Admin sidebar intentionally contains nested navigation sections.
 export function AdminSidebar() {
 	const navigate = useNavigate();
 	const location = useLocation();
-
-	/*
-	 * Sidebar state
-	 *
-	 * expanded:
-	 *   icon + text
-	 *
-	 * collapsed:
-	 *   only icons
-	 */
 	const { state, setOpen } = useSidebar();
 
 	const [usersOpen, setUsersOpen] = useState(false);
@@ -199,16 +116,6 @@ export function AdminSidebar() {
 		return currentPath === url || currentPath.startsWith(`${url}/`);
 	};
 
-	/*
-	 * When a parent menu is clicked while sidebar is collapsed,
-	 * first expand the sidebar.
-	 *
-	 * We intentionally don't toggle the submenu on the same click.
-	 * This gives the expected UX:
-	 *
-	 * collapsed -> click Users -> sidebar expands
-	 * expanded  -> click Users -> submenu opens/closes
-	 */
 	const handleUsersClick = () => {
 		if (isCollapsed) {
 			setOpen(true);
@@ -244,9 +151,6 @@ export function AdminSidebar() {
 			className="border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950"
 			collapsible="icon"
 		>
-			{/* =========================================================
-			    BRAND
-			========================================================= */}
 			<SidebarHeader className="border-slate-100 border-b bg-white px-3 py-4 dark:border-slate-800 dark:bg-slate-950">
 				<SidebarMenu>
 					<SidebarMenuItem>
@@ -286,9 +190,6 @@ export function AdminSidebar() {
 
 					<SidebarGroupContent>
 						<SidebarMenu className="gap-1">
-							{/* =================================================
-							    DASHBOARD + LIVE CALLS
-							================================================= */}
 							{navigation.map((item) => {
 								const Icon = item.icon;
 								const active = isActive(item.url);
@@ -324,9 +225,6 @@ export function AdminSidebar() {
 								);
 							})}
 
-							{/* =================================================
-							    USERS
-							================================================= */}
 							<SidebarMenuItem>
 								<SidebarMenuButton
 									className="h-9 rounded-lg px-3 text-slate-600 hover:bg-slate-50 hover:text-[#0757ff] group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-blue-400"
@@ -425,9 +323,6 @@ export function AdminSidebar() {
 											);
 										})}
 
-										{/* =============================================
-										    OUTBOUND SERVICES
-										============================================= */}
 										<SidebarMenuItem className="mt-1">
 											<SidebarMenuButton
 												className="h-8 rounded-md px-3 text-slate-500 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
@@ -476,9 +371,6 @@ export function AdminSidebar() {
 											)}
 										</SidebarMenuItem>
 
-										{/* =============================================
-										    TEMPLATE MANAGEMENT
-										============================================= */}
 										{templateNavigation.map((item) => {
 											const active = isActive(item.url);
 
@@ -507,9 +399,6 @@ export function AdminSidebar() {
 								)}
 							</SidebarMenuItem>
 
-							{/* =================================================
-							    SETTINGS
-							================================================= */}
 							<SidebarMenuItem className="mt-1">
 								<SidebarMenuButton
 									className="h-9 rounded-lg px-3 text-slate-600 hover:bg-slate-50 hover:text-[#0757ff] group-data-[collapsible=icon]:justify-center group-data-[collapsible=icon]:px-2 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-blue-400"
@@ -531,9 +420,6 @@ export function AdminSidebar() {
 
 								{!!settingsOpen && (
 									<div className="mt-1 ml-4 border-slate-200 border-l pl-2 group-data-[collapsible=icon]:hidden dark:border-slate-800">
-										{/* =============================================
-										    USER MANAGEMENT
-										============================================= */}
 										<SidebarMenuItem>
 											<SidebarMenuButton
 												className="h-8 rounded-md px-3 text-slate-500 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
@@ -649,9 +535,6 @@ export function AdminSidebar() {
 											)}
 										</SidebarMenuItem>
 
-										{/* =============================================
-										    MANAGE SETTINGS
-										============================================= */}
 										<SidebarMenuItem className="mt-1">
 											<SidebarMenuButton
 												className="h-8 rounded-md px-3 text-slate-500 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
@@ -929,9 +812,6 @@ export function AdminSidebar() {
 				</SidebarGroup>
 			</SidebarContent>
 
-			{/* =========================================================
-			    FOOTER
-			========================================================= */}
 			<SidebarFooter className="border-slate-100 border-t bg-white px-3 py-3 dark:border-slate-800 dark:bg-slate-950">
 				<SidebarMenu>
 					<SidebarMenuItem>
