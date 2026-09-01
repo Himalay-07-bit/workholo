@@ -65,12 +65,12 @@ export function CallControls() {
 									: "bg-slate-50 text-slate-600 group-hover:bg-blue-100 group-hover:text-[#0757ff] dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-blue-950/60 dark:group-hover:text-blue-400"
 							}`}
 						>
-							<Icon className="size-8 pt-2" strokeWidth={1.9} />
+							<Icon className="size-6 pt-2" strokeWidth={1.9} />
 						</div>
 
 						{/* LABEL */}
 						<span
-							className={`truncate p-3 pb-1 text-center font-medium text-[25px] leading-4 ${
+							className={`truncate p-3 pb-1 text-center font-medium text-[14px] leading-4 ${
 								isHangUp
 									? "text-red-500 dark:text-red-400"
 									: "text-slate-600 dark:text-slate-300"
