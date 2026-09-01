@@ -187,7 +187,7 @@ function AddInboundQueuePage() {
 						<SectionHeader title="Reporting Settings" />
 
 						<div className="p-5">
-							<div className="max-w-xl">
+							<div className="w-full max-w-xl">
 								<Field label="SLA Duration (In Seconds)" />
 							</div>
 						</div>
