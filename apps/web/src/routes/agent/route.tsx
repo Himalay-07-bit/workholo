@@ -1,3 +1,5 @@
+// biome-ignore-all lint/performance/noJsxPropsBind: The action uses the route-local navigator.
+
 import { createFileRoute, Outlet } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/agent")({

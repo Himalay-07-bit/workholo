@@ -268,23 +268,30 @@ function AddRolePage() {
 	return (
 		<div className="flex min-h-screen flex-col bg-background">
 			<AdminTopbar />
-			<main className="flex-1 p-4 md:p-6">
-				<section className="mx-auto max-w-[1600px] overflow-hidden rounded-md border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950">
-					<div className="border-slate-200 border-b px-5 py-4 text-slate-700 text-sm dark:border-slate-800 dark:text-slate-200">
-						Add a new Role
+			<main className="flex-1 bg-[#f4f7fb] p-4 md:p-6 dark:bg-slate-900">
+				<section className="mx-auto max-w-[1600px] overflow-hidden rounded-xl border border-slate-200 bg-white shadow-slate-200/50 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:shadow-none">
+					<div className="flex items-center border-slate-200 border-b bg-white px-5 py-4 dark:border-slate-800 dark:bg-slate-950">
+						<div className="border-[#0757ff] border-l-4 pl-3">
+							<h1 className="font-semibold text-[#102b55] text-base dark:text-white">
+								Add a new Role
+							</h1>
+							<p className="mt-0.5 text-slate-400 text-xs dark:text-slate-500">
+								Create a role and assign permissions
+							</p>
+						</div>
 					</div>
 
-					<div className="p-6 md:p-8">
-						<div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+					<div className="p-5 md:p-7">
+						<div className="grid grid-cols-1 gap-5 rounded-xl border border-slate-200 bg-slate-50/60 p-5 md:grid-cols-2 dark:border-slate-800 dark:bg-slate-900/40">
 							<div>
 								<label
-									className="mb-2 block text-slate-600 text-sm dark:text-slate-300"
+									className="mb-2 block font-medium text-[#102b55] text-xs dark:text-slate-200"
 									htmlFor="role-name"
 								>
 									Name<span className="text-red-500">*</span>
 								</label>
 								<input
-									className="h-9 w-full border-0 border-slate-300 border-b bg-transparent px-0 text-sm outline-none focus:border-blue-500 dark:border-slate-700"
+									className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-[#102b55] text-sm outline-none transition focus:border-[#0757ff] focus:ring-2 focus:ring-[#0757ff]/10 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
 									id="role-name"
 									onChange={(e) => setName(e.target.value)}
 									value={name}
@@ -292,13 +299,13 @@ function AddRolePage() {
 							</div>
 							<div>
 								<label
-									className="mb-2 block text-slate-600 text-sm dark:text-slate-300"
+									className="mb-2 block font-medium text-[#102b55] text-xs dark:text-slate-200"
 									htmlFor="role-description"
 								>
 									Description<span className="text-red-500">*</span>
 								</label>
 								<input
-									className="h-9 w-full border-0 border-slate-300 border-b bg-transparent px-0 text-sm outline-none focus:border-blue-500 dark:border-slate-700"
+									className="h-10 w-full rounded-lg border border-slate-200 bg-white px-3 text-[#102b55] text-sm outline-none transition focus:border-[#0757ff] focus:ring-2 focus:ring-[#0757ff]/10 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-100"
 									id="role-description"
 									onChange={(e) => setDescription(e.target.value)}
 									value={description}
@@ -322,16 +329,16 @@ function AddRolePage() {
 							toggleRow={toggleRow}
 						/>
 
-						<div className="mt-8 flex items-center gap-2 border-slate-200 border-t pt-5 dark:border-slate-800">
+						<div className="mt-8 flex items-center gap-3 border-slate-200 border-t pt-5 dark:border-slate-800">
 							<button
-								className="rounded-sm bg-blue-600 px-4 py-2 font-medium text-white text-xs hover:bg-blue-700"
+								className="rounded-lg bg-[#0757ff] px-5 py-2.5 font-semibold text-white text-xs shadow-blue-500/20 shadow-sm transition hover:bg-[#0649d8] focus:outline-none focus:ring-2 focus:ring-[#0757ff]/20"
 								onClick={save}
 								type="button"
 							>
 								Save
 							</button>
 							<button
-								className="rounded-sm border border-slate-300 bg-white px-4 py-2 text-slate-700 text-xs hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200"
+								className="rounded-lg border border-slate-200 bg-white px-5 py-2.5 font-medium text-slate-600 text-xs transition hover:border-slate-300 hover:bg-slate-50 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800"
 								onClick={() => history.back()}
 								type="button"
 							>
@@ -361,25 +368,30 @@ function PermissionSection({
 	toggleEverything?: (value: boolean) => void;
 }) {
 	return (
-		<section className="mt-8">
-			<div className="mb-5 flex items-center gap-2">
-				<h2 className="font-medium text-slate-700 text-sm dark:text-slate-200">
+		<section className="mt-7 overflow-hidden rounded-xl border border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
+			<div className="flex items-center justify-between border-slate-200 border-b bg-slate-50/80 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/70">
+				<h2 className="border-[#0757ff] border-l-3 pl-2 font-semibold text-[#102b55] text-sm dark:text-white">
 					{title}
 				</h2>
 				{title === "General permissions" && (
-					<span className="text-cyan-500">ⓘ</span>
+					<span
+						className="text-[#0757ff] text-xs"
+						title="Select permissions for this role"
+					>
+						ⓘ
+					</span>
 				)}
 			</div>
 
 			{toggleEverything ? (
-				<label className="mb-5 flex cursor-pointer items-center gap-2 text-slate-600 text-xs dark:text-slate-300">
+				<label className="mx-4 mt-4 mb-4 flex w-fit cursor-pointer items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 font-medium text-[#0757ff] text-xs dark:border-blue-900/50 dark:bg-blue-950/40 dark:text-blue-300">
 					<input
 						checked={rows.every((row) =>
 							row.options
 								.filter((o) => o.label !== "Select All")
 								.every((o) => checked[`${row.label}|${o.label}`])
 						)}
-						className="h-3.5 w-3.5"
+						className="size-4 accent-[#0757ff]"
 						onChange={(e) => toggleEverything(e.target.checked)}
 						type="checkbox"
 					/>
@@ -387,7 +399,7 @@ function PermissionSection({
 				</label>
 			) : null}
 
-			<div className="space-y-6">
+			<div className="divide-y divide-slate-100 px-4 dark:divide-slate-800">
 				{rows.map((row) => {
 					const selectable = row.options.filter(
 						(o) => o.label !== "Select All"
@@ -397,24 +409,24 @@ function PermissionSection({
 						selectable.every((o) => checked[`${row.label}|${o.label}`]);
 					return (
 						<div
-							className="grid grid-cols-[250px_minmax(0,1fr)] items-start gap-5"
+							className="grid grid-cols-1 items-start gap-3 py-4 md:grid-cols-[250px_minmax(0,1fr)] md:gap-5"
 							key={row.label}
 						>
-							<div className="pt-0.5 text-slate-600 text-xs dark:text-slate-300">
+							<div className="pt-0.5 font-semibold text-[#102b55] text-xs dark:text-slate-200">
 								{row.label}
 							</div>
-							<div className="flex flex-wrap gap-x-5 gap-y-3">
+							<div className="flex flex-wrap gap-x-5 gap-y-2.5">
 								{row.options.map((option) => {
 									const key = `${row.label}|${option.label}`;
 									const isSelectAll = option.label === "Select All";
 									return (
 										<label
-											className="flex cursor-pointer items-center gap-1.5 whitespace-nowrap text-[11px] text-slate-600 dark:text-slate-300"
+											className="flex cursor-pointer items-center gap-2 whitespace-nowrap rounded-md px-2 py-1.5 text-[11px] text-slate-600 transition hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-blue-400"
 											key={key}
 										>
 											<input
 												checked={isSelectAll ? allChecked : !!checked[key]}
-												className="h-3.5 w-3.5"
+												className="size-4 accent-[#0757ff]"
 												onChange={(e) =>
 													isSelectAll
 														? toggleRow(row, e.target.checked)
