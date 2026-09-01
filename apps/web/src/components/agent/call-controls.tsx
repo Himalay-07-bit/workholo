@@ -70,7 +70,7 @@ export function CallControls() {
 
 						{/* LABEL */}
 						<span
-							className={`truncate p-3 pb-1 text-center font-medium text-[12px] leading-4 ${
+							className={`truncate p-3 pb-1 text-center font-medium text-[14px] leading-4 ${
 								isHangUp
 									? "text-red-500 dark:text-red-400"
 									: "text-slate-600 dark:text-slate-300"
