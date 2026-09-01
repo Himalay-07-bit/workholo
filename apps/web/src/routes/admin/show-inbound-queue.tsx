@@ -23,6 +23,7 @@ import {
 	Users,
 } from "lucide-react";
 import { useMemo, useState } from "react";
+import { toast } from "sonner";
 
 import { AdminTopbar } from "@/components/admin/admin-topbar";
 import { queryClient, queryUtils } from "@/utils/orpc";
@@ -44,6 +45,13 @@ function ShowInboundQueuePage() {
 	const [queueToDelete, setQueueToDelete] = useState<(typeof queues)[number]>();
 	const deleteMutation = useMutation(
 		queryUtils.inboundQueues.delete.mutationOptions({
+			onError: (mutationError) => {
+				toast.error(
+					mutationError instanceof Error
+						? mutationError.message
+						: "Unable to delete inbound queue."
+				);
+			},
 			onSuccess: async () => {
 				await queryClient.invalidateQueries({
 					queryKey: queryUtils.inboundQueues.getAll.queryKey(),
