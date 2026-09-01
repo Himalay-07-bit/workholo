@@ -10,23 +10,15 @@ export const userIdSchema = z.object({
 });
 
 export const createUserSchema = z.object({
-	agentDispositions: z.boolean().default(false),
-	autoGeneratePassword: z.boolean().default(true),
-	blockWebLogin: z.boolean().default(false),
-	callerIds: z.string().default(""),
-	callForwardNumber: z.string().default(""),
-	callingAgent: z.boolean().default(true),
-	createExtension: z.boolean().default(false),
-	department: z.string().default(""),
-	designation: z.string().default(""),
 	email: z.string().email(),
-	loginBasedCalling: z.boolean().default(false),
-	loginId: z.string().min(1),
+	emailVerified: z.boolean().default(false),
+	image: z
+		.string()
+		.url()
+		.optional()
+		.or(z.literal(""))
+		.transform((value) => (value === "" ? undefined : value)),
 	name: z.string().min(1),
-	phone: z.string().min(1),
-	role: z.enum(["Agent", "Supervisor", "Admin"]).default("Agent"),
-	team: z.string().default(""),
-	twoFactor: z.boolean().default(false),
 });
 
 export const updateUserSchema = z.object({

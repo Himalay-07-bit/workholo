@@ -52,6 +52,11 @@ export function AdminTopbar() {
 		navigate({ to: "/admin/profile" });
 	}, [navigate]);
 
+	// const signOut = async () => {
+	// 	await authClient.signOut();
+	// 	navigate({ to: "/auth" });
+	// };
+
 	return (
 		<header className="sticky top-0 flex h-16 shrink-0 items-center gap-3 border-slate-200 border-b bg-white px-4 dark:border-slate-800 dark:bg-slate-950">
 			<SidebarTrigger className="text-slate-600 hover:bg-slate-100 hover:text-[#0757ff] dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-blue-400" />
