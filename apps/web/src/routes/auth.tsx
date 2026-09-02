@@ -15,6 +15,8 @@ import {
 	UsersRound,
 } from "lucide-react";
 import { useState } from "react";
+import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 
 export const Route = createFileRoute("/auth")({
 	component: AuthPage,
@@ -24,13 +26,28 @@ function AuthPage() {
 	const navigate = useNavigate();
 
 	const [showPassword, setShowPassword] = useState(false);
-	const [loginId, setLoginId] = useState("");
+	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [isSubmitting, setIsSubmitting] = useState(false);
 
-	function handleLogin() {
-		if (loginId.trim() && password.trim()) {
-			navigate({ to: "/admin" });
+	async function handleLogin() {
+		if (!(email.trim() && password.trim())) {
+			return;
 		}
+
+		setIsSubmitting(true);
+		const { error } = await authClient.signIn.email({
+			email: email.trim(),
+			password,
+		});
+		setIsSubmitting(false);
+
+		if (error) {
+			toast.error(error.message ?? "Unable to sign in.");
+			return;
+		}
+
+		navigate({ to: "/admin" });
 	}
 
 	return (
@@ -223,20 +240,22 @@ function AuthPage() {
 								<div className="space-y-2">
 									<Label
 										className="font-semibold text-[#263b5b] text-xs"
-										htmlFor="login-id"
+										htmlFor="email"
 									>
-										Login ID
+										Email address
 									</Label>
 
 									<div className="group relative">
 										<UserRound className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-[#0757ff]" />
 
 										<Input
+											autoComplete="email"
 											className="h-12 rounded-lg border-slate-200 bg-white pl-10 text-slate-900 text-xs shadow-none transition-all placeholder:text-slate-400 focus-visible:border-[#0757ff] focus-visible:ring-4 focus-visible:ring-blue-500/10"
-											id="login-id"
-											onChange={(event) => setLoginId(event.target.value)}
-											placeholder="Enter your login ID"
-											value={loginId}
+											id="email"
+											onChange={(event) => setEmail(event.target.value)}
+											placeholder="Enter your email address"
+											type="email"
+											value={email}
 										/>
 									</div>
 								</div>
@@ -297,10 +316,11 @@ function AuthPage() {
 
 								<Button
 									className="h-12 w-full rounded-lg bg-[#0757ff] font-semibold text-xs shadow-blue-500/20 shadow-md transition-all hover:-translate-y-0.5 hover:bg-[#004be0] hover:shadow-blue-500/25 hover:shadow-lg active:translate-y-0"
+									disabled={isSubmitting}
 									onClick={handleLogin}
 									type="button"
 								>
-									Login to Dashboard
+									{isSubmitting ? "Signing in..." : "Login to Dashboard"}
 								</Button>
 							</div>
 
