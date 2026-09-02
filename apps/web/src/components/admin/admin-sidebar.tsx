@@ -26,7 +26,7 @@ import {
 	Wrench,
 } from "lucide-react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { type ACL_MODULES, type ACLRoute, findACLRoute } from "@/config/acl";
 
@@ -119,23 +119,35 @@ interface CollapsedSidebarPanelProps {
 	section: ACLRoute;
 }
 
+interface AdminSidebarProps {
+	onSecondarySidebarChange: (isOpen: boolean) => void;
+}
+
 interface CollapsedSidebarItemProps {
 	currentPath: string;
 	depth?: number;
 	item: ACLRoute;
+	itemPath: string[];
 	onNavigate: (url: string) => void;
+	onToggle: (itemPath: string[]) => void;
+	openItemPath: string[];
 }
 
 function CollapsedSidebarItem({
 	currentPath,
 	depth = 0,
 	item,
+	itemPath,
 	onNavigate,
+	onToggle,
+	openItemPath,
 }: CollapsedSidebarItemProps) {
-	const [isOpen, setIsOpen] = useState(false);
 	const hasChildren = Boolean(item.children?.length);
 	const Icon = item.icon;
 	const active = isRouteActive(item, currentPath);
+	const isOpen =
+		hasChildren &&
+		itemPath.every((itemId, index) => itemId === openItemPath[index]);
 
 	return (
 		<li>
@@ -149,7 +161,7 @@ function CollapsedSidebarItem({
 				}`}
 				onClick={() => {
 					if (hasChildren) {
-						setIsOpen((open) => !open);
+						onToggle(itemPath);
 						return;
 					}
 
@@ -176,8 +188,11 @@ function CollapsedSidebarItem({
 							currentPath={currentPath}
 							depth={depth + 1}
 							item={child}
+							itemPath={[...itemPath, child.id]}
 							key={child.id}
 							onNavigate={onNavigate}
+							onToggle={onToggle}
+							openItemPath={openItemPath}
 						/>
 					))}
 				</ul>
@@ -193,11 +208,20 @@ function CollapsedSidebarPanel({
 	section,
 }: CollapsedSidebarPanelProps) {
 	const Icon = section.icon;
+	const [openItemPath, setOpenItemPath] = useState<string[]>([]);
+
+	const toggleItem = (itemPath: string[]) => {
+		const isOpen = itemPath.every(
+			(itemId, index) => itemId === openItemPath[index]
+		);
+
+		setOpenItemPath(isOpen ? itemPath.slice(0, -1) : itemPath);
+	};
 
 	return (
 		<aside
 			aria-label={`${section.name} navigation`}
-			className="fixed inset-y-0 left-[var(--sidebar-width-icon)] z-40 hidden w-72 border-slate-200 border-r bg-white shadow-xl md:flex md:flex-col dark:border-slate-800 dark:bg-slate-950"
+			className="fixed top-16 bottom-0 left-[var(--sidebar-width-icon)] z-40 hidden w-72 border-slate-200 border-r bg-white shadow-xl md:flex md:flex-col dark:border-slate-800 dark:bg-slate-950"
 		>
 			<div className="flex items-center gap-2 border-slate-100 border-b px-4 py-4 dark:border-slate-800">
 				<Icon className="size-5 text-[#0757ff] dark:text-blue-400" />
@@ -220,8 +244,11 @@ function CollapsedSidebarPanel({
 						<CollapsedSidebarItem
 							currentPath={currentPath}
 							item={item}
+							itemPath={[item.id]}
 							key={item.id}
 							onNavigate={onNavigate}
+							onToggle={toggleItem}
+							openItemPath={openItemPath}
 						/>
 					))}
 				</ul>
@@ -230,7 +257,7 @@ function CollapsedSidebarPanel({
 	);
 }
 
-export function AdminSidebar() {
+export function AdminSidebar({ onSecondarySidebarChange }: AdminSidebarProps) {
 	const navigate = useNavigate();
 	const location = useLocation();
 	const { state } = useSidebar();
@@ -251,6 +278,10 @@ export function AdminSidebar() {
 	const currentPath = location.pathname;
 
 	const isCollapsed = state === "collapsed";
+
+	useEffect(() => {
+		onSecondarySidebarChange(isCollapsed && secondarySidebarSection !== null);
+	}, [isCollapsed, onSecondarySidebarChange, secondarySidebarSection]);
 
 	const isActive = (url: string) => isPathActive(currentPath, url);
 	const usersActive = isRouteActive(secondarySidebarRoutes.users, currentPath);
