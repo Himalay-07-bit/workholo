@@ -25,18 +25,18 @@ function AdminLoginPage() {
 	const navigate = useNavigate();
 
 	const [showPassword, setShowPassword] = useState(false);
-	const [loginId, setLoginId] = useState("");
+	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [isSubmitting, setIsSubmitting] = useState(false);
 
 	async function handleLogin() {
-		if (!(loginId.trim() && password.trim())) {
+		if (!(email.trim() && password.trim())) {
 			return;
 		}
 
 		setIsSubmitting(true);
 		const { error } = await authClient.signIn.email({
-			email: loginId.trim(),
+			email: email.trim(),
 			password,
 		});
 		setIsSubmitting(false);
@@ -298,20 +298,22 @@ function AdminLoginPage() {
 								<div className="space-y-2">
 									<Label
 										className="font-semibold text-[#263b5b] text-xs"
-										htmlFor="login-id"
+										htmlFor="email"
 									>
-										Login ID
+										Email address
 									</Label>
 
 									<div className="group relative">
 										<UserRound className="absolute top-1/2 left-3.5 size-4 -translate-y-1/2 text-slate-400 transition-colors group-focus-within:text-[#0757ff]" />
 
 										<Input
+											autoComplete="email"
 											className="h-12 rounded-lg border-slate-200 bg-white pl-10 text-xs shadow-none transition-all placeholder:text-slate-400 focus-visible:border-[#0757ff] focus-visible:ring-4 focus-visible:ring-blue-500/10"
-											id="login-id"
-											onChange={(event) => setLoginId(event.target.value)}
-											placeholder="Enter your login ID"
-											value={loginId}
+											id="email"
+											onChange={(event) => setEmail(event.target.value)}
+											placeholder="Enter your email address"
+											type="email"
+											value={email}
 										/>
 									</div>
 								</div>
