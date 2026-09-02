@@ -83,8 +83,6 @@ const templateNavigation = (services.children ?? [])
 		].includes(item.id)
 	)
 	.map(toNavigationItem);
-const manageRoleItems =
-	findACLRoute("roles")?.children?.map(toNavigationItem) ?? [];
 const otherNavigation = [calls, callLogs].map(toNavigationItem);
 
 export function AdminSidebar() {
@@ -98,7 +96,6 @@ export function AdminSidebar() {
 	const [settingsOpen, setSettingsOpen] = useState(false);
 	const [userManagementOpen, setUserManagementOpen] = useState(false);
 	const [manageSettingsOpen, setManageSettingsOpen] = useState(false);
-	const [manageRolesOpen, setManageRolesOpen] = useState(false);
 	const [manageTeamOpen, setManageTeamOpen] = useState(false);
 	const [manageSftpOpen, setManageSftpOpen] = useState(false);
 	const [manageAwsOpen, setManageAwsOpen] = useState(false);
@@ -443,50 +440,15 @@ export function AdminSidebar() {
 														<SidebarMenuButton
 															className="h-8 rounded-md px-2 text-slate-500 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
 															onClick={() =>
-																setManageRolesOpen((open) => !open)
+																navigate({
+																	to: "/admin/all-roles-and-permissions",
+																})
 															}
 															size="sm"
 															tooltip="Manage Roles"
 														>
 															<span className="text-[11px]">Manage Roles</span>
-
-															<ChevronRight
-																className={`ml-auto size-3.5 text-slate-400 transition-transform dark:text-slate-500 ${
-																	manageRolesOpen ? "rotate-90" : ""
-																}`}
-															/>
 														</SidebarMenuButton>
-
-														{!!manageRolesOpen && (
-															<div className="mt-1 ml-3 border-slate-200 border-l pl-2 dark:border-slate-800">
-																{manageRoleItems.map((item) => {
-																	const active = isActive(item.url);
-
-																	return (
-																		<SidebarMenuItem key={item.title}>
-																			<SidebarMenuButton
-																				className={`h-7 rounded-md px-2 ${
-																					active
-																						? "bg-blue-50 font-semibold text-[#0757ff] dark:bg-blue-950/60 dark:text-blue-400"
-																						: "text-slate-500 hover:bg-slate-50 hover:text-[#0757ff] dark:text-slate-400 dark:hover:bg-slate-900 dark:hover:text-blue-400"
-																				}`}
-																				onClick={() =>
-																					navigate({
-																						to: item.url,
-																					})
-																				}
-																				size="sm"
-																				tooltip={item.title}
-																			>
-																				<span className="text-[10px]">
-																					{item.title}
-																				</span>
-																			</SidebarMenuButton>
-																		</SidebarMenuItem>
-																	);
-																})}
-															</div>
-														)}
 													</SidebarMenuItem>
 
 													{/* MANAGE TEAM */}
