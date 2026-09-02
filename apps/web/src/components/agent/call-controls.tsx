@@ -41,13 +41,13 @@ const controls: CallControl[] = [
 
 export function CallControls() {
 	return (
-		<div className="flex p-1 w-full shrink-0 gap-2 md:gap-2.5">
+		<div className="flex w-full shrink-0 gap-2 p-1 md:gap-2.5">
 			{controls.map(({ label, icon: Icon }) => {
 				const isHangUp = label === "Hang up";
 
 				return (
 					<button
-						className={`p-1 group relative flex h-[76px] min-w-0 flex-1 basis-0 flex-col items-center justify-center gap-1.5 overflow-hidden rounded-lg border px-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0757ff]/20 ${
+						className={`group relative flex h-[76px] min-w-0 flex-1 basis-0 flex-col items-center justify-center gap-1.5 overflow-hidden rounded-lg border p-1 px-2 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-[#0757ff]/20 ${
 							isHangUp
 								? "border-red-100 bg-red-50/70 text-red-500 hover:border-red-300 hover:bg-red-50 hover:text-red-600 dark:border-red-900/50 dark:bg-red-950/20 dark:text-red-400 dark:hover:border-red-800 dark:hover:bg-red-950/40"
 								: "border-slate-200 bg-white text-slate-500 shadow-sm hover:-translate-y-0.5 hover:border-blue-200 hover:bg-blue-50/60 hover:text-[#0757ff] hover:shadow-md dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400 dark:hover:border-blue-800 dark:hover:bg-blue-950/30 dark:hover:text-blue-400"
@@ -63,7 +63,7 @@ export function CallControls() {
 									: "bg-slate-50 text-slate-600 group-hover:bg-blue-100 group-hover:text-[#0757ff] dark:bg-slate-800 dark:text-slate-300 dark:group-hover:bg-blue-950/60 dark:group-hover:text-blue-400"
 							}`}
 						>
-							<Icon className="size-7 " strokeWidth={1.9} />
+							<Icon className="size-7" strokeWidth={1.9} />
 						</div>
 
 						{/* LABEL */}
